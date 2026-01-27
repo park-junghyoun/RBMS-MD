@@ -1,0 +1,21 @@
+-Input=DefaultBuild\ad.obj
+-Input=DefaultBuild\afe.obj
+-Input=DefaultBuild\afetimer.obj
+-Input=DefaultBuild\ci.obj
+-Input=DefaultBuild\fet.obj
+-Input=DefaultBuild\hvp.obj
+-Input=DefaultBuild\oc.obj
+-Input=DefaultBuild\ouv.obj
+-Input=DefaultBuild\pwr.obj
+-Input=DefaultBuild\trim.obj
+-Input=DefaultBuild\wkup.obj
+-Input=DefaultBuild\mcu.obj
+-Input=DefaultBuild\cb.obj
+-DEVICE=C:\Program Files (x86)\Renesas Electronics\CS+\CC\Device\RL78\Devicefile\DR7F240130.DVF
+-FOrm=Library=U
+-OUtput=DefaultBuild\RBMS-MD.lib
+-NOMessage
+-MEMory=High
+-NOLOgo
+-exit
+

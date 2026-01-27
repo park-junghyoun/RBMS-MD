@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<MicomToolCommonProjectFile Version="1.00">
+  <CreatorType Name="CubeSuite+" Version="V8.10.00  [06 Jun 2023]" />
+  <Placeholders>
+    <PlaceholderPrefix>%</PlaceholderPrefix>
+    <PlaceholderPostfix>%</PlaceholderPostfix>
+  </Placeholders>
+  <Project Name="RBMS-MD" Type="Library">
+    <Files>
+      <Category Name="AFE">
+        <Path>src\AFE\ad.c</Path>
+        <Path>src\AFE\afe.c</Path>
+        <Path>src\AFE\afetimer.c</Path>
+        <Path>src\AFE\ci.c</Path>
+        <Path>src\AFE\fet.c</Path>
+        <Path>src\AFE\hvp.c</Path>
+        <Path>src\AFE\oc.c</Path>
+        <Path>src\AFE\ouv.c</Path>
+        <Path>src\AFE\pwr.c</Path>
+        <Path>src\AFE\trim.c</Path>
+        <Path>src\AFE\wkup.c</Path>
+        <Path>src\AFE\cb.c</Path>
+      </Category>
+      <Category Name="MCU">
+        <Path>src\MCU\mcu.c</Path>
+      </Category>
+    </Files>
+    <Device Series="RL78">RAJ240100(FGIC)</Device>
+    <BuildOptions Name="CC-RL" Version="V1.12.01">
+      <BuildMode Name="DefaultBuild" Active="True">
+        <LinkOrder>
+          <Path>DefaultBuild\ad.obj</Path>
+          <Path>DefaultBuild\afe.obj</Path>
+          <Path>DefaultBuild\afetimer.obj</Path>
+          <Path>DefaultBuild\ci.obj</Path>
+          <Path>DefaultBuild\fet.obj</Path>
+          <Path>DefaultBuild\hvp.obj</Path>
+          <Path>DefaultBuild\oc.obj</Path>
+          <Path>DefaultBuild\ouv.obj</Path>
+          <Path>DefaultBuild\pwr.obj</Path>
+          <Path>DefaultBuild\trim.obj</Path>
+          <Path>DefaultBuild\wkup.obj</Path>
+          <Path>DefaultBuild\mcu.obj</Path>
+          <Path>DefaultBuild\cb.obj</Path>
+        </LinkOrder>
+        <CommonOptions>
+          <IncludePathForC>src</IncludePathForC>
+          <IncludePathForC>src\AFE</IncludePathForC>
+          <IncludePathForC>src\MCU</IncludePathForC>
+          <IncludePathForC>src\Device\RAJ240100\</IncludePathForC>
+        </CommonOptions>
+        <GeneralOptions>
+          <SimultaneouslyBuild>False</SimultaneouslyBuild>
+        </GeneralOptions>
+        <CompileOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-g_line</Option>
+          <Option>-I src</Option>
+          <Option>-I src\AFE</Option>
+          <Option>-I src\MCU</Option>
+          <Option>-I src\Device\RAJ240100\</Option>
+          <Option>-c</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-c</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-FOrm=Library=U</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.lib</Option>
+          <Option>-NOMessage</Option>
+          <Option>-MEMory=High</Option>
+          <Option>-NOLOgo</Option>
+          <Option>-EXIt</Option>
+        </LinkOptions>
+        <IOHeaderGenerationOptions>
+          <Option>-df=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-o=%ProjectDir%\iodefine.h</Option>
+          <Option>-f</Option>
+          <UpdateIOMode>None</UpdateIOMode>
+        </IOHeaderGenerationOptions>
+      </BuildMode>
+    </BuildOptions>
+  </Project>
+</MicomToolCommonProjectFile>
