@@ -42,6 +42,8 @@
 #include "wkup_mapping.h"
 #include "device_register.h"
 
+/* Module overview: charger/discharger wake-up source configuration and wake interrupt control. */
+
 
 
 // - Declare Internal function -------------------------------------------------

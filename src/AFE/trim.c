@@ -42,6 +42,8 @@
 #include "device_trimming.h"
 #include "device_register.h"
 
+/* Module overview: trimming-sequence write/verify flow for analog calibration data. */
+
 // - Declare Internal function -------------------------------------------------
 
 // - Internal constant ---------------------------------------------------------

@@ -42,6 +42,8 @@
 #include  "pwr_mapping.h"
 #include  "device_register.h"
 
+/* Module overview: AFE power/clock mode transitions and reset-sequence control. */
+
 
 // - Declare Internal function -------------------------------------------------
 

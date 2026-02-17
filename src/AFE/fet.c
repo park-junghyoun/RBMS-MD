@@ -42,6 +42,8 @@
 #include "fet_mapping.h"
 #include "device_register.h"
 
+/* Module overview: charge/discharge FET initialization and on/off state control. */
+
 // - Declare Internal function -------------------------------------------------
 
 // - Internal constant ---------------------------------------------------------

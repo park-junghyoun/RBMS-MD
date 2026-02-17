@@ -40,6 +40,8 @@
 #include "define.h"
 #include "afe.h"
 
+/* Module overview: over/under-voltage configuration and threshold management helpers. */
+
 // - Declare Internal function -------------------------------------------------
 
 // - Internal constant ---------------------------------------------------------

@@ -42,6 +42,8 @@
 #include "cb_mapping.h"
 #include "device_register.h"
 
+/* Module overview: cell-balancing control register setup and runtime balancing updates. */
+
 
 // - Declare Internal function -------------------------------------------------
 

@@ -41,6 +41,8 @@
 #include "afe.h"
 #include "mcu_mapping.h"
 
+/* Module overview: MCU pin/clock initialization and basic timing utility functions. */
+
 // - Declare Internal function -------------------------------------------------
 static U8 mcu_get_clock(void);
 static void mcu_tm03_100usWaitTime(void);

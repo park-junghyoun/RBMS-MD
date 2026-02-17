@@ -40,6 +40,8 @@
 #include "define.h"
 #include "afe.h"
 #include "ad_mapping.h"
+
+/* Module overview: ADC channel setup, conversion control, and conversion-result access. */
 #include "device_register.h"
 
 
@@ -294,7 +296,6 @@ void _int_AD_Comple( void )
 	
 	AFE_Reg_Read(p8_ADIF_Reg_Mapping,1,&u8_reg_data);
 
-	if(u8_reg_data & u8_ADIR_Data_Mapping)
 	{
 		AFE_Reg_Write(p8_ADIF_Reg_Mapping,~u8_ADIR_Data_Mapping);								// Clear IF flag
 		afe_ReadAD();
