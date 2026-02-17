@@ -93,6 +93,12 @@ void _int_AfeTimer(void)
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
+/*******************************************************************************
+* Function Name: AFE_TimerA_Control
+* Description  : Enable or disable AFE Timer A operation.
+* Arguments    : u8_con : ON/OFF
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_TimerA_Control(U8 u8_con)
 {
 	if(u8_con > ON)
@@ -181,6 +187,12 @@ void afe_TimerB_5ms_Init( void )
 * Description  : Initialize and start 1sec timer by using AFE Timer B form LOCO.
 * Arguments    : void
 * Return Value : void
+*******************************************************************************/
+/*******************************************************************************
+* Function Name: AFE_TimerB_Control
+* Description  : Enable or disable AFE Timer B operation.
+* Arguments    : u8_con : ON/OFF
+* Return Value : U8 : TRUE/FALSE
 *******************************************************************************/
 U8 AFE_TimerB_Control(U8 u8_con)
 {

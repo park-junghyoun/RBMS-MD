@@ -62,6 +62,12 @@ static void afe_Abn_WDT_Overflow_Chk(void);
 // - Internal variable ---------------------------------------------------------
 
 // - Define function -----------------------------------------------------------
+/*******************************************************************************
+* Function Name: AFE_Abn_OC_Init
+* Description  : Initialize abnormal over-current blocks (SC/DOC/COC).
+* Arguments    : config : HW1 OC configuration
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_Abn_OC_Init(st_afe_hw1_config_t config)
 {
 	U8 init_seq = TRUE;
@@ -101,6 +107,12 @@ U8 AFE_Abn_OC_Init(st_afe_hw1_config_t config)
 	
 	return init_seq;
 }
+/*******************************************************************************
+* Function Name: AFE_Abn_WDT_Init
+* Description  : Configure abnormal watchdog detection behavior.
+* Arguments    : u8_wdt_config : watchdog mode
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_Abn_WDT_Init(U8 u8_wdt_config)
 {
 	if(u8_wdt_config > 3)

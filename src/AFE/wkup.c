@@ -69,6 +69,12 @@ static U8 afe_WKUP_Pon_Setting(U8 u8_pon_en);
 * Arguments    : void
 * Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
 *******************************************************************************/
+/*******************************************************************************
+* Function Name: AFE_WKUP_Init
+* Description  : Initialize wake-up block using charger/discharger wake sources.
+* Arguments    : st_afe_wakeup_config : wake configuration set
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_WKUP_Init(st_afe_hw2_config_t st_afe_wakeup_config)
 {
 	U8 init_seq = TRUE;
@@ -209,6 +215,12 @@ U8 afe_WKUP_Setting(st_afe_wkup_config_t st_wkup_chg_setting, st_afe_wkup_config
 * Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
 *******************************************************************************/
 
+/*******************************************************************************
+* Function Name: AFE_WKUP_Dsg_Control
+* Description  : Enable/disable discharge-side wake-up detection.
+* Arguments    : u8_con : ON/OFF
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_WKUP_Dsg_Control(U8 u8_con)
 {
 	U8 u8_seq_check  = TRUE;
@@ -235,6 +247,12 @@ U8 AFE_WKUP_Dsg_Control(U8 u8_con)
 
 	return u8_seq_check;
 }
+/*******************************************************************************
+* Function Name: AFE_WKUP_Chg_Control
+* Description  : Enable/disable charge-side wake-up detection.
+* Arguments    : u8_con : ON/OFF
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_WKUP_Chg_Control(U8 u8_con)
 {
 	U8 u8_seq_check  = TRUE;
@@ -383,6 +401,12 @@ void afe_WKUP_Get(void)
 * Description  : Get VCHG pin status
 * Arguments    : void
 * Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
+*******************************************************************************/
+/*******************************************************************************
+* Function Name: _int_WakeUpDtct
+* Description  : Wake-up detection ISR handler.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void _int_WakeUpDtct(void)
 {

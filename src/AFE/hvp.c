@@ -58,6 +58,12 @@ U8 e_hvp_mode_setting[E_AFE_HVP_NUM];
 * Arguments    : void
 * Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
 *******************************************************************************/
+/*******************************************************************************
+* Function Name: AFE_HVP_Init
+* Description  : Initialize HVP pins to default output mode.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void AFE_HVP_Init(void)
 {
 	U8 u8_index = 0;
@@ -68,6 +74,12 @@ void AFE_HVP_Init(void)
 	}
 }
 
+/*******************************************************************************
+* Function Name: AFE_HVP_Mode_Control
+* Description  : Set mode (input/output type) for selected HVP pin.
+* Arguments    : e_hvio/e_mode : HVP index and mode
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_HVP_Mode_Control(E_AFE_HVIO_ITEM e_hvio, E_AFE_HVP_MODE_ITEM e_mode)
 {
 	U8 u8_pmhv_data = 0;
@@ -116,6 +128,12 @@ U8 AFE_HVP_Mode_Control(E_AFE_HVIO_ITEM e_hvio, E_AFE_HVP_MODE_ITEM e_mode)
 	return TRUE;
 }
 
+/*******************************************************************************
+* Function Name: AFE_HVP_Output_Control
+* Description  : Drive selected HVP output state when configured as output.
+* Arguments    : e_hvio : HVP index, u8_con : ON/OFF
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_HVP_Output_Control(E_AFE_HVIO_ITEM e_hvio, U8 u8_con)
 {
 	U8 u8_phv_data = 0;
@@ -150,6 +168,12 @@ U8 AFE_HVP_Output_Control(E_AFE_HVIO_ITEM e_hvio, U8 u8_con)
 	return TRUE;
 }
 
+/*******************************************************************************
+* Function Name: AFE_HVP_Get_State
+* Description  : Get cached HVP mode/output configuration state.
+* Arguments    : e_hvio : HVP index
+* Return Value : U8 : State value
+*******************************************************************************/
 U8 AFE_HVP_Get_State(E_AFE_HVIO_ITEM e_hvio)
 {
 	U8 u8_phv_data = 0;

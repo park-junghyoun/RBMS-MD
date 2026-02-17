@@ -41,9 +41,21 @@
 static volatile U32 u32_Pending_bitmap = 0;
 /* Software overflow flag when duplicated event bits are queued before handling. */
 static volatile U8 u8_Sw_Ovf = 0;
+/*******************************************************************************
+* Function Name: Stop_Mode
+* Description  : Enter STOP mode when no pending software events exist.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void Stop_Mode(void);
 
 /* ===== ISR-safe callback ===== */
+/*******************************************************************************
+* Function Name: R_BMS_afe_callback
+* Description  : ISR callback that queues hardware events into software pending bitmap.
+* Arguments    : p_args : event callback arguments
+* Return Value : void
+*******************************************************************************/
 void R_BMS_afe_callback(st_afe_callback_args_t *p_args)
 {
 	MCU_PSW_PUSH();
@@ -204,6 +216,12 @@ void R_BMS_afe_event_process(void)
 }
 
 /* ===== Main-loop event handler ===== */
+/*******************************************************************************
+* Function Name: R_BMS_afe_event_handler
+* Description  : Main-loop dispatcher for pending events and overflow flags.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void R_BMS_afe_event_handler(void)
 {
 	U32 u32_ovf_flg = 0;
@@ -237,6 +255,12 @@ void R_BMS_afe_load_config(st_afe_config_t *cfg)
 
 }
 
+/*******************************************************************************
+* Function Name: R_BMS_afe_init
+* Description  : Load default AFE config and initialize the AFE driver.
+* Arguments    : void
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 R_BMS_afe_init(void)
 {
 	st_afe_init_result_t u8_init_result= {0,};

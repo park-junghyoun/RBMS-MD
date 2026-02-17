@@ -52,6 +52,12 @@
 // - Internal variable ---------------------------------------------------------
 static U8 u8_pwr_state;
 // - Define function -----------------------------------------------------------
+/*******************************************************************************
+* Function Name: AFE_PWR_Control
+* Description  : Switch AFE clock/power mode between normal and low-power settings.
+* Arguments    : e_pwr_con : Target clock mode
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_PWR_Control( E_AFE_CLOCK_ITEM e_pwr_con )
 {
 	U8 u8_reg_data = 0;
@@ -101,15 +107,33 @@ U8 AFE_PWR_Control( E_AFE_CLOCK_ITEM e_pwr_con )
 	return u8_reg_check;
 }
 
+/*******************************************************************************
+* Function Name: AFE_PWR_Get_State
+* Description  : Get cached AFE power-control state.
+* Arguments    : void
+* Return Value : U8 : Current power state
+*******************************************************************************/
 U8 AFE_PWR_Get_State(void)
 {
 	return u8_pwr_state;
 }
 
+/*******************************************************************************
+* Function Name: AFE_PWR_PowerDown
+* Description  : Request AFE power-down sequence.
+* Arguments    : void
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_PWR_PowerDown(void)
 {
 	return TRUE;
 }
+/*******************************************************************************
+* Function Name: AFE_PWR_Reset
+* Description  : Reset AFE block and verify reset completion.
+* Arguments    : void
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_PWR_Reset(void)
 {
 	U8 u8_afe_seq = 0;

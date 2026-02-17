@@ -65,6 +65,12 @@ static E_AFE_AD_ITEM e_ad_run_mode = E_AD_MODE_NUM;
 static U_AD_ADC u_ad_adc_raw[U8_AD_MEA_SIZE];
 
 // - Define function -----------------------------------------------------------
+/*******************************************************************************
+* Function Name: AFE_AD_Init
+* Description  : Initialize ADC block and apply user ADC configuration.
+* Arguments    : config : ADC enable/time configuration
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_AD_Init( st_afe_adc_config_t config )
 {
 	U8 u8_reg_check = TRUE;
@@ -95,6 +101,12 @@ U8 AFE_AD_Init( st_afe_adc_config_t config )
 *	              : E_AFE_AD_TIME : AD conversion time
 * Return Value : void
 *******************************************************************************/
+/*******************************************************************************
+* Function Name: AFE_AD_Setting
+* Description  : Program AD enable map and conversion timing registers.
+* Arguments    : config : ADC enable/time configuration
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_AD_Setting( st_afe_adc_config_t config )
 {
 	U64 u64_bit_mask = 0;
@@ -109,7 +121,9 @@ U8 AFE_AD_Setting( st_afe_adc_config_t config )
 	for(u8_mode_index = 0; u8_mode_index <E_AD_MODE_NUM; u8_mode_index++)
 	{
 		// Fleid mask
-		u64_bit_mask = (1 << (u8_Mode_Real_Size[u8_mode_index]+1)) -1;
+		u64_bit_mask = (1 << (u8_Mode_Real_Size[u8_mode_index]+1
+)) -1;
+)) -1;
 		// Fleid output
 		u8_ad_enable_item[u8_mode_index] = (config.u64_adc_enable >> (U8_AD_MEA_SIZE *u8_mode_index)) & u64_bit_mask;
 		//If the ADC you want to measure is not empty
@@ -139,6 +153,24 @@ U8 AFE_AD_Setting( st_afe_adc_config_t config )
 	}
 	if(config.u8_adc_time > U8_AD_TIME_MAX)
 	{
+/*******************************************************************************
+* Function Name: AFE_AD_Start_SW_Trigger
+* Description  : Start ADC software-trigger conversion sequence.
+* Arguments    : void
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
+/*******************************************************************************
+* Function Name: AFE_AD_Stop_SW_Trigger
+* Description  : Stop ADC software-trigger conversion sequence.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
+/*******************************************************************************
+* Function Name: AFE_AD_Get_AdData
+* Description  : Read last converted ADC value for selected measurement item.
+* Arguments    : u8_ad_num : Measurement item index
+* Return Value : U16 : Converted raw ADC value
+*******************************************************************************/
 		u8_ad_limit_time = U8_AD_TIME_MAX;
 	}
 	else

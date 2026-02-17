@@ -53,6 +53,12 @@
 U8 u8_cb_item[U8_CB_REG_ITEM] ={0,0};
 
 // - Define function -----------------------------------------------------------
+/*******************************************************************************
+* Function Name: AFE_CB_Stop
+* Description  : Disable all cell-balancing channels.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void AFE_CB_Stop( void )
 {
 	U8 u8_cb_reg = 0;
@@ -65,6 +71,12 @@ void AFE_CB_Stop( void )
 
 }
 
+/*******************************************************************************
+* Function Name: AFE_CB_Start
+* Description  : Apply cached balancing mask and enable balancing outputs.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void AFE_CB_Start( void )
 {
 	U8 u8_cb_reg = 0;
@@ -75,6 +87,12 @@ void AFE_CB_Start( void )
 	}
 }
 
+/*******************************************************************************
+* Function Name: AFE_CB_Control
+* Description  : Update balancing target bitmask and write control registers.
+* Arguments    : u16_balancing : Cell balancing bitmask
+* Return Value : void
+*******************************************************************************/
 void AFE_CB_Control( U16 u16_balancing )
 {
 	U16 u16_index = 0;
