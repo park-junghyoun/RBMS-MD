@@ -41,6 +41,8 @@
 #include "afe.h"
 #include "mcu_mapping.h"
 
+/* Module overview: MCU pin/clock initialization and basic timing utility functions. */
+
 // - Declare Internal function -------------------------------------------------
 static U8 mcu_get_clock(void);
 static void mcu_tm03_100usWaitTime(void);
@@ -50,6 +52,12 @@ static void mcu_tm03_100usWaitTime(void);
 
 
 // - Define function -----------------------------------------------------------
+/*******************************************************************************
+* Function Name: MCU_Pin_Init
+* Description  : Initialize MCU-side GPIO/peripheral pin configuration sequence.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void MCU_Pin_Init(void)
 {
 	U8 u8_index = 0;
@@ -59,6 +67,12 @@ void MCU_Pin_Init(void)
 		*p8_MCU_Pin_Sequence_Reg_Mapping[u8_index] = u8_MCU_Pin_Sequence_Data_Mapping[u8_index];
 	}
 }
+/*******************************************************************************
+* Function Name: MCU_AFE_Pin_Init
+* Description  : Initialize AFE-related MCU pin configuration sequence.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void MCU_AFE_Pin_Init(void)
 {
 	U8 u8_index = 0;
@@ -127,6 +141,12 @@ void mcu_tm03_100usWaitTime(void)
 	}
 }
 
+/*******************************************************************************
+* Function Name: MCU_100us_WaitTime
+* Description  : Busy-wait delay routine with 100us unit ticks.
+* Arguments    : u8_n00us_wait : number of 100us ticks
+* Return Value : void
+*******************************************************************************/
 void MCU_100us_WaitTime(U8 u8_n00us_wait)
 {
 	U8 u8_index = 0;

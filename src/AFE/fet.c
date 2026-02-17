@@ -42,6 +42,8 @@
 #include "fet_mapping.h"
 #include "device_register.h"
 
+/* Module overview: charge/discharge FET initialization and on/off state control. */
+
 // - Declare Internal function -------------------------------------------------
 
 // - Internal constant ---------------------------------------------------------
@@ -61,6 +63,12 @@ void AFE_FET_Init( void )
 	AFE_Reg_Write(p8_DFOCON_Reg_Mapping,u8_DFOCON_Data_Mapping);
 
 }
+/*******************************************************************************
+* Function Name: AFE_FET_Set
+* Description  : Set C-FET and D-FET state with MAINTAIN support.
+* Arguments    : u8_cfet/u8_dfet : ON/OFF/MAINTAIN
+* Return Value : void
+*******************************************************************************/
 void AFE_FET_Set( U8 u8_cfet, U8 u8_dfet)
 {
 	U8 u8_fetst = 0;

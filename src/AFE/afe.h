@@ -43,6 +43,8 @@
 #include "define.h"
 #include "device_register.h"
 
+/* Public AFE driver interface: enums, configs, callbacks, and exported APIs. */
+
 #ifdef	_AFE_C
 #define		GLOBAL
 #else

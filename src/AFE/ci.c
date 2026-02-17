@@ -42,6 +42,8 @@
 #include "ci_mapping.h"
 #include "device_register.h"
 
+/* Module overview: coulomb-counter (current integration) setup, ISR handling, and data reads. */
+
 
 // - Declare Internal function -------------------------------------------------
 #pragma interrupt _int_CI_Comple(vect=U16_INTCC_VECTOR_MAPPING)		// Current Integration complete
@@ -72,6 +74,12 @@ void AFE_CI_Init( void )
 	AFE_Reg_Write(p8_CCMK_Reg_Mapping,u8_reg_data | u8_CCMK_Data_Mapping);
 }
 
+/*******************************************************************************
+* Function Name: _int_CI_Comple
+* Description  : Current integration completion ISR handler.
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void _int_CI_Comple( void )
 {
 	U8 u8_reg_data;
@@ -101,6 +109,12 @@ void _int_CI_Comple( void )
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
+/*******************************************************************************
+* Function Name: AFE_CI_Start
+* Description  : Start current integration measurement.
+* Arguments    : void
+* Return Value : U8 : TRUE/FALSE
+*******************************************************************************/
 U8 AFE_CI_Start( void )
 {
 	if(f_AFE_CC_Run == ON)
@@ -125,6 +139,12 @@ void AFE_CI_Stop( void )
 	AFE_Reg_Write(p_CCEN_Reg_Mapping,u8_CCEN_Data_Mapping[OFF]);
 }
 
+/*******************************************************************************
+* Function Name: AFE_CI_Get_AdData
+* Description  : Get latest current-integration raw count value.
+* Arguments    : void
+* Return Value : U32 : Raw integration result
+*******************************************************************************/
 U32 AFE_CI_Get_AdData( void )
 {
 	return u_ci_adc_raw.data;
