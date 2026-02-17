@@ -52,15 +52,16 @@
 
 // - Define function -----------------------------------------------------------
 /*******************************************************************************
-* Function Name: AFE_SetupFET
-* Description  : setup FET
-* Arguments    : U8 : FET ON/OFF bit flag
+* Function Name: AFE_FET_Init
+* Description  : Initialize FET control configuration registers.
+* Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_FET_Init( void )
+void AFE_FET_Init(void)
 {
+	/* Program charge/discharge FET operation defaults from mapping tables. */
 	AFE_Reg_Write(p8_CFOCON_Reg_Mapping,	u8_CFOCON_Data_Mapping);
-	AFE_Reg_Write(p8_DFOCON_Reg_Mapping,u8_DFOCON_Data_Mapping);
+	AFE_Reg_Write(p8_DFOCON_Reg_Mapping, u8_DFOCON_Data_Mapping);
 
 }
 /*******************************************************************************
@@ -69,14 +70,16 @@ void AFE_FET_Init( void )
 * Arguments    : u8_cfet/u8_dfet : ON/OFF/MAINTAIN
 * Return Value : void
 *******************************************************************************/
-void AFE_FET_Set( U8 u8_cfet, U8 u8_dfet)
+void AFE_FET_Set(U8 u8_cfet, U8 u8_dfet)
 {
 	U8 u8_fetst = 0;
 	U8 u8_fetcon = 0;
 	
-	AFE_Reg_Read(p8_FCON_Reg_Mapping,1,&u8_fetst);
+	/* Read current state first so MAINTAIN can preserve selected bits. */
+	AFE_Reg_Read(p8_FCON_Reg_Mapping, 1, &u8_fetst);
 	
-	if(u8_dfet == OFF)
+	/* Build new D-FET control bits based on requested policy. */
+	if (u8_dfet == OFF)
 	{
 		u8_fetcon |= u8_FET_Data_Mapping[E_FET_D][OFF];
 	}else if (u8_dfet == ON)
@@ -89,7 +92,8 @@ void AFE_FET_Set( U8 u8_cfet, U8 u8_dfet)
 	}
 
 	
-	if(u8_cfet == OFF)
+	/* Build new C-FET control bits based on requested policy. */
+	if (u8_cfet == OFF)
 	{
 		u8_fetcon |= u8_FET_Data_Mapping[E_FET_C][OFF];
 	}else if (u8_cfet == ON)
@@ -102,14 +106,14 @@ void AFE_FET_Set( U8 u8_cfet, U8 u8_dfet)
 	}
 
 
-	// - Setup FET
+	/* Commit both FET decisions in one write to avoid transient mismatch. */
 	AFE_Reg_Write(p8_FCON_Reg_Mapping, u8_fetcon);
 
 }
 
 
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
+* Function Name: AFE_FET_Get
 * Description  : Get FET status
 * Arguments    : void
 * Return Value : U8 : FET ON/OFF bit flag
@@ -118,7 +122,8 @@ U8 AFE_FET_Get(void)
 {
 	U8 u8_Ret = 0;
 	
-	AFE_Reg_Read(p8_FCON_Reg_Mapping,1,&u8_Ret);
+	/* Return raw FCON state so caller can decode per-FET status bits. */
+	AFE_Reg_Read(p8_FCON_Reg_Mapping, 1, &u8_Ret);
 
 	return u8_Ret;
 }

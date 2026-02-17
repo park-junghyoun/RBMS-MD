@@ -27,8 +27,8 @@
 
 /*""FILE COMMENT""*******************************************************
 * System Name	: RAA241xxx RBMS-P Firmware for Renesas
-* File Name		: pwr.c
-* Contents		: RAA241xxx AFE Operation Mode control
+* File Name		: cb.c
+* Contents		: RAA241xxx Cell balancing control
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -50,7 +50,8 @@
 // - Internal constant ---------------------------------------------------------
 
 // - Internal variable ---------------------------------------------------------
-U8 u8_cb_item[U8_CB_REG_ITEM] ={0,0};
+/* Cached CBEN register image; reused when stopping/starting balancing. */
+U8 u8_cb_item[U8_CB_REG_ITEM] = {0, 0};
 
 // - Define function -----------------------------------------------------------
 /*******************************************************************************
@@ -59,14 +60,15 @@ U8 u8_cb_item[U8_CB_REG_ITEM] ={0,0};
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_CB_Stop( void )
+void AFE_CB_Stop(void)
 {
 	U8 u8_cb_reg = 0;
 	
-	for(u8_cb_reg = 0; u8_cb_reg < U8_CB_REG_ITEM; u8_cb_reg++)
+	for (u8_cb_reg = 0; u8_cb_reg < U8_CB_REG_ITEM; u8_cb_reg++)
 	{
+		/* Clear software cache and hardware enables together. */
 		u8_cb_item[u8_cb_reg] = 0x00;
-		AFE_Reg_Write(p_CBEN_Reg_Mapping[u8_cb_reg],u8_cb_item[u8_cb_reg]);
+		AFE_Reg_Write(p_CBEN_Reg_Mapping[u8_cb_reg], u8_cb_item[u8_cb_reg]);
 	}
 
 }
@@ -77,13 +79,14 @@ void AFE_CB_Stop( void )
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_CB_Start( void )
+void AFE_CB_Start(void)
 {
 	U8 u8_cb_reg = 0;
 	
-	for(u8_cb_reg = 0; u8_cb_reg < U8_CB_REG_ITEM; u8_cb_reg++)
+	for (u8_cb_reg = 0; u8_cb_reg < U8_CB_REG_ITEM; u8_cb_reg++)
 	{
-		AFE_Reg_Write(p_CBEN_Reg_Mapping[u8_cb_reg],u8_cb_item[u8_cb_reg]);
+		/* Restore cached channel-enable masks to hardware registers. */
+		AFE_Reg_Write(p_CBEN_Reg_Mapping[u8_cb_reg], u8_cb_item[u8_cb_reg]);
 	}
 }
 
@@ -93,17 +96,19 @@ void AFE_CB_Start( void )
 * Arguments    : u16_balancing : Cell balancing bitmask
 * Return Value : void
 *******************************************************************************/
-void AFE_CB_Control( U16 u16_balancing )
+void AFE_CB_Control(U16 u16_balancing)
 {
 	U16 u16_index = 0;
 	U8 u8_cb_reg = 0;
 	
-	for(u16_index = 0; u16_index < U8_CB_MAXIMUM_CELL_NUM; u16_index++)
+	/* Convert per-cell bitmask into CBEN register-bank image. */
+	for (u16_index = 0; u16_index < U8_CB_MAXIMUM_CELL_NUM; u16_index++)
 	{
-		if(E_CB1_ITEM_NUM <= u16_index)
+		if (E_CB1_ITEM_NUM <= u16_index)
 		{
 			u8_cb_reg = 1;
 		}
+		/* Shift target bit into the current CB register byte. */
 		u8_cb_item[u8_cb_reg] |= (u16_balancing >> u16_index);
 	}
 }
