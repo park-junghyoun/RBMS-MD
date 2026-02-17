@@ -53,10 +53,11 @@
 // - Define function -----------------------------------------------------------
 /*******************************************************************************
 * Function Name: AFE_Trimming_Setting
-* Description  : Initialize AFE
+* Description  : Program and verify AFE trimming registers.
 * Arguments    : void
-* Return Value : void
+* Return Value : U8 : TRUE if trimming write/readback verification succeeds
 *******************************************************************************/
+/* Debug-visible scratch values used while writing and verifying trim bytes. */
 U8 data;
 U8 read_data;
 U8 AFE_Trimming_Setting(void)
@@ -65,30 +66,33 @@ U8 AFE_Trimming_Setting(void)
 	U8 u8_reg_check = TRUE;
 	U8 u8_index = 0;
 
+	/* Window2 exposes trim registers and must be selected before programming. */
 	u8_seq_check = AFE_WindowTo(E_AFE_WINDOW2);
 
-	if(u8_seq_check == FALSE)
+	if (u8_seq_check == FALSE)
 	{
 		return u8_seq_check;
 	}
 	
-	for(u8_index =0; u8_index < U8_TRIM_SEQUENCE_NUMBER; u8_index++)
+	for (u8_index = 0; u8_index < U8_TRIM_SEQUENCE_NUMBER; u8_index++)
 	{
+		/* Write one trim value and immediately read back for integrity verification. */
 		data = *p8_Trim_Sequence_Data_Mapping[u8_index];
 		AFE_Reg_Write(p8_Trim_Sequence_Reg_Mapping[u8_index], data);
-		AFE_Reg_Read(p8_Trim_Sequence_Reg_Mapping[u8_index],1, &read_data);
+		AFE_Reg_Read(p8_Trim_Sequence_Reg_Mapping[u8_index], 1, &read_data);
 		if (data != read_data)
 		{
+			/* Abort on first mismatch so caller can treat trimming as failed. */
 			u8_reg_check = FALSE;
 			break;
 		}
 	}
+	/* Always return to Window0 so subsequent API calls see the normal map. */
 	u8_seq_check = AFE_WindowTo(E_AFE_WINDOW0);
-	if(u8_seq_check == FALSE)
+	if (u8_seq_check == FALSE)
 	{
 		return u8_seq_check;
 	}
 	
 	return u8_reg_check;
 }
-

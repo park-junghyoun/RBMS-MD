@@ -27,8 +27,8 @@
 
 /*""FILE COMMENT""*******************************************************
 * System Name	: RAA241xxx RBMS-P Firmware for Renesas
-* File Name		: fet.c
-* Contents		: RAA241xxx Charge/Discharge MOSFET control
+* File Name		: mcu.c
+* Contents		: MCU pin/clock initialization and delay helpers
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -61,9 +61,10 @@ static void mcu_tm03_100usWaitTime(void);
 void MCU_Pin_Init(void)
 {
 	U8 u8_index = 0;
-	
-	for(u8_index =0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
+
+	for (u8_index = 0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
 	{
+		/* Apply board-specific pin setup entries in documented order. */
 		*p8_MCU_Pin_Sequence_Reg_Mapping[u8_index] = u8_MCU_Pin_Sequence_Data_Mapping[u8_index];
 	}
 }
@@ -76,9 +77,10 @@ void MCU_Pin_Init(void)
 void MCU_AFE_Pin_Init(void)
 {
 	U8 u8_index = 0;
-	
-	for(u8_index =0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
+
+	for (u8_index = 0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
 	{
+		/* Configure AFE-connected pins (IRQ, SPI/serial, wake lines, etc.). */
 		*p8_AFE_Pin_Sequence_Reg_Mapping[u8_index] = u8_AFE_Pin_Sequence_Data_Mapping[u8_index];
 	}
 
@@ -87,18 +89,18 @@ U8 mcu_get_clock(void)
 {
 	U8 u8_clock = 0;
 	U8 u8_index = 0;
-	
+
 	u8_clock = P8_HOCO_CLOCK;
 	u8_clock &= U8_HOCO_CLOCK_MASK;
 
-	for(u8_index = 0; u8_index <=E_MCU_CLOCK_ITEM_NUM; u8_index++)
+	for (u8_index = 0; u8_index <= E_MCU_CLOCK_ITEM_NUM; u8_index++)
 	{
-		if(u8_clock == u8_MCU_CLOCK_Data_Mapping[u8_index])
+		if (u8_clock == u8_MCU_CLOCK_Data_Mapping[u8_index])
 		{
 			return u8_index;
 		}
 	}
-	
+
 	return 0xFF;
 }
 
@@ -106,15 +108,17 @@ void mcu_tm03_100usWaitTime(void)
 {
 	U8 u8_tau0_en = OFF;
 	U8 u8_clock = 0;
-	
-	if(PER0 & U8_PER0_TAU0EN_MASK)
+
+	if (PER0 & U8_PER0_TAU0EN_MASK)
 	{
+		/* Preserve pre-existing TAU0 state to avoid side effects. */
 		u8_tau0_en = ON;
 	}else
 	{
+		/* Enable timer unit only for the duration of this delay operation. */
 		TAU0EN = 1;
 	}
-	u8_clock =mcu_get_clock();
+	u8_clock = mcu_get_clock();
 	TPS0 &= U16_TAU_CKm3_MASK;
 	TPS0 |= U16_TAU_CKm3_FCLK_256;			// CKm3 Setting
 
@@ -126,17 +130,18 @@ void mcu_tm03_100usWaitTime(void)
 
 	//TMR03 = TMR_CKm3_8Bit;					// Select CKm3, 8Bit
 	TMR03 = U16_TAU_CKm3_16BIT;				// Select CKm3, 16Bit
-	
+
 	TDR03 = u8_MCU_TAU_TDR03_Data_Mapping[u8_clock];
 
-	TS0L_bit.no3 = 1;								// Start TM03
-	while( TMIF03 == 0 ) ;						// Wait for interrupt
+	TS0L_bit.no3 = 1;								// Start TM03 one-shot interval.
+	while (TMIF03 == 0) ;						// Wait for interrupt
 	TMIF03 = 0;								// Clear INTTM03 interrupt flag
 
-	TT0L_bit.no3 = 1;								// Stop TM03
-	
-	if(u8_tau0_en == OFF)
+	TT0L_bit.no3 = 1;								// Stop TM03 after expiration.
+
+	if (u8_tau0_en == OFF)
 	{
+		/* Restore original peripheral enable state. */
 		TAU0EN = 0;
 	}
 }
@@ -150,9 +155,9 @@ void mcu_tm03_100usWaitTime(void)
 void MCU_100us_WaitTime(U8 u8_n00us_wait)
 {
 	U8 u8_index = 0;
-	
-	for(u8_index = 0; u8_index < u8_n00us_wait; u8_index++)
-	{	
+
+	for (u8_index = 0; u8_index < u8_n00us_wait; u8_index++)
+	{
 		mcu_tm03_100usWaitTime();
-	}	
+	}
 }
