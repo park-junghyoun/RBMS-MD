@@ -51,10 +51,10 @@ void afe_CI_Overflow_Chk(void);
 typedef union {
 	U32		data;				// ADC raw count (e.g., 18-bit stored in 32-bit)
 	U8		buffer[sizeof(U32)];
-}UNION_CI_ADC;
+}U_CI_ADC;
 
 // - Internal variable ---------------------------------------------------------
-static UNION_CI_ADC u_ci_adc_raw;
+static U_CI_ADC u_ci_adc_raw;
 // - Define function -----------------------------------------------------------
 /*******************************************************************************
 * Function Name: _int_CurrentIntegComp
@@ -62,14 +62,17 @@ static UNION_CI_ADC u_ci_adc_raw;
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_CI_Init(void)
+void AFE_CI_Init( void )
 {
 	U8 u8_reg_data = 0;
-
+	
+	AFE_CI_Stop();
+	AFE_Reg_Write(p8_CCIF_Reg_Mapping,~(u8_CCIR_data_Mapping[E_CC_FST_IR]|u8_CCIR_data_Mapping[E_CC_IR]));
 	AFE_Reg_Read(p8_CCMK_Reg_Mapping,1,&u8_reg_data);
 	AFE_Reg_Write(p8_CCMK_Reg_Mapping,u8_reg_data | u8_CCMK_Data_Mapping);
 }
-void _int_CI_Comple(void)
+
+void _int_CI_Comple( void )
 {
 	U8 u8_reg_data;
 	
@@ -85,10 +88,9 @@ void _int_CI_Comple(void)
 	{
 		AFE_Reg_Write(p8_CCIF_Reg_Mapping,~u8_CCIR_data_Mapping[E_CC_IR]);
 		AFE_Reg_Read(p8_CCR_Reg_Mapping,3,u_ci_adc_raw.buffer);							// Get Current Integ count
-		f_AFE_CC_Int = ON;													// Set Curr integ. flag
+		AFE_DispatchFrom_ISR(E_AFE_EVENT_CC);
+		afe_CI_Overflow_Chk();
 	}
-	_INT_AFE_CI_Callback(u32_AFE_Int_Flg,u32_AFE_IntErr_Flg);
-	afe_CI_Overflow_Chk();
 	
 	f_AFE_Int_Opr = OFF;
 }
@@ -99,9 +101,16 @@ void _int_CI_Comple(void)
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_CI_StartCC(void)
+U8 AFE_CI_Start( void )
 {
+	if(f_AFE_CC_Run == ON)
+	{
+		return FALSE;
+	}
 	AFE_Reg_Write(p_CCEN_Reg_Mapping,u8_CCEN_Data_Mapping[ON]);
+	f_AFE_CC_Run = ON;
+
+	return TRUE;
 }
 
 
@@ -111,17 +120,17 @@ void AFE_CI_StartCC(void)
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_CI_StopCC(void)
+void AFE_CI_Stop( void )
 {
 	AFE_Reg_Write(p_CCEN_Reg_Mapping,u8_CCEN_Data_Mapping[OFF]);
 }
 
-U32 AFE_CI_GetADC(void)
+U32 AFE_CI_Get_AdData( void )
 {
 	return u_ci_adc_raw.data;
 }
 
-void afe_CI_Overflow_Chk(void)
+void afe_CI_Overflow_Chk( void )
 {
 	U8 u8_reg_data = 0;
 	

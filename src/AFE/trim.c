@@ -55,15 +55,38 @@
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_Trimming_Setting(void)
+U8 data;
+U8 read_data;
+U8 AFE_Trimming_Setting(void)
 {
+	U8 u8_seq_check = TRUE;
+	U8 u8_reg_check = TRUE;
 	U8 u8_index = 0;
 
-	AFE_WindowTo(WINDOW2);
-	for(u8_index =0; u8_index < TRIM_SEQUENCE_NUMBER; u8_index++)
+	u8_seq_check = AFE_WindowTo(E_AFE_WINDOW2);
+
+	if(u8_seq_check == FALSE)
 	{
-		AFE_Reg_Write(p8_Trim_Sequence_Reg_Mapping[u8_index], *(p8_Trim_Sequence_Data_Mapping[u8_index]));
+		return u8_seq_check;
 	}
-	AFE_WindowTo(WINDOW0);
+	
+	for(u8_index =0; u8_index < U8_TRIM_SEQUENCE_NUMBER; u8_index++)
+	{
+		data = *p8_Trim_Sequence_Data_Mapping[u8_index];
+		AFE_Reg_Write(p8_Trim_Sequence_Reg_Mapping[u8_index], data);
+		AFE_Reg_Read(p8_Trim_Sequence_Reg_Mapping[u8_index],1, &read_data);
+		if (data != read_data)
+		{
+			u8_reg_check = FALSE;
+			break;
+		}
+	}
+	u8_seq_check = AFE_WindowTo(E_AFE_WINDOW0);
+	if(u8_seq_check == FALSE)
+	{
+		return u8_seq_check;
+	}
+	
+	return u8_reg_check;
 }
 

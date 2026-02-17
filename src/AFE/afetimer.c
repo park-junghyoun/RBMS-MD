@@ -72,16 +72,14 @@ void _int_AfeTimer(void)
 	if( u8_reg_data & u8_TIMERIR_data_Mapping[E_TIMER_A_IR])								// AFE timer A interrupt
 	{
 		AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_A_IR]);// AFE timer A interrupt request flag
-		f_AFE_TIMERA_Int = ON;
-		_INT_AFE_TimerA_Callback(u32_AFE_Int_Flg,u32_AFE_IntErr_Flg);
+		AFE_DispatchFrom_ISR(E_AFE_EVENT_TIMERA);
 		afe_TimerA_Overflow_Chk();
 	}
 	
 	if( u8_reg_data & u8_TIMERIR_data_Mapping[E_TIMER_B_IR])								// AFE timer B interrupt
 	{
 		AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_B_IR]);// AFE timer B interrupt request flag
-		f_AFE_TIMERA_Int = ON;
-		_INT_AFE_TimerB_Callback(u32_AFE_Int_Flg,u32_AFE_IntErr_Flg);
+		AFE_DispatchFrom_ISR(E_AFE_EVENT_TIMERB);
 		afe_TimerB_Overflow_Chk();
 	}
 	f_AFE_Int_Opr = OFF;
@@ -93,15 +91,30 @@ void _int_AfeTimer(void)
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_TimerA_Con(U8 u8_con)
+U8 AFE_TimerA_Control(U8 u8_con)
 {
+	if(u8_con > ON)
+	{
+		return FALSE;
+	}
+	if((f_AFE_TIMERA_Run == ON) &&(u8_con == ON))
+	{
+		return FALSE;
+	}
 	if(u8_con >= ON)
 	{
-		AFE_Reg_Write(p8_ATMACR_Reg_Mapping,u8_AFETRA_Data_Mapping[ON]);
+		f_AFE_TIMERA_Run = ON;
+		AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_A_IR]);
+		AFE_Reg_Write(p8_ATMAR_Reg_Mapping,u8_ATMAR_Data_Mapping);												// 0.25[s] * (3+1) = 1[s]
+		AFE_Reg_Write(p8_ATMACR_Reg_Mapping,u8_ATMACR_Data_Mapping[ON]);
 	}else
 	{
-		AFE_Reg_Write(p8_ATMACR_Reg_Mapping,u8_AFETRA_Data_Mapping[OFF]);
+		f_AFE_TIMERA_Run = OFF;
+		AFE_Reg_Write(p8_ATMACR_Reg_Mapping,u8_ATMACR_Data_Mapping[OFF]);
+		AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_A_IR]);
+
 	}
+	return TRUE;
 }
 
 /*******************************************************************************
@@ -114,12 +127,12 @@ void afe_TimerA_1sec_Init( void )
 {
 	U8 u8_reg_data = 0;
 
-	AFE_Reg_Write(p8_ATMACR_Reg_Mapping,u8_AFETRA_Data_Mapping[OFF]);				// AFE timer stop / count source 16kHz / Timer mode
+	AFE_Reg_Write(p8_ATMACR_Reg_Mapping,u8_ATMACR_Data_Mapping[OFF]);				// AFE timer stop / count source 16kHz / Timer mode
 	AFE_Reg_Write(p8_ATMAR_Reg_Mapping,u8_ATMAR_Data_Mapping);												// 0.25[s] * (3+1) = 1[s]
 
 	AFE_Reg_Read(p8_TIMERMK_Reg_Mapping,1,&u8_reg_data);
 	AFE_Reg_Write(p8_TIMERMK_Reg_Mapping,u8_reg_data |u8_TIMERMK_Data_Mapping[E_TIMER_A_IR]);
-
+	AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_A_IR]);
 }
 
 
@@ -158,6 +171,7 @@ void afe_TimerB_5ms_Init( void )
 
 	AFE_Reg_Read(p8_TIMERMK_Reg_Mapping,1,&u8_reg_data);
 	AFE_Reg_Write(p8_TIMERMK_Reg_Mapping,u8_reg_data |u8_TIMERMK_Data_Mapping[E_TIMER_B_IR]);	
+	AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_B_IR]);
 }
 
 /*******************************************************************************
@@ -166,15 +180,28 @@ void afe_TimerB_5ms_Init( void )
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_TimerB_Con(U8 u8_con)
+U8 AFE_TimerB_Control(U8 u8_con)
 {
+	if(u8_con > ON)
+	{
+		return FALSE;
+	}
+	if((f_AFE_TIMERB_Run == ON) &&(u8_con == ON))
+	{
+		return FALSE;
+	}
+
 	if(u8_con >= ON)
 	{
+		AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_B_IR]);
 		AFE_Reg_Write(p8_ATMBCR_Reg_Mapping,u8_AFETRB_Data_Mapping[ON]);
 	}else
 	{
 		AFE_Reg_Write(p8_ATMBCR_Reg_Mapping,u8_AFETRB_Data_Mapping[OFF]);
+		AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_B_IR]);
 	}
+	
+	return TRUE;
 }
 void afe_TimerB_Overflow_Chk(void)
 {

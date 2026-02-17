@@ -40,26 +40,14 @@
 #define _AFE_HVP_MAP_H
 
 #include "device_register.h"
+#include "afe.h"
 
 /***********************************************************************
 ADC MAMPPING DEVICE PROFILE
 ***********************************************************************/
-typedef enum{
-	E_HV_OUTPUT_DISABLE = 0,
-	E_HV_OUTPUT_N_CH,
-	E_HV_OUTPUT_P_CH,
-	E_HV_OUTPUT_NUM
-} E_AFE_HVP_OUTPUT_SETTING;
-
-typedef enum{
-	E_HVP = 0,
-	E_HVP1,
-	E_HVP2,
-	E_HVP_NUM
-} E_AFE_HVP_PIN;
 
 volatile U8 __near * const p8_PMHV_Reg_Mapping = &AFE_PMHV;
-U8 const u8_PMHV_Data_Mapping[E_HVP_NUM][2] = 
+U8 const u8_PMHV_Data_Mapping[E_AFE_HVP_NUM][2] = 
 {
 	{HVP0_INPUT,HVP0_OUTPUT},
 	{HVP1_INPUT,HVP1_OUTPUT},	
@@ -68,7 +56,7 @@ U8 const u8_PMHV_Data_Mapping[E_HVP_NUM][2] =
 };
 
 volatile U8 __near * const p8_POMHV_Reg_Mapping = &AFE_POMHV;
-U8 const u8_POMHV_Data_Mapping[E_HVP_NUM][E_HV_OUTPUT_NUM] =
+U8 const u8_POMHV_Data_Mapping[E_AFE_HVP_NUM][E_AFE_HVP_MODE_NUM] =
 {
 	{HVP0OUT_DIS,HVP0OUT_NCH,HVP0OUT_PCH},
 	{HVP1OUT_DIS,HVP1OUT_NCH,HVP1OUT_PCH},
@@ -76,7 +64,7 @@ U8 const u8_POMHV_Data_Mapping[E_HVP_NUM][E_HV_OUTPUT_NUM] =
 
 };
 volatile U8 __near * const p8_PHV_Reg_Mapping = &AFE_PHV;
-U8 const u8_PHV_Data_Mapping[E_HVP_NUM][2] =
+U8 const u8_PHV_Data_Mapping[E_AFE_HVP_NUM][2] =
 {
 	{HVP0_LOW,HVP0_HIGH},
 	{HVP1_LOW,HVP1_HIGH},

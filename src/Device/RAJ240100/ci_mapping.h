@@ -60,7 +60,7 @@ U8 const u8_CCEN_Data_Mapping[2] = {CC_STOP,CC_START};
 
 volatile U8 __near * const p8_CCR_Reg_Mapping = &AFE_CCRL;
 
-volatile U8 __near * const p8_CCMK_Reg_Mapping = &AFE_AFIF0;
+volatile U8 __near * const p8_CCMK_Reg_Mapping = &AFE_AFMK0;
 U8 const u8_CCMK_Data_Mapping = INT_CCMSK;
 
 

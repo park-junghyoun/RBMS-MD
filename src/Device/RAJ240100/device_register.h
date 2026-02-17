@@ -350,8 +350,8 @@
 #define		INT_HVP2IR		0b00000100			// HVP2 interrupt request
 
 												// - (F051F) AFE Interrupt request 3 -
-#define		INT_AFETRAIR	0b00000001				// AFE timer A interrupt request
-#define		INT_AFETRBIR	0b00000010				// AFE timer B interrupt request
+#define		INT_AFETRAIR		0b00000001				// AFE timer A interrupt request
+#define		INT_AFETRBIR		0b00000010				// AFE timer B interrupt request
 
 												// - (F0520) ADC control 0 -
 #define		ADC_EN			0b00000001			// ADC enable

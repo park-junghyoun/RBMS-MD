@@ -36,8 +36,8 @@
 *                            AND RENESAS SOLUTIONS CORPORATION
 *""FILE COMMENT END""*****************************************************/
 
-#ifndef _AFE_OC_MAP_H
-#define _AFE_OC_MAP_H
+#ifndef _AFE_ABN_MAP_H
+#define _AFE_ABN_MAP_H
 
 #include "device_register.h"
 
@@ -47,47 +47,47 @@
 ADC MAMPPING DEVICE PROFILE
 ***********************************************************************/
 typedef enum{
-	E_OC_SCD_IR = 0,
-	E_OC_DOC_IR,
-	E_OC_COC_IR,
-	E_OC_WDT_IR,
-	E_OC_IR_ITEM_NUM
-} E_AFE_OC_IF_ITEM;
+	E_ABN_SCD_IR = 0,
+	E_ABN_DOC_IR,
+	E_ABN_COC_IR,
+	E_ABN_WDT_IR,
+	E_ABN_IR_ITEM_NUM
+} E_AFE_ABN_IF_ITEM;
 
-#define U8_OC_SCCMPV_MAX	0x12
-#define U8_OC_SCCMPV_MIN	0x00
-#define U8_OC_SCCTIME_MAX	0x0F
-#define U8_OC_SCCTIME_MIN	0x00
+#define U8_ABN_SCCMPV_MAX	0x12
+#define U8_ABN_SCCMPV_MIN	0x00
+#define U8_ABN_SCCTIME_MAX	0x0F
+#define U8_ABN_SCCTIME_MIN	0x00
 
-#define U8_OC_DOCMPV_MAX	0x36
-#define U8_OC_DOCMPV_MIN	0x00
-#define U16_OC_DOCTIME_MAX	0xFFFF
-#define U16_OC_DOCTIME_MIN	0x0000
+#define U8_ABN_DOCMPV_MAX	0x36
+#define U8_ABN_DOCMPV_MIN	0x00
+#define U16_ABN_DOCTIME_MAX	0xFFFF
+#define U16_ABN_DOCTIME_MIN	0x0000
 
-#define U8_OC_COCMPV_MAX	0x20
-#define U8_OC_COCMPV_MIN	0x00
-#define U8_OC_COCTIME_MAX	0xFF
-#define U8_OC_COCTIME_MIN	0x00
+#define U8_ABN_COCMPV_MAX	0x20
+#define U8_ABN_COCMPV_MIN	0x00
+#define U8_ABN_COCTIME_MAX	0xFF
+#define U8_ABN_COCTIME_MIN	0x00
 
 volatile U8 __near * const p8_ABIF_Reg_Mapping = &AFE_AFIF1;
-U8 const u8_ABIR_Data_Mapping[E_OC_IR_ITEM_NUM] = {INT_SCDIR,INT_DOC1DIR,INT_COCDIR,INT_WDTIR};
+U8 const u8_ABIR_Data_Mapping[E_ABN_IR_ITEM_NUM] = {INT_SCDIR,INT_DOC1DIR,INT_COCDIR,INT_WDTIR};
 
 volatile U8 __near * const p8_ABIRMK_Reg_Mapping = &AFE_AFMK1;
-U8 const u8_ABIRMK_Data_Mapping[E_OC_IR_ITEM_NUM] = {INT_SCDMSK,INT_DOCDMSK,INT_COCDMSK,INT_AWDTMSK};
+U8 const u8_ABIRMK_Data_Mapping[E_ABN_IR_ITEM_NUM] = {INT_SCDMSK,INT_DOCDMSK,INT_COCDMSK,INT_AWDTMSK};
 
 volatile U8 __near * const p8_SCCCON_Reg_Mapping = &AFE_SCDCON;
-U8 const u8_SCCCON_Data_Mapping[2] = {SC_DIS,SC_EN|SC_FETEN};
+U8 const u8_SCCCON_Data_Mapping[3] = {SC_DIS,SC_EN,SC_EN|SC_FETEN};
 
 volatile U8 __near * const p8_SCCTIME_Reg_Mapping = &AFE_SCDTIME;
 
 volatile U8 __near * const p8_DOCCON_Reg_Mapping = &AFE_DOC1DCON;
-U8 const u8_DOCCON_Data_Mapping[2] = {DOC1_DIS,DOC1_EN|DOC1_FETEN};
+U8 const u8_DOCCON_Data_Mapping[3] = {DOC1_DIS,DOC1_EN,DOC1_EN|DOC1_FETEN};
 
 volatile U8 __near * const p8_DOCTIME1_Reg_Mapping = &AFE_DOC1DTIME1;
 volatile U8 __near * const p8_DOCTIME2_Reg_Mapping = &AFE_DOC1DTIME2;
 
 volatile U8 __near * const p8_COCCON_Reg_Mapping = &AFE_COCDCON;
-U8 const u8_COCCON_Data_Mapping[2] = {COC_DIS,COC_EN|COC_FETEN};
+U8 const u8_COCCON_Data_Mapping[3] = {COC_DIS,COC_EN,COC_EN|COC_FETEN};
 volatile U8 __near * const p8_COCTIME_Reg_Mapping = &AFE_COCDTIME;
 
 volatile U8 __near * const p8_DOCCAL_Reg_Mapping = &AFE_DOC1CAL;
@@ -108,7 +108,10 @@ U8 const u8_OCDRSTS_DOC_Mapping = DOC1RSTRT;
 U8 const u8_OCDRSTS_SC_Mapping = SCRSTRT;
 U8 const u8_OCDRSTS_COC_Mapping = COCRFLG;
 
+volatile U8 __near * const p8_AWDTCON_Reg_Mapping = &AFE_AWDTCON;
+U8 const u8_AWDTCON_DATA_Mapping[3] = {WDT_STOP,WDT_8S|WDT_MTRSEL_DIS,WDT_8S|WDT_MTRSEL_EN};
 
+volatile U8 __near * const p8_AWDTRF_Reg_Mapping = &AFE_AWDTRF;
 
 /***********************************************************************
 ADC SETTING DEVICE PROFILE

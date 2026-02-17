@@ -51,21 +51,38 @@ static void afe_SW_TriggerAD( void );
 static void afe_AD_Overflow_Chk( void );
 
 // - Internal constant ---------------------------------------------------------
+typedef union {
+	U16		data;				// ADC raw count
+	U8		buffer[sizeof(U16)];
+}U_AD_ADC;
 
 // - Internal variable ---------------------------------------------------------
-static U16 u16_get_adc[U8_TOTAL_ADC_COUNT];
-static U8 u8_ad_enable_item[E_AD_ITEM_NUM];
-static E_AFE_AD_ITEM e_ad_run_mode = E_AD_ITEM_NUM;
+static U16 u16_get_adc[E_AFE_MEA_NUM];
+static U8 u8_ad_enable_item[E_AD_MODE_NUM];									// include offset ad
+static E_AFE_AD_ITEM e_ad_run_mode = E_AD_MODE_NUM;
+static U_AD_ADC u_ad_adc_raw[U8_AD_MEA_SIZE];
 
 // - Define function -----------------------------------------------------------
-void AFE_AD_Init( st_afe_ad_config_t config )
+U8 AFE_AD_Init( st_afe_adc_config_t config )
 {
+	U8 u8_reg_check = TRUE;
 	U8 u8_reg_data = 0;
+	U8 u8_index = 0;
 
-	AFE_AD_Setting(config);
+	// Buffer Init
+	for(u8_index = 0; u8_index <E_AFE_MEA_NUM; u8_index++)
+	{
+		u16_get_adc[u8_index] = 0xFFFF;
+	}
+	
+	AFE_Reg_Write(p8_ADIF_Reg_Mapping,~u8_ADIR_Data_Mapping);								// Clear IF flag
+	
+	u8_reg_check = AFE_AD_Setting(config);
 	
 	AFE_Reg_Read(p8_ADMK_Reg_Mapping,1,&u8_reg_data);
 	AFE_Reg_Write(p8_ADMK_Reg_Mapping,u8_reg_data | u8_ADMK_Data_Mapping);
+
+	return u8_reg_check;
 }
 /*******************************************************************************
 * Function Name: AD_Setting_ADEn
@@ -76,47 +93,68 @@ void AFE_AD_Init( st_afe_ad_config_t config )
 *	              : E_AFE_AD_TIME : AD conversion time
 * Return Value : void
 *******************************************************************************/
-void AFE_AD_Setting( st_afe_ad_config_t config )
+U8 AFE_AD_Setting( st_afe_adc_config_t config )
 {
 	U64 u64_bit_mask = 0;
-	U8 u8_index1 = 0;
+	U8 u8_mode_index = 0;
 	U8 u8_ad_limit_settime = 0;
 	U8 u8_ad_limit_time = 0;
-
+	U8 u8_reg_check = TRUE;
+	U8 u8_reg_data = 0;
 	
 	AFE_AD_Stop_SW_Trigger();
 	// admsel buffer setting
-	for(u8_index1 = 0; u8_index1 <E_AD_ITEM_NUM; u8_index1++)
+	for(u8_mode_index = 0; u8_mode_index <E_AD_MODE_NUM; u8_mode_index++)
 	{
 		// Fleid mask
-		u64_bit_mask = (1<<u8_Mode_Size[u8_index1]) - 1;
+		u64_bit_mask = (1 << (u8_Mode_Real_Size[u8_mode_index]+1)) -1;
 		// Fleid output
-		u8_ad_enable_item[u8_index1] = (config.u64_ad_enable >> u8_Mode_Start_index[u8_index1]) & u64_bit_mask;
+		u8_ad_enable_item[u8_mode_index] = (config.u64_adc_enable >> (U8_AD_MEA_SIZE *u8_mode_index)) & u64_bit_mask;
+		//If the ADC you want to measure is not empty
+		if(u8_ad_enable_item[u8_mode_index] != 0)
+		{
+			// include offset voltage
+			u8_ad_enable_item[u8_mode_index] = (u8_ad_enable_item[u8_mode_index] << 1) +1;
+			// Write ADMSEL
+			AFE_Reg_Write(p8_ADMSEL_Reg_Mapping[u8_mode_index],u8_ad_enable_item[u8_mode_index]);
+			// Check ADMSEL
+			AFE_Reg_Read(p8_ADMSEL_Reg_Mapping[u8_mode_index],1, &u8_reg_data);
+			if(u8_reg_data != u8_ad_enable_item[u8_mode_index])
+			{
+				u8_reg_check = FALSE;
+			}
+		}
 		
-		AFE_Reg_Write(p8_ADMSEL_Reg_Mapping[u8_index1],u8_ad_enable_item[u8_index1]);
 	}
-	if(config.u8_ad_settime > U8_AD_SETTIME_MAX)
+	// AD Time Setting
+	if(config.u8_adc_settime > U8_AD_SETTIME_MAX)
 	{
 		u8_ad_limit_settime = U8_AD_SETTIME_MAX;
 	}
 	else
 	{
-		u8_ad_limit_settime = config.u8_ad_settime;
+		u8_ad_limit_settime = config.u8_adc_settime;
 	}
-	if(config.u8_ad_time > U8_AD_TIME_MAX)
+	if(config.u8_adc_time > U8_AD_TIME_MAX)
 	{
 		u8_ad_limit_time = U8_AD_TIME_MAX;
 	}
 	else
 	{
-		u8_ad_limit_time = config.u8_ad_time;
+		u8_ad_limit_time = config.u8_adc_time;
 	}
 
 	u8_ad_limit_time = (U8)((u8_ad_limit_settime<<4)|(u8_ad_limit_time));
 	
 	AFE_Reg_Write(p8_ADTIME_Reg_Mapping,u8_ad_limit_time);
+	// Check ADTIME
+	AFE_Reg_Read(p8_ADTIME_Reg_Mapping,1, &u8_reg_data);
+	if(u8_reg_data != u8_ad_limit_time)
+	{
+		u8_reg_check = FALSE;
+	}
 
-
+	return u8_reg_check;
 }
 /*******************************************************************************
 * Function Name: AD_Start_SW_Trigger
@@ -125,10 +163,26 @@ void AFE_AD_Setting( st_afe_ad_config_t config )
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_AD_Start_SW_Trigger( void )
+U8 AFE_AD_Start_SW_Trigger( void )
 {
+	U8 u8_index = 0;
+	
+	if( f_AFE_AD_Run == ON)
+	{
+		return FALSE;
+	}
+	
+	f_AFE_AD_Run  = ON;
 	e_ad_run_mode = E_AD_MODE1;
+	// internal buffer Clear
+	for(u8_index =0; u8_index < E_AFE_MEA_NUM; u8_index++)
+	{
+		u16_get_adc[u8_index] = 0xFFFF;
+	}
 	AFE_Reg_Write(p8_ADCEN_Reg_Mapping, u8_ADCEN_Data_Mapping[ON]);
+	AFE_Reg_Write(p8_ADMODSEL_Reg_Mapping,u8_ADMODSEL_Data_Mapping[e_ad_run_mode]);
+
+	return TRUE;
 }
 /*******************************************************************************
 * Function Name: AD_Stop_SW_Trigger
@@ -139,7 +193,9 @@ void AFE_AD_Start_SW_Trigger( void )
 *******************************************************************************/
 void AFE_AD_Stop_SW_Trigger( void )
 {
+	f_AFE_AD_Run  = OFF;
 	AFE_Reg_Write(p8_ADCEN_Reg_Mapping, u8_ADCEN_Data_Mapping[OFF]);
+	e_ad_run_mode = E_AD_MODE1;
 }
 
 /*******************************************************************************
@@ -150,11 +206,11 @@ void AFE_AD_Stop_SW_Trigger( void )
 *	              : u16_ad : AD data
 * Return Value : void
 *******************************************************************************/
-U16 AFE_AD_Get_AdData( U8 u8_ad_num )
+U16 AFE_AD_Get_AdData( E_AFE_MEA_MODE_ITEM u8_ad_num )
 {
 	U16 u16_ad = 0;
 	
-	if(u8_ad_num >= U8_TOTAL_ADC_COUNT)
+	if(u8_ad_num >= 0x24)
 	{
 		u16_ad = U16_MAX;
 	}else
@@ -162,8 +218,7 @@ U16 AFE_AD_Get_AdData( U8 u8_ad_num )
 		u16_ad = u16_get_adc[u8_ad_num];
 	}
 	
-	
-return u16_ad;
+	return u16_ad;
 }
 /*******************************************************************************
 * Function Name: AD_ReadAD
@@ -175,18 +230,23 @@ return u16_ad;
 void afe_ReadAD( void )
 {
 	U8 u8_ad_index = 0;
-	U8 u8_ad_item[U8_MAX_MODE_SIZE];
 
-	if(e_ad_run_mode >= E_AD_ITEM_NUM)
+	// Mode Check
+	if(e_ad_run_mode >= E_AD_MODE_NUM)
 	{
 		return;
 	}
+	// AFE Register Read
+	AFE_Reg_Read(p8_ADR_Reg_Mapping, u8_Mode_Real_Size[e_ad_run_mode]*2,u_ad_adc_raw[0].buffer);
 
-	AFE_Reg_Read(p8_ADR_Reg_Mapping, u8_Mode_Size[e_ad_run_mode],u8_ad_item);
-
-	for(u8_ad_index = 0; u8_ad_index < u8_Mode_Size[e_ad_run_mode]; u8_ad_index++)
+	for(u8_ad_index = 0; u8_ad_index <u8_Mode_Real_Size[e_ad_run_mode]; u8_ad_index++)
 	{
-		u16_get_adc[u8_Mode_Start_index[e_ad_run_mode]+u8_ad_index] = u8_ad_item[u8_ad_index];
+		//Enable item?
+		if(u8_ad_enable_item[e_ad_run_mode]>>(u8_ad_index+1) & 0x01)
+		{
+			// Get adc
+			u16_get_adc[(U8_AD_MEA_SIZE*e_ad_run_mode)+u8_ad_index] = u_ad_adc_raw[u8_ad_index].data;
+		}
 	}
 }
 
@@ -194,26 +254,30 @@ void afe_SW_TriggerAD( void )
 {
 	U8 u8_item_index = 0;
 	
-	if(e_ad_run_mode >= E_AD_ITEM_NUM)
+	if(e_ad_run_mode >= E_AD_MODE_NUM)
 	{
-		AFE_Reg_Write(p8_ADCEN_Reg_Mapping, u8_ADCEN_Data_Mapping[OFF]);
-		f_AFE_AD_Int = ON;
-		_INT_AFE_AD_Callback(u32_AFE_Int_Flg,u32_AFE_IntErr_Flg);
+		AFE_DispatchFrom_ISR(E_AFE_EVENT_AD);
+		f_AFE_AD_Run  = OFF;
 		return;
 		
 	}
 	//find enable mode index 
-	for(u8_item_index = 0; u8_item_index < E_AD_ITEM_NUM; u8_item_index++)
+	for(u8_item_index =e_ad_run_mode; u8_item_index < E_AD_MODE_NUM; u8_item_index++)
 	{
 		if(u8_ad_enable_item[e_ad_run_mode] == NULL)
 		{
 			e_ad_run_mode++;	
+			if(e_ad_run_mode >= E_AD_MODE_NUM)
+			{
+				AFE_DispatchFrom_ISR(E_AFE_EVENT_AD);
+				f_AFE_AD_Run  = OFF;
+				return;
+			}
 		}
 	}
-
-	AFE_Reg_Write(p8_ADMODSEL_Reg_Mapping,u8_ADMODSEL_Data_Mapping[e_ad_run_mode]);
-	
+	AFE_Reg_Write(p8_ADCEN_Reg_Mapping, u8_ADCEN_Data_Mapping[ON]);
 	e_ad_run_mode++;
+	AFE_Reg_Write(p8_ADMODSEL_Reg_Mapping,u8_ADMODSEL_Data_Mapping[e_ad_run_mode]);
 }
 
 /*******************************************************************************

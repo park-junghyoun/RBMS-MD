@@ -54,21 +54,16 @@ void MCU_Pin_Init(void)
 {
 	U8 u8_index = 0;
 	
-	DI();																// Interrupt disable
-
-	for(u8_index =0; u8_index < MCU_SEQUENCE_NUMBER; u8_index++)
+	for(u8_index =0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
 	{
 		*p8_MCU_Pin_Sequence_Reg_Mapping[u8_index] = u8_MCU_Pin_Sequence_Data_Mapping[u8_index];
 	}
-	//TIMER INITIALIZE
-	TAU0EN = 1; 														// Timer array unit0 supplies input clock
-
 }
 void MCU_AFE_Pin_Init(void)
 {
 	U8 u8_index = 0;
 	
-	for(u8_index =0; u8_index < AFE_SEQUENCE_NUMBER; u8_index++)
+	for(u8_index =0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
 	{
 		*p8_AFE_Pin_Sequence_Reg_Mapping[u8_index] = u8_AFE_Pin_Sequence_Data_Mapping[u8_index];
 	}
@@ -95,12 +90,14 @@ U8 mcu_get_clock(void)
 
 void mcu_tm03_100usWaitTime(void)
 {
-	U8 u8_tau0_en = 0;
+	U8 u8_tau0_en = OFF;
 	U8 u8_clock = 0;
 	
 	if(PER0 & U8_PER0_TAU0EN_MASK)
 	{
 		u8_tau0_en = ON;
+	}else
+	{
 		TAU0EN = 1;
 	}
 	u8_clock =mcu_get_clock();
@@ -124,7 +121,7 @@ void mcu_tm03_100usWaitTime(void)
 
 	TT0L_bit.no3 = 1;								// Stop TM03
 	
-	if(u8_tau0_en == ON)
+	if(u8_tau0_en == OFF)
 	{
 		TAU0EN = 0;
 	}

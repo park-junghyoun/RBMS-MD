@@ -60,13 +60,10 @@
 #define OUTPUT	1
 #define INPUT		0
 
+#define PNULL (void*)0
 #define NULL	0
 #define TRUE	1
 #define FALSE	0
-
-#define WINDOW0		0
-#define WINDOW1		1
-#define WINDOW2		2
 
 typedef unsigned char	U8;
 typedef signed char		S8;

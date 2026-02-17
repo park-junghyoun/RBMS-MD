@@ -66,7 +66,7 @@ void AFE_FET_Set( U8 u8_cfet, U8 u8_dfet)
 	U8 u8_fetst = 0;
 	U8 u8_fetcon = 0;
 	
-	AFE_Reg_Read(p8_FMON_Reg_Mapping,1,&u8_fetst);
+	AFE_Reg_Read(p8_FCON_Reg_Mapping,1,&u8_fetst);
 	
 	if(u8_dfet == OFF)
 	{
@@ -110,7 +110,7 @@ U8 AFE_FET_Get(void)
 {
 	U8 u8_Ret = 0;
 	
-	AFE_Reg_Read(p8_FMON_Reg_Mapping,1,&u8_Ret);
+	AFE_Reg_Read(p8_FCON_Reg_Mapping,1,&u8_Ret);
 
 	return u8_Ret;
 }

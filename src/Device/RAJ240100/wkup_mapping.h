@@ -51,14 +51,6 @@ typedef enum{
 } E_AFE_WKUP_IF_ITEM;
 
 typedef enum{
-	E_WKUP_GAIN_2 = 0,
-	E_WKUP_GAIN_5,
-	E_WKUP_GAIN_10,
-	E_WKUP_GAIN_20,
-	E_WKUP_GAIN_ITEM_NUM
-} E_AFE_WKUP_GAIN_ITEM;
-
-typedef enum{
 	E_WKUP_FET_DIS = 0,
 	E_WKUP_FET_EN,
 	E_WKUP_FET_ITEM_NUM

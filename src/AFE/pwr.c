@@ -50,34 +50,53 @@
 // - Internal variable ---------------------------------------------------------
 static U8 u8_pwr_state;
 // - Define function -----------------------------------------------------------
-void AFE_PWR_Control(U8 u8_pwr_con)
+U8 AFE_PWR_Control( E_AFE_CLOCK_ITEM e_pwr_con )
 {
 	U8 u8_reg_data = 0;
-	PSW_PUSH();														// PSW -> STACK
-	DI();															// Disable interrupt
+	U8 u8_reg_check = TRUE;
+	
+	if(e_pwr_con > E_AFE_CLOCK_LOWPOWER)
+	{
+		return FALSE;
+	}
+	MCU_PSW_PUSH();														// PSW -> STACK
 
 																	// AFE Power ctrl
-	if(u8_pwr_con >= 1)												// AFE Power limit
+	if(e_pwr_con == E_AFE_CLOCK_NORMAL)												// AFE Power limit
 	{
 		AFE_Reg_Write(p8_PCON_Reg_Mapping,	u8_PCON_LowPower_Mapping);
 		AFE_Reg_Write(p8_CLCON_Reg_Mapping,	u8_CLCON_LowPower_Mapping); 	// ALOCO select
-		do
+
+		MCU_100us_WaitTime(2);
+		AFE_Reg_Read(p8_CLCON_Reg_Mapping,1,&u8_reg_data);			// Read MCLKSTS of AMOCON
+		if(u8_reg_data == u8_CLCON_LowPower_Mapping)
 		{
-			AFE_Reg_Read(p8_CLCON_Reg_Mapping,1,&u8_reg_data);			// Read MCLKSTS of AMOCON
-		} while(u8_reg_data & u8_CLCON_LowPower_Mapping);					// Wait for AOCO selec
-		u8_pwr_state = 1;
+			u8_pwr_state = 1;
+		}else
+		{
+			u8_reg_check = FALSE;
+		}
+		
 	}else
 	{
 		AFE_Reg_Write(p8_PCON_Reg_Mapping,	u8_PCON_Normal_Mapping);
 		AFE_Reg_Write(p8_CLCON_Reg_Mapping,	u8_CLCON_Normal_Mapping); 	// ALOCO select
-		do
+		
+		MCU_100us_WaitTime(2);
+		AFE_Reg_Read(p8_CLCON_Reg_Mapping,1,&u8_reg_data);			// Read MCLKSTS of AMOCON
+		if(u8_reg_data == u8_CLCON_Normal_Mapping)
 		{
-			AFE_Reg_Read(p8_CLCON_Reg_Mapping,1,&u8_reg_data);			// Read MCLKSTS of AMOCON
-		} while(u8_reg_data & u8_CLCON_Normal_Mapping);						// Wait for AOCO select
-		u8_pwr_state = 0;
+			u8_pwr_state = 0;
+		}else
+		{
+			u8_reg_check = FALSE;
+		}
+
 	}
 	
-	PSW_POP();														// STACK -> PSW
+	MCU_PSW_POP();														// STACK -> PSW
+
+	return u8_reg_check;
 }
 
 U8 AFE_PWR_Get_State(void)
@@ -85,18 +104,29 @@ U8 AFE_PWR_Get_State(void)
 	return u8_pwr_state;
 }
 
-void AFE_PWR_PowerDown(void)
+U8 AFE_PWR_PowerDown(void)
 {
-	
+	return TRUE;
 }
-void AFE_PWR_Reset(void)
+U8 AFE_PWR_Reset(void)
 {
 	U8 u8_afe_seq = 0;
+	U8 u8_reg_data = 0xFF;
+	U8 u8_reg_check = TRUE;
 	
 	for(u8_afe_seq = 0; u8_afe_seq < U8_AFE_SWRST_SEQ; u8_afe_seq++)
 	{
-		AFE_Reg_Write(p8_PCON_Reg_Mapping,	u8_SWRST_Sequence_Mapping[u8_afe_seq]);	
+		AFE_Reg_Write(p8_SWRST_Reg_Mapping,	u8_SWRST_Sequence_Mapping[u8_afe_seq]);	
 	}
 	
-	MCU_100us_WaitTime(2);
+	MCU_100us_WaitTime(2);		// wait 130us
+
+	AFE_Reg_Read(p8_SWRST_Reg_Mapping,1,&u8_reg_data);
+
+	if(u8_reg_data != 0x00)
+	{
+		u8_reg_check = FALSE;
+	}
+	
+	return u8_reg_check;
 }

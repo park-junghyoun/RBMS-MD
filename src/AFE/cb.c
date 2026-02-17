@@ -73,7 +73,7 @@ void AFE_CB_Start( void )
 	}
 }
 
-void AFE_CB_Con( U16 u16_balancing )
+void AFE_CB_Control( U16 u16_balancing )
 {
 	U16 u16_index = 0;
 	U8 u8_cb_reg = 0;

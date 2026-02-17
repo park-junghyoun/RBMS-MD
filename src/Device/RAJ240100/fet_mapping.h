@@ -62,7 +62,6 @@ U8 const u8_FET_Data_Mapping[E_FET_ALL_NUM][2] =
 	{FET_OFF,FET_D},	
 
 };
-volatile U8 __near * const p8_FMON_Reg_Mapping = &AFE_FMON;
 /***********************************************************************
 ADC SETTING DEVICE PROFILE
 ***********************************************************************/

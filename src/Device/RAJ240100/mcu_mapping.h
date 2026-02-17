@@ -128,8 +128,8 @@ U8 const u8_MCU_Pin_Sequence_Data_Mapping[MCU_SEQUENCE_NUMBER] =
 //C2C communication permission
 };
 
-#define AFE_SEQUENCE_NUMBER	10		
-volatile U8 __near * const p8_AFE_Pin_Sequence_Reg_Mapping[AFE_SEQUENCE_NUMBER] =
+#define U8_AFE_SEQUENCE_NUMBER	10		
+volatile U8 __near * const p8_AFE_Pin_Sequence_Reg_Mapping[U8_AFE_SEQUENCE_NUMBER] =
 {
 	&EGP1,
 	&EGN1,
@@ -143,7 +143,7 @@ volatile U8 __near * const p8_AFE_Pin_Sequence_Reg_Mapping[AFE_SEQUENCE_NUMBER] 
 	&MK2L
 };
 
-U8 const u8_AFE_Pin_Sequence_Data_Mapping[AFE_SEQUENCE_NUMBER] =
+U8 const u8_AFE_Pin_Sequence_Data_Mapping[U8_AFE_SEQUENCE_NUMBER] =
 {
 //EGP1
 	0b00000000,
@@ -159,14 +159,14 @@ U8 const u8_AFE_Pin_Sequence_Data_Mapping[AFE_SEQUENCE_NUMBER] =
 	// +----------			: Disable
 
 // PR02H
-	0b11110111,
+	0b11101111,
 // PR12H
 	0b11100111,
 	// |||||||+--- INTP11	: Interrupt priority Level 3 (AFE wakeup interrupt)
 	// ||||||+---- TRDPR		: Interrupt priority Level 3 (Disable)
 	// |||||+-----			: Interrupt priority Level 3 (Disable)
-	// ||||+------ INTP12	: Interrupt priority Level 0 (AFE abnormal	interrupt)
-	// |||+------- INTP13	: Interrupt priority Level 1 (AFE timer interrupt)
+	// ||||+------ INTP12	: Interrupt priority Level 1 (AFE abnormal interrupt)
+	// |||+------- INTP13	: Interrupt priority Level 0 (AFE timer interrupt)
 	// ||+--------			: Interrupt priority Level 3 (Disable)
 	// |+---------			: Interrupt priority Level 3 (Disable)
 	// +---------- FLPR 		: Interrupt priority Level 3 (Disable)

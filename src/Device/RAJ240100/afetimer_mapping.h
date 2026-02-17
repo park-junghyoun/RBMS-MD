@@ -60,9 +60,9 @@ U8 const u8_TIMERMK_Data_Mapping[E_TIMER_IR_ITEM_NUM] = {INT_AFETRAMSK,INT_AFETR
 volatile U8 __near * const p8_TIMERIF_Reg_Mapping = &AFE_AFIF3;
 U8 const u8_TIMERIR_data_Mapping[E_TIMER_IR_ITEM_NUM] = {INT_AFETRAIR,INT_AFETRBIR};
 volatile U8 __near * const p8_ATMACR_Reg_Mapping = &AFE_ATMACR;
-U8 const u8_AFETRA_Data_Mapping[2] = {AFETRASTOP | AFETRACLKSEL_16K,AFETRASTART_ST | AFETRACLKSEL_16K};
+U8 const u8_ATMACR_Data_Mapping[2] = {AFETRASTOP | AFETRACLKSEL_16K,AFETRASTART_ST | AFETRACLKSEL_16K};
 volatile U8 __near * const  p8_ATMAR_Reg_Mapping = &AFE_ATMAR;
-U8 const u8_ATMAR_Data_Mapping = 0;
+U8 const u8_ATMAR_Data_Mapping = 3;
 // Clock source: AOCO/ALOCO
 // Underflow time (s) = 0.25 x (n + 1)
 // 0.25 x (0+1) = 250ms

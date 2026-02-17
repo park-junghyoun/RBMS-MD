@@ -58,24 +58,24 @@
 #define P8_TRIM_ADDR_FCPT0					AFEREG11							//(F0511)
 
 // Trimming data for AFE
-#define P8_TRIM_DATA_FCPT0					((__far volatile U8*)0x01C86D)			/* B_AFE_FET0 */
-#define P8_TRIM_DATA_VREG2_5V				((__far volatile U8*)0x01C86C) 			/* AFE-VREG2(5.0V) */
-#define P8_TRIM_DATA_VREG2_3V				((__far volatile U8*)0x01C86B) 			/* AFE-VREG2(3.3V) */
-#define P8_TRIM_DATA_BUFT0					((__far volatile U8*)0x01C86A) 			/* AFE-IV TRIM1 */
-#define P8_TRIM_DATA_BUFT1					((__far volatile U8*)0x01C869) 			/* AFE-IV TRIM0 */
-#define P8_TRIM_DATA_RT0						((__far volatile U8*)0x01C867) 			/* AFE-VREGAD(RT0) */
-#define P8_TRIM_DATA_RT1						((__far volatile U8*)0x01C868) 			/* AFE-VREGCC(RT1) */
-#define P8_TRIM_DATA_BT0						((__far volatile U8*)0x01C865) 			/* AFE-BT0 */
-#define P8_TRIM_DATA_BT1						((__far volatile U8*)0x01C866) 			/* AFE-BT1 */
-#define P8_TRIM_DATA_LOCO1					((__far volatile U8*)0x01C864) 			/* AFE-LOCO1 */
-#define P8_TRIM_DATA_LOCO0					((__far volatile U8*)0x01C863) 			/* AFE-LOCO0 */
-#define P8_TRIM_DATA_OCO2					((__far volatile U8*)0x01C862) 			/* AFE-OCO2 */
-#define P8_TRIM_DATA_OCO1					((__far volatile U8*)0x01C861) 			/* AFE-OCO1 */
-#define P8_TRIM_DATA_OCO0					((__far volatile U8*)0x01C860) 			/* AFE-OCO0 */
+#define P8_TRIM_DATA_FCPT0					((const __far U8*)0x01C86D)			/* B_AFE_FET0 */
+#define P8_TRIM_DATA_VREG2_5V				((const __far U8*)0x01C86C) 			/* AFE-VREG2(5.0V) */
+#define P8_TRIM_DATA_VREG2_3V				((const __far U8*)0x01C86B) 			/* AFE-VREG2(3.3V) */
+#define P8_TRIM_DATA_BUFT0					((const __far U8*)0x01C86A) 			/* AFE-IV TRIM1 */
+#define P8_TRIM_DATA_BUFT1					((const __far U8*)0x01C869) 			/* AFE-IV TRIM0 */
+#define P8_TRIM_DATA_RT0						((const __far U8*)0x01C867) 			/* AFE-VREGAD(RT0) */
+#define P8_TRIM_DATA_RT1						((const __far U8*)0x01C868) 			/* AFE-VREGCC(RT1) */
+#define P8_TRIM_DATA_BT0						((const __far U8*)0x01C865) 				/* AFE-BT0 */
+#define P8_TRIM_DATA_BT1						((const __far U8*)0x01C866) 			/* AFE-BT1 */
+#define P8_TRIM_DATA_LOCO1					((const __far U8*)0x01C864) 			/* AFE-LOCO1 */
+#define P8_TRIM_DATA_LOCO0					((const __far U8*)0x01C863) 			/* AFE-LOCO0 */
+#define P8_TRIM_DATA_OCO2					((const __far U8*)0x01C862) 			/* AFE-OCO2 */
+#define P8_TRIM_DATA_OCO1					((const __far U8*)0x01C861) 			/* AFE-OCO1 */
+#define P8_TRIM_DATA_OCO0					((const __far U8*)0x01C860) 			/* AFE-OCO0 */
 
 
-#define TRIM_SEQUENCE_NUMBER	13		
-volatile U8 __near * const p8_Trim_Sequence_Reg_Mapping[TRIM_SEQUENCE_NUMBER] =
+#define U8_TRIM_SEQUENCE_NUMBER	13		
+volatile U8 __near * const p8_Trim_Sequence_Reg_Mapping[U8_TRIM_SEQUENCE_NUMBER] =
 {
 	&P8_TRIM_ADDR_BT0,
 	&P8_TRIM_ADDR_BT1,
@@ -91,7 +91,7 @@ volatile U8 __near * const p8_Trim_Sequence_Reg_Mapping[TRIM_SEQUENCE_NUMBER] =
 	&P8_TRIM_ADDR_RT1,
 	&P8_TRIM_ADDR_FCPT0
 };
-volatile U8 __far * const p8_Trim_Sequence_Data_Mapping[TRIM_SEQUENCE_NUMBER] =
+const __far U8* const p8_Trim_Sequence_Data_Mapping[U8_TRIM_SEQUENCE_NUMBER] =
 {
 	P8_TRIM_DATA_BT0,
 	P8_TRIM_DATA_BT1,

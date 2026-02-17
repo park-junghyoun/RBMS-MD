@@ -48,7 +48,7 @@
 // - Internal constant ---------------------------------------------------------
 
 // - Internal variable ---------------------------------------------------------
-
+U8 e_hvp_mode_setting[E_AFE_HVP_NUM];
 // - Define function -----------------------------------------------------------
 /*******************************************************************************
 * Function Name: AFE_GetFETstatus
@@ -59,37 +59,113 @@
 void AFE_HVP_Init(void)
 {
 	U8 u8_index = 0;
+	
+	for(u8_index = 0; u8_index < E_AFE_HVP_NUM; u8_index++)
+	{
+		AFE_HVP_Mode_Control((E_AFE_HVIO_ITEM)u8_index,E_AFE_HVP_MODE_OUTPUT_PCH);
+	}
+}
+
+U8 AFE_HVP_Mode_Control(E_AFE_HVIO_ITEM e_hvio, E_AFE_HVP_MODE_ITEM e_mode)
+{
 	U8 u8_pmhv_data = 0;
 	U8 u8_pomhv_data = 0;
 	U8 u8_phv_data = 0;
-	
-	for(u8_index = 0; u8_index < E_HVP_NUM; u8_index++)
+
+	if(e_hvio >= E_AFE_HVP_NUM)
 	{
-		u8_pmhv_data |= u8_PMHV_Data_Mapping[u8_index][OUTPUT];
-		u8_pomhv_data |= u8_POMHV_Data_Mapping[u8_index][E_HV_OUTPUT_P_CH];
-		u8_phv_data |= u8_PHV_Data_Mapping[u8_index][LOW];
+		return FALSE;
 	}
 
-	
+	if(e_mode > E_AFE_HVP_MODE_NUM)
+	{
+		return FALSE;
+	}
+	AFE_Reg_Read(p8_PMHV_Reg_Mapping,1, 	&u8_pmhv_data);
+	AFE_Reg_Read(p8_POMHV_Reg_Mapping,1, 	&u8_pomhv_data);
+	AFE_Reg_Read(p8_PHV_Reg_Mapping,1, 	&u8_phv_data);
+	u8_pmhv_data &= ~u8_PMHV_Data_Mapping[e_hvio][INPUT];
+	u8_pomhv_data &= ~(u8_POMHV_Data_Mapping[e_hvio][E_AFE_HVP_MODE_OUTPUT_PCH]|u8_POMHV_Data_Mapping[e_hvio][E_AFE_HVP_MODE_OUTPUT_NCH]);
+	u8_pmhv_data &= ~u8_PHV_Data_Mapping[e_hvio][HI];
+	switch(e_mode)
+	{
+		case E_AFE_HVP_MODE_INPUT:
+			u8_pmhv_data |= u8_PMHV_Data_Mapping[e_hvio][INPUT];
+			u8_pomhv_data |= u8_POMHV_Data_Mapping[e_hvio][E_AFE_HVP_MODE_INPUT];
+			e_hvp_mode_setting[e_hvio] = E_AFE_HVP_MODE_INPUT;
+			break;
+		case E_AFE_HVP_MODE_OUTPUT_NCH:
+			u8_pmhv_data |= u8_PMHV_Data_Mapping[e_hvio][OUTPUT];
+			u8_pomhv_data |= u8_POMHV_Data_Mapping[e_hvio][E_AFE_HVP_MODE_OUTPUT_NCH];
+			e_hvp_mode_setting[e_hvio] = E_AFE_HVP_MODE_OUTPUT_NCH;
+			break;
+		case E_AFE_HVP_MODE_OUTPUT_PCH:
+			u8_pmhv_data |= u8_PMHV_Data_Mapping[e_hvio][OUTPUT];
+			u8_pomhv_data |= u8_POMHV_Data_Mapping[e_hvio][E_AFE_HVP_MODE_OUTPUT_PCH];
+			e_hvp_mode_setting[e_hvio] = E_AFE_HVP_MODE_OUTPUT_PCH;
+			break;
+		default:
+			break;
+	}
 	AFE_Reg_Write(p8_PMHV_Reg_Mapping,	u8_pmhv_data);
 	AFE_Reg_Write(p8_POMHV_Reg_Mapping,	u8_pomhv_data);
-	AFE_Reg_Write(p8_PHV_Reg_Mapping,	u8_phv_data);
+	AFE_Reg_Write(p8_PMHV_Reg_Mapping,	u8_pmhv_data);
+
+	return TRUE;
 }
 
-void AFE_HVP_Control(U8 u8_hvp_onoff)
+U8 AFE_HVP_Output_Control(E_AFE_HVIO_ITEM e_hvio, U8 u8_con)
 {
-	U8 u8_index = 0;
-	U8 u8_bitmask = 0;
 	U8 u8_phv_data = 0;
 
-	for(u8_index = 0; u8_index < E_HVP_NUM; u8_index++)
-	{	
-		u8_bitmask = (u8_hvp_onoff >> u8_index) & 0x01;
-		
-		u8_phv_data |= u8_PHV_Data_Mapping[u8_bitmask][HI];
+	if(e_hvio >= E_AFE_HVP_NUM)
+	{
+		return FALSE;
+	}
+
+	if(u8_con > HI)
+	{
+		return FALSE;
+	}
+	
+	if(e_hvp_mode_setting[e_hvio] == E_AFE_HVP_MODE_INPUT)
+	{
+		return FALSE;
+	}
+	
+	AFE_Reg_Read(p8_PHV_Reg_Mapping,1, 	&u8_phv_data);
+	
+	if( u8_con == HI)
+	{
+		u8_phv_data |= u8_PHV_Data_Mapping[e_hvio][HI];
+	}else
+	{
+		u8_phv_data &=  ~(u8_PHV_Data_Mapping[e_hvio][HI]);
 	}
 	
 	AFE_Reg_Write(p8_PHV_Reg_Mapping,	u8_phv_data);
+
+	return TRUE;
+}
+
+U8 AFE_HVP_Get_State(E_AFE_HVIO_ITEM e_hvio)
+{
+	U8 u8_phv_data = 0;
+
+	if(e_hvio >= E_AFE_HVP_NUM)
+	{
+		return 0xFF;
+	}
+
+	AFE_Reg_Read(p8_PHV_Reg_Mapping,1, 	&u8_phv_data);
+
+	if(u8_phv_data & u8_PHV_Data_Mapping[e_hvio][HI])
+	{
+		return HI;
+	}else
+	{
+		return LOW;
+	}
 }
 
 

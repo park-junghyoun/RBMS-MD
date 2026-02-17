@@ -43,6 +43,13 @@
 
 #define	CS			P7_bit.no2						// CS port
 
+#define U8_MAX_CELL_COUNT 10
+#define U8_MAX_THERMISTOR_COUNT 4
+#define U16_DRVICE_VERSION 0x0001
+
+
+#define U8_ISR_RESET_SEQ	4
+volatile U8 __near * const p8_ISR_Reset_Sequence_Mapping[U8_ISR_RESET_SEQ] = { &AFE_AFIF0, &AFE_AFIF1, &AFE_AFIF2, &AFE_AFIF3};
 
 
 #endif
