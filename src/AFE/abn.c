@@ -40,6 +40,8 @@
 #include "define.h"
 #include "afe.h"
 #include "abn_mapping.h"
+
+/* Module overview: abnormal detection (SC/DOC/COC/WDT) initialization and ISR handling. */
 #include "device_register.h"
 
 

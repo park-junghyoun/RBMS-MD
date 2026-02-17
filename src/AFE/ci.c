@@ -42,6 +42,8 @@
 #include "ci_mapping.h"
 #include "device_register.h"
 
+/* Module overview: coulomb-counter (current integration) setup, ISR handling, and data reads. */
+
 
 // - Declare Internal function -------------------------------------------------
 #pragma interrupt _int_CI_Comple(vect=U16_INTCC_VECTOR_MAPPING)		// Current Integration complete

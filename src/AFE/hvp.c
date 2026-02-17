@@ -42,6 +42,8 @@
 #include "hvp_mapping.h"
 #include "device_register.h"
 
+/* Module overview: high-voltage pin mode initialization and per-pin mode control API. */
+
 
 // - Declare Internal function -------------------------------------------------
 

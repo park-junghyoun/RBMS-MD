@@ -40,6 +40,8 @@
 #include "define.h"
 #include "afe.h"
 #include "afetimer_mapping.h"
+
+/* Module overview: AFE timer A/B configuration, control, and timer interrupt dispatch. */
 #include "device_register.h"
 
 
