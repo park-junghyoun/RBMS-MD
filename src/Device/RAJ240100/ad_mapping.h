@@ -55,6 +55,7 @@ typedef enum {
 
 #define U8_AD_MEA_SIZE (U8)6
 
+/* Per-mode channel counts excluding the offset channel. */
 U8 const u8_Mode_Real_Size[E_AD_MODE_NUM] = {5,5,3,6,6};
 // Numbers excluding offsets
 // MODE1 = Offset, Cell 1-5
@@ -64,10 +65,11 @@ U8 const u8_Mode_Real_Size[E_AD_MODE_NUM] = {5,5,3,6,6};
 // MODE6 = Offset, AD reference, CC reference, AD/CC Power, MCU reference, S Temp,VREG2
 
 /***********************************************************************
-ADC MAMPPING DEVICE PROFILE
+ADC MAPPING DEVICE PROFILE
 ***********************************************************************/
 #define U16_INTAD_VECTOR_MAPPING INTP9
 
+/* AD interrupt flag/mask and conversion-control register mappings. */
 volatile U8 __near * const p8_ADIF_Reg_Mapping = &AFE_AFIF0;
 U8 const u8_ADIR_Data_Mapping = INT_ADIR;
 volatile U8 __near * const p8_ADMK_Reg_Mapping = &AFE_AFMK0;
@@ -84,6 +86,7 @@ U8 const u8_ADMODSEL_Data_Mapping[E_AD_MODE_NUM] = {ADC_BTMODE1,ADC_BTMODE2,ADC_
 ADC SETTING DEVICE PROFILE
 ***********************************************************************/
 
+/* Maximum allowed nibble values for ADCON2 timing fields. */
 #define U8_AD_TIME_MAX						0x08
 #define U8_AD_SETTIME_MAX					0x0A
 

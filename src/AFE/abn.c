@@ -70,6 +70,7 @@ U8 AFE_Abn_OC_Init(st_afe_hw1_config_t config)
 {
 	U8 init_seq = TRUE;
 	
+	/* Keep ABN IRQs masked while calibration/configuration is in progress. */
 	afe_Abn_Interrupt(OFF);
 	init_seq = afe_Abn_COC_Calibration();
 	if(init_seq == FALSE) 
@@ -101,6 +102,7 @@ U8 AFE_Abn_OC_Init(st_afe_hw1_config_t config)
 		return init_seq;
 	}
 	
+	/* Re-enable ABN IRQ delivery after all blocks are configured. */
 	afe_Abn_Interrupt(ON);
 	
 	return init_seq;
@@ -113,24 +115,28 @@ U8 AFE_Abn_OC_Init(st_afe_hw1_config_t config)
 *******************************************************************************/
 U8 AFE_Abn_WDT_Init(U8 u8_wdt_config)
 {
-	if(u8_wdt_config > 3)
+	/* Valid table index range is 0..2. */
+	if(u8_wdt_config >= 3)
 	{
 		return FALSE;
 	}
+	/* Program watchdog behavior from predefined mapping table. */
 	AFE_Reg_Write(p8_AWDTCON_Reg_Mapping,	u8_AWDTCON_DATA_Mapping[u8_wdt_config]);	
 
+	/* Clear/refresh AWDT request flags after configuration. */
 	AFE_Reg_Write(p8_AWDTRF_Reg_Mapping, 0xFF);
 	
 	return TRUE; 
 }
 /*******************************************************************************
 * Function Name: _int_AbnormalDtct
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : ABN interrupt service routine for SC/DOC/COC/WDT sources.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void _int_AbnormalDtct( void )
 {
+	/* Snapshot ABN interrupt flags once and service each asserted source. */
 	U8 u8_reg_data;
 	
 	f_AFE_Int_Opr = ON;
@@ -170,9 +176,9 @@ void _int_AbnormalDtct( void )
 }
 /*******************************************************************************
 * Function Name: afe_Abn_SCC_Setting
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Validate/clamp and apply SC detection threshold/time settings.
+* Arguments    : st_oc_config : SC over-current configuration
+* Return Value : U8 : TRUE/FALSE
 *******************************************************************************/
 U8 afe_Abn_SCC_Setting( st_afe_oc_config_t st_oc_config )
 {
@@ -214,9 +220,9 @@ U8 afe_Abn_SCC_Setting( st_afe_oc_config_t st_oc_config )
 }
 /*******************************************************************************
 * Function Name: afe_Abn_DOC_Setting
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Validate/clamp and apply DOC detection threshold/time settings.
+* Arguments    : st_oc_config : DOC over-current configuration
+* Return Value : U8 : TRUE/FALSE
 *******************************************************************************/
 U8 afe_Abn_DOC_Setting( st_afe_oc_config_t st_oc_config )
 {
@@ -239,6 +245,7 @@ U8 afe_Abn_DOC_Setting( st_afe_oc_config_t st_oc_config )
 		u16_odctime_data = st_oc_config.u16_time;
 	}
 
+	/* Clamp DOC threshold to DOC-specific HW range. */
 	if(st_oc_config.u8_thresholds > U8_ABN_DOCMPV_MAX)
 	{
 		u8_odcmpv_data = U8_ABN_DOCMPV_MAX;
@@ -259,9 +266,9 @@ U8 afe_Abn_DOC_Setting( st_afe_oc_config_t st_oc_config )
 }
 /*******************************************************************************
 * Function Name: afe_Abn_COC_Setting
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Validate/clamp and apply COC detection threshold/time settings.
+* Arguments    : st_oc_config : COC over-current configuration
+* Return Value : U8 : TRUE/FALSE
 *******************************************************************************/
 U8 afe_Abn_COC_Setting( st_afe_oc_config_t st_oc_config )
 {
@@ -284,12 +291,13 @@ U8 afe_Abn_COC_Setting( st_afe_oc_config_t st_oc_config )
 		u8_coctime_data = st_oc_config.u16_time;
 	}
 
-	if(st_oc_config.u8_thresholds > U8_ABN_DOCMPV_MAX)
+	/* Clamp COC threshold to COC-specific HW range. */
+	if(st_oc_config.u8_thresholds > U8_ABN_COCMPV_MAX)
 	{
-		u8_cocmpv_data = U8_ABN_DOCMPV_MAX;
-	}else if(st_oc_config.u8_thresholds <= U8_ABN_DOCMPV_MIN)
+		u8_cocmpv_data = U8_ABN_COCMPV_MAX;
+	}else if(st_oc_config.u8_thresholds <= U8_ABN_COCMPV_MIN)
 	{
-		u8_cocmpv_data = U8_ABN_DOCMPV_MIN;
+		u8_cocmpv_data = U8_ABN_COCMPV_MIN;
 	}else
 	{
 		u8_cocmpv_data = st_oc_config.u8_thresholds;
@@ -303,9 +311,9 @@ U8 afe_Abn_COC_Setting( st_afe_oc_config_t st_oc_config )
 }
 /*******************************************************************************
 * Function Name: afe_Abn_DOC_Calibration
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Execute DOC comparator offset calibration sequence.
+* Arguments    : void
+* Return Value : U8 : TRUE/FALSE
 *******************************************************************************/
 U8 afe_Abn_DOC_Calibration(void)
 {
@@ -322,6 +330,7 @@ U8 afe_Abn_DOC_Calibration(void)
 
 	MCU_100us_WaitTime(10);
 	
+	/* Sweep calibration code until DOC status toggles, then back off one step. */
 	do{	
 		if(u8_doccal_val != 0x00)
 		{
@@ -333,7 +342,7 @@ U8 afe_Abn_DOC_Calibration(void)
 			{
 				u8_doccal_val++;
 				AFE_WindowTo(E_AFE_WINDOW1);			// AFE Window 1
-				AFE_Reg_Write(p8_DOCCAL_Reg_Mapping,p8_DOCCAL_Reg_Mapping[OFF] | u8_doccal_val);					// DOCCAL calibration value setting & DOC calibration disabled
+				AFE_Reg_Write(p8_DOCCAL_Reg_Mapping,u8_DOCCAL_Data_Mapping[OFF] | u8_doccal_val);					// DOCCAL calibration value setting & DOC calibration disabled
 				AFE_WindowTo(E_AFE_WINDOW0);			// AFE Window 0
 				break;
 
@@ -341,7 +350,7 @@ U8 afe_Abn_DOC_Calibration(void)
 		}else
 		{
 			AFE_WindowTo(E_AFE_WINDOW1);				// AFE Window 1
-			AFE_Reg_Write(p8_DOCCAL_Reg_Mapping,p8_DOCCAL_Reg_Mapping[OFF] | u8_doccal_val);			// Set DOC calibration value
+			AFE_Reg_Write(p8_DOCCAL_Reg_Mapping,u8_DOCCAL_Data_Mapping[OFF] | u8_doccal_val);			// Set DOC calibration value
 			AFE_WindowTo(E_AFE_WINDOW0);				// AFE Window 0
 			u8_reg_check = FALSE;
 			break;
@@ -361,9 +370,9 @@ U8 afe_Abn_DOC_Calibration(void)
 }
 /*******************************************************************************
 * Function Name: afe_Abn_COC_Calibration
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Execute COC comparator offset calibration sequence.
+* Arguments    : void
+* Return Value : U8 : TRUE/FALSE
 *******************************************************************************/
 U8 afe_Abn_COC_Calibration(void)
 {
@@ -379,18 +388,20 @@ U8 afe_Abn_COC_Calibration(void)
 	
 	MCU_100us_WaitTime(10);
 	
+	/* Sweep calibration code until COC status toggles, then back off one step. */
 	do{	
 		if(u8_coccal_val != 0x00)
 		{
 			AFE_Reg_Read(p8_OCDSTS_Reg_Mapping,1,&u8_cocsts);			
-			if(u8_cocsts & u8_OCDRSTS_DOC_Mapping)
+			/* Evaluate COC status flag while calibrating COC comparator. */
+			if(u8_cocsts & u8_OCDSTS_COC_Mapping)
 			{
 				u8_coccal_val--;
 			}else
 			{
 				u8_coccal_val++;
 				AFE_WindowTo(E_AFE_WINDOW1);			// AFE Window 1
-				AFE_Reg_Write(p8_COCCAL_Reg_Mapping,p8_COCCAL_Reg_Mapping[OFF] | u8_coccal_val);					// DOCCAL calibration value setting & DOC calibration disabled
+				AFE_Reg_Write(p8_COCCAL_Reg_Mapping,u8_COCCAL_Data_Mapping[OFF] | u8_coccal_val);					// DOCCAL calibration value setting & DOC calibration disabled
 				AFE_WindowTo(E_AFE_WINDOW0);			// AFE Window 0
 				break;
 
@@ -398,13 +409,13 @@ U8 afe_Abn_COC_Calibration(void)
 		}else
 		{
 			AFE_WindowTo(E_AFE_WINDOW1);				// AFE Window 1
-			AFE_Reg_Write(p8_COCCAL_Reg_Mapping,p8_COCCAL_Reg_Mapping[OFF] | u8_coccal_val);			// Set DOC calibration value
+			AFE_Reg_Write(p8_COCCAL_Reg_Mapping,u8_COCCAL_Data_Mapping[OFF] | u8_coccal_val);			// Set DOC calibration value
 			AFE_WindowTo(E_AFE_WINDOW0);				// AFE Window 0
 			u8_reg_check = FALSE;
 			break;
 		}
 		AFE_WindowTo(E_AFE_WINDOW1);					// AFE Window 1
-		AFE_Reg_Write(p8_COCCAL_Reg_Mapping,p8_COCCAL_Reg_Mapping[ON] | u8_coccal_val);				// DOC calibration enabled & calibration value
+		AFE_Reg_Write(p8_COCCAL_Reg_Mapping,u8_COCCAL_Data_Mapping[ON] | u8_coccal_val);				// DOC calibration enabled & calibration value
 		AFE_WindowTo(E_AFE_WINDOW0);					// AFE Window 0
 		AFE_Reg_Write(p8_OCORSTS_Reg_Mapping,u8_OCDRSTS_COC_Mapping);					// Discharge detection flag clear
 		MCU_100us_WaitTime(10);
@@ -418,15 +429,16 @@ U8 afe_Abn_COC_Calibration(void)
 }
 /*******************************************************************************
 * Function Name: afe_Abn_Interrupt
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Enable/disable ABN interrupt masks for all ABN sources.
+* Arguments    : u8_onoff : ON to mask, OFF to unmask
+* Return Value : void
 *******************************************************************************/
 void afe_Abn_Interrupt(U8 u8_onoff)
 {
 	U8 u8_reg_data;
 	
 	AFE_Reg_Read(p8_ABIRMK_Reg_Mapping,1,&u8_reg_data);
+	/* Mask-register polarity: set bits to mask, clear bits to unmask. */
 	if(u8_onoff == ON)
 	{
 		u8_reg_data |= (u8_ABIRMK_Data_Mapping[E_ABN_SCD_IR] | u8_ABIRMK_Data_Mapping[E_ABN_DOC_IR] | u8_ABIRMK_Data_Mapping[E_ABN_COC_IR] | u8_ABIRMK_Data_Mapping[E_ABN_WDT_IR]);
@@ -440,9 +452,9 @@ void afe_Abn_Interrupt(U8 u8_onoff)
 }
 /*******************************************************************************
 * Function Name: afe_Abn_SC_Overflow_Chk
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Detect SC interrupt re-assertion while ISR is servicing current event.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void afe_Abn_SC_Overflow_Chk(void)
 {
@@ -457,9 +469,9 @@ void afe_Abn_SC_Overflow_Chk(void)
 }
 /*******************************************************************************
 * Function Name: afe_Abn_COC_Overflow_Chk
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Detect COC interrupt re-assertion while ISR is servicing current event.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void afe_Abn_COC_Overflow_Chk(void)
 {
@@ -474,9 +486,9 @@ void afe_Abn_COC_Overflow_Chk(void)
 }
 /*******************************************************************************
 * Function Name: afe_Abn_DOC_Overflow_Chk
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Detect DOC interrupt re-assertion while ISR is servicing current event.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void afe_Abn_DOC_Overflow_Chk(void)
 {
@@ -491,9 +503,9 @@ void afe_Abn_DOC_Overflow_Chk(void)
 }
 /*******************************************************************************
 * Function Name: afe_Abn_WDT_Overflow_Chk
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Detect WDT interrupt re-assertion while ISR is servicing current event.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void afe_Abn_WDT_Overflow_Chk(void)
 {

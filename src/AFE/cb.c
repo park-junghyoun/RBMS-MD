@@ -48,6 +48,7 @@
 // - Internal constant ---------------------------------------------------------
 
 // - Internal variable ---------------------------------------------------------
+/* Cached image of CBEN register bytes (COND0/COND1). */
 U8 u8_cb_item[U8_CB_REG_ITEM];
 
 // - Define function -----------------------------------------------------------
@@ -95,6 +96,11 @@ void AFE_CB_Control( U16 u16_balancing )
 {
 	U16 u16_index = 0;
 	U8 u8_cb_reg = 0;
+	U8 u8_shift = 0;
+
+	/* Rebuild cache from scratch for the new balancing request. */
+	u8_cb_item[0] = 0;
+	u8_cb_item[1] = 0;
 
 	/* Convert per-cell bitmask into CBEN register-bank image. */
 	for(u16_index = 0; u16_index < U8_CB_MAXIMUM_CELL_NUM; u16_index++)
@@ -102,11 +108,19 @@ void AFE_CB_Control( U16 u16_balancing )
 		if(E_CB1_ITEM_NUM <= u16_index)
 		{
 			u8_cb_reg = 1;
+			u8_shift = (U8)(u16_index - E_CB1_ITEM_NUM);
+		}else
+		{
+			u8_cb_reg = 0;
+			u8_shift = (U8)u16_index;
 		}
-		/* Shift target bit into the current CB register byte. */
-		u8_cb_item[u8_cb_reg] |= (u16_balancing >> u16_index);
+		/* Extract one cell bit and place it at the mapped CBEN position. */
+		u8_cb_item[u8_cb_reg] |= (U8)(((u16_balancing >> u16_index) & 0x01u) << u8_shift);
 	}
-}
 
+	/* Write rebuilt register image to hardware immediately. */
+	AFE_Reg_Write(p_CBEN_Reg_Mapping[0],u8_cb_item[0]);
+	AFE_Reg_Write(p_CBEN_Reg_Mapping[1],u8_cb_item[1]);
+}
 
 

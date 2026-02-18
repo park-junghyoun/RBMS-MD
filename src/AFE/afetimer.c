@@ -118,9 +118,9 @@ U8 AFE_TimerA_Control(U8 u8_con)
 
 /*******************************************************************************
 * Function Name: afe_TimerA_1sec_Init
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Initialize Timer A to 1-second periodic underflow configuration.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void afe_TimerA_1sec_Init( void )
 {
@@ -130,6 +130,7 @@ void afe_TimerA_1sec_Init( void )
 	AFE_Reg_Write(p8_ATMAR_Reg_Mapping,u8_ATMAR_Data_Mapping);												// 0.25[s] * (3+1) = 1[s]
 
 	AFE_Reg_Read(p8_TIMERMK_Reg_Mapping,1,&u8_reg_data);
+	/* Apply Timer A interrupt mask policy and clear any pending Timer A IF flag. */
 	AFE_Reg_Write(p8_TIMERMK_Reg_Mapping,u8_reg_data |u8_TIMERMK_Data_Mapping[E_TIMER_A_IR]);
 	AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_A_IR]);
 }
@@ -137,9 +138,9 @@ void afe_TimerA_1sec_Init( void )
 
 /*******************************************************************************
 * Function Name: AFE_Timer_Init
-* Description  : 
-* Arguments    : 
-* Return Value : 
+* Description  : Initialize both AFE timers with default TimerA/TimerB periods.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void AFE_Timer_Init( void )
 {
@@ -149,9 +150,9 @@ void AFE_Timer_Init( void )
 
 /*******************************************************************************
 * Function Name: afe_TimerB_5ms_Init
-* Description  : 
-* Arguments    : 
-* Return Value :
+* Description  : Initialize Timer B to ~5ms periodic underflow configuration.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void afe_TimerB_5ms_Init( void )
 {
@@ -168,6 +169,7 @@ void afe_TimerB_5ms_Init( void )
 	// 0.03052 x (163 + 1) x (0 + 1) = 5.00528ms
 
 	AFE_Reg_Read(p8_TIMERMK_Reg_Mapping,1,&u8_reg_data);
+	/* Apply Timer B interrupt mask policy and clear any pending Timer B IF flag. */
 	AFE_Reg_Write(p8_TIMERMK_Reg_Mapping,u8_reg_data |u8_TIMERMK_Data_Mapping[E_TIMER_B_IR]);	
 	AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_B_IR]);
 }
@@ -203,9 +205,9 @@ U8 AFE_TimerB_Control(U8 u8_con)
 }
 /*******************************************************************************
 * Function Name: afe_TimerB_Overflow_Chk
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Detect Timer B interrupt re-assertion during current ISR handling.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void afe_TimerB_Overflow_Chk(void)
 {
@@ -220,9 +222,9 @@ void afe_TimerB_Overflow_Chk(void)
 }
 /*******************************************************************************
 * Function Name: afe_TimerA_Overflow_Chk
-* Description  : 
-* Arguments    :
-* Return Value :
+* Description  : Detect Timer A interrupt re-assertion during current ISR handling.
+* Arguments    : void
+* Return Value : void
 *******************************************************************************/
 void afe_TimerA_Overflow_Chk(void)
 {
