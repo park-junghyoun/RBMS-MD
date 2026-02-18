@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: mcu.c
-* Contents		: MCU pin/clock initialization and delay helpers
+* Contents		: MCU pin/clock initialization and basic timing utility functions
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -40,8 +40,6 @@
 #include "define.h"
 #include "afe.h"
 #include "mcu_mapping.h"
-
-/* Module overview: MCU pin/clock initialization and basic timing utility functions. */
 
 // - Declare Internal function -------------------------------------------------
 static U8 mcu_get_clock(void);
@@ -61,10 +59,9 @@ static void mcu_tm03_100usWaitTime(void);
 void MCU_Pin_Init(void)
 {
 	U8 u8_index = 0;
-
-	for (u8_index = 0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
+	
+	for(u8_index =0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
 	{
-		/* Apply board-specific pin setup entries in documented order. */
 		*p8_MCU_Pin_Sequence_Reg_Mapping[u8_index] = u8_MCU_Pin_Sequence_Data_Mapping[u8_index];
 	}
 }
@@ -77,33 +74,44 @@ void MCU_Pin_Init(void)
 void MCU_AFE_Pin_Init(void)
 {
 	U8 u8_index = 0;
-
-	for (u8_index = 0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
+	
+	for(u8_index =0; u8_index < U8_AFE_SEQUENCE_NUMBER; u8_index++)
 	{
 		/* Configure AFE-connected pins (IRQ, SPI/serial, wake lines, etc.). */
 		*p8_AFE_Pin_Sequence_Reg_Mapping[u8_index] = u8_AFE_Pin_Sequence_Data_Mapping[u8_index];
 	}
 
 }
+/*******************************************************************************
+* Function Name: mcu_get_clock
+* Description  : 
+* Arguments    : 
+* Return Value :
+*******************************************************************************/
 U8 mcu_get_clock(void)
 {
 	U8 u8_clock = 0;
 	U8 u8_index = 0;
-
+	
 	u8_clock = P8_HOCO_CLOCK;
 	u8_clock &= U8_HOCO_CLOCK_MASK;
 
-	for (u8_index = 0; u8_index <= E_MCU_CLOCK_ITEM_NUM; u8_index++)
+	for(u8_index = 0; u8_index <=E_MCU_CLOCK_ITEM_NUM; u8_index++)
 	{
-		if (u8_clock == u8_MCU_CLOCK_Data_Mapping[u8_index])
+		if(u8_clock == u8_MCU_CLOCK_Data_Mapping[u8_index])
 		{
 			return u8_index;
 		}
 	}
-
+	
 	return 0xFF;
 }
-
+/*******************************************************************************
+* Function Name: mcu_tm03_100usWaitTime
+* Description  : 
+* Arguments    : 
+* Return Value :
+*******************************************************************************/
 void mcu_tm03_100usWaitTime(void)
 {
 	U8 u8_tau0_en = OFF;
@@ -155,9 +163,9 @@ void mcu_tm03_100usWaitTime(void)
 void MCU_100us_WaitTime(U8 u8_n00us_wait)
 {
 	U8 u8_index = 0;
-
-	for (u8_index = 0; u8_index < u8_n00us_wait; u8_index++)
-	{
+	
+	for(u8_index = 0; u8_index < u8_n00us_wait; u8_index++)
+	{	
 		mcu_tm03_100usWaitTime();
-	}
+	}	
 }

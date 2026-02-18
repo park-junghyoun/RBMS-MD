@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
-* File Name		: main.c
-* Contents		: RBMS-MD sample application entry and event loop
+* System Name	: RBMS-M Series Driver for Renesas
+* File Name		: RBMS-MD.h
+* Contents		: RBMS-M Driver Hher
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -37,25 +37,11 @@
 *""FILE COMMENT END""*****************************************************/
 #include "afe.h"
 
-/* Bitmask of pending AFE events to be handled in main-loop context. */
 static volatile U32 u32_Pending_bitmap = 0;
-/* Software overflow flag when duplicated event bits are queued before handling. */
 static volatile U8 u8_Sw_Ovf = 0;
-/*******************************************************************************
-* Function Name: Stop_Mode
-* Description  : Enter STOP mode when no pending software events exist.
-* Arguments    : void
-* Return Value : void
-*******************************************************************************/
 void Stop_Mode(void);
 
-/* ===== ISR-safe callback ===== */
-/*******************************************************************************
-* Function Name: R_BMS_afe_callback
-* Description  : ISR callback that queues hardware events into software pending bitmap.
-* Arguments    : p_args : event callback arguments
-* Return Value : void
-*******************************************************************************/
+/* ===== ISR-safe Callback ===== */
 void R_BMS_afe_callback(st_afe_callback_args_t *p_args)
 {
 	MCU_PSW_PUSH();
@@ -63,14 +49,14 @@ void R_BMS_afe_callback(st_afe_callback_args_t *p_args)
 	{
 		u8_Sw_Ovf = ON;
 		u32_Pending_bitmap = 0;
-		// TODO: handle software pending-event overflow.
+		//TODO: Software OverWrite
 	}else
 	{
 		u32_Pending_bitmap |= (1u << p_args->event);
 	}
 	MCU_PSW_POP();
 
-	// TODO: add urgent event handling paths that must run inside ISR context.
+	//TODO:Use events that require quick processing.
 	/*
 	switch(u32_Pending_bitmap)
 	{
@@ -81,90 +67,83 @@ void R_BMS_afe_callback(st_afe_callback_args_t *p_args)
 }
 void R_BMS_afe_event_hw_overflow(U32 ovf_flg)
 {
-	/*
-	 * Hardware overflow means a new interrupt arrived before the previous
-	 * hardware flag could be consumed. Clear each asserted bit explicitly.
-	 */
 	if (ovf_flg & U32_AFE_INT_CC_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_CC_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_AD_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_AD_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_SC_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_SC_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_DOC_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_DOC_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_COC_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_COC_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_OV_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_OV_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_UV_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_UV_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_TA_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_TA_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_TB_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_TB_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_WDT_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_WDT_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_DWU_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_DWU_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_CWU_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_CWU_BIT);
 	}
 	if (ovf_flg & U32_AFE_INT_PON_BIT)
 	{
-		// TODO: report and recover from event-overflow condition.
+		//TODO : Over Flow Error
 		AFE_Int_HwOvf_Clear(U32_AFE_INT_PON_BIT);
 	}
 
 }
 void R_BMS_afe_event_process(void)
 {
-	/* Process queued events one-by-one and clear each handled software flag. */
 	if(u32_Pending_bitmap & U32_AFE_INT_CC_BIT)
 	{
 		U32 ad = AFE_CI_Get_AdData();
-		(void)ad; /* Placeholder: hand off sampled value to application logic. */
 		u32_Pending_bitmap &= ~U32_AFE_INT_CC_BIT;
 	}
 	if(u32_Pending_bitmap & U32_AFE_INT_AD_BIT)
 	{
 		U16 ad = AFE_AD_Get_AdData(U64_AD_CV4);
-		(void)ad; /* Placeholder: hand off sampled value to application logic. */
 		u32_Pending_bitmap &= ~U32_AFE_INT_AD_BIT;
 	}
 	if(u32_Pending_bitmap & U32_AFE_INT_SC_BIT)
@@ -215,13 +194,7 @@ void R_BMS_afe_event_process(void)
 
 }
 
-/* ===== Main-loop event handler ===== */
-/*******************************************************************************
-* Function Name: R_BMS_afe_event_handler
-* Description  : Main-loop dispatcher for pending events and overflow flags.
-* Arguments    : void
-* Return Value : void
-*******************************************************************************/
+/* ===== Main Loop Event Handler ===== */
 void R_BMS_afe_event_handler(void)
 {
 	U32 u32_ovf_flg = 0;
@@ -242,7 +215,6 @@ void R_BMS_afe_event_handler(void)
 
 void R_BMS_afe_load_config(st_afe_config_t *cfg)
 {
-	/* Load conservative sample settings for bring-up / reference operation. */
 	cfg->u8_afe_clock = E_AFE_CLOCK_NORMAL;
 	cfg->u8_afe_wdt_config = E_AFE_WDT_OFF;
 	cfg->st_afe_hw1_config.st_sc_config.e_setting= E_AFE_OC_DISABLE;
@@ -255,18 +227,11 @@ void R_BMS_afe_load_config(st_afe_config_t *cfg)
 
 }
 
-/*******************************************************************************
-* Function Name: R_BMS_afe_init
-* Description  : Load default AFE config and initialize the AFE driver.
-* Arguments    : void
-* Return Value : U8 : TRUE/FALSE
-*******************************************************************************/
 U8 R_BMS_afe_init(void)
 {
 	st_afe_init_result_t u8_init_result= {0,};
 	st_afe_config_t cfg;
 	
-	/* Register callback first so async events can be queued immediately. */
 	AFE_Callback_ISR(R_BMS_afe_callback, PNULL);
 
 	R_BMS_afe_load_config(&cfg);
@@ -275,16 +240,13 @@ U8 R_BMS_afe_init(void)
 }
 static U8 u8_afe_init;
 
-/* Optional scratch variable used for register-debug reads. */
 U8 u8_reg_data = 0;
 void main(void)
 {
-	/* Initialize the AFE driver and dependent blocks. */
 	u8_afe_init = R_BMS_afe_init();
 
 	if(u8_afe_init == TRUE)
 	{
-		/* Start example measurement/monitoring features after successful init. */
 		AFE_AD_Start_SW_Trigger();
 		AFE_CI_StartCC();
 		AFE_FET_Set(ON, ON);
@@ -293,8 +255,8 @@ void main(void)
 	}
 	while (1)
 	{
-		/* Run deferred event handlers, then transition to low-power idle. */
-		// Optional debug: AFE_Reg_Read(&AFE_AFIF3, 1, &u8_reg_data);
+
+		//AFE_Reg_Read(&AFE_AFIF3,1,&u8_reg_data);
 		R_BMS_afe_event_handler();
 		Stop_Mode();
 	}
@@ -302,21 +264,21 @@ void main(void)
 
 void Stop_Mode(void)
 {
-	/* Keep CPU active if there is still software work pending. */
 	if(u32_Pending_bitmap) return;
 	
 	DI();
 	WUP0 = 1;
-	NOP();											// Wait at least 3 clocks before STOP.
+	NOP();											// wait 3clock
 	NOP();
 	NOP();
-	EI();											// Re-enable interrupts before entering STOP.
-	STOP();											// Enter low-power STOP mode.
-	NOP();								// Wait at least 5 clocks after wake-up.
+	EI();											// Interrupt enable
+	STOP();											// Stop mode
+	NOP();								// wait 5clock
 	NOP();
 	NOP();
 	NOP();
 	NOP();
 	WUP0 = 0;	
 }
+
 

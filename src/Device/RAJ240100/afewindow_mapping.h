@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RBMS-M Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: afewindow_mapping.h
-* Contents		: general define
+* Contents		: afewondow mapping
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************

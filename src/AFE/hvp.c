@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
-* File Name		: fet.c
-* Contents		: RAA241xxx Charge/Discharge MOSFET control
+* System Name	: RBMS-M Series Driver for Renesas
+* File Name		: hvp.c
+* Contents		: high-voltage pin mode initialization and per-pin mode control API.
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -42,8 +42,6 @@
 #include "hvp_mapping.h"
 #include "device_register.h"
 
-/* Module overview: high-voltage pin mode initialization and per-pin mode control API. */
-
 
 // - Declare Internal function -------------------------------------------------
 
@@ -52,12 +50,6 @@
 // - Internal variable ---------------------------------------------------------
 U8 e_hvp_mode_setting[E_AFE_HVP_NUM];
 // - Define function -----------------------------------------------------------
-/*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
-*******************************************************************************/
 /*******************************************************************************
 * Function Name: AFE_HVP_Init
 * Description  : Initialize HVP pins to default output mode.
@@ -73,7 +65,6 @@ void AFE_HVP_Init(void)
 		AFE_HVP_Mode_Control((E_AFE_HVIO_ITEM)u8_index,E_AFE_HVP_MODE_OUTPUT_PCH);
 	}
 }
-
 /*******************************************************************************
 * Function Name: AFE_HVP_Mode_Control
 * Description  : Set mode (input/output type) for selected HVP pin.
@@ -127,7 +118,6 @@ U8 AFE_HVP_Mode_Control(E_AFE_HVIO_ITEM e_hvio, E_AFE_HVP_MODE_ITEM e_mode)
 
 	return TRUE;
 }
-
 /*******************************************************************************
 * Function Name: AFE_HVP_Output_Control
 * Description  : Drive selected HVP output state when configured as output.
@@ -167,7 +157,6 @@ U8 AFE_HVP_Output_Control(E_AFE_HVIO_ITEM e_hvio, U8 u8_con)
 
 	return TRUE;
 }
-
 /*******************************************************************************
 * Function Name: AFE_HVP_Get_State
 * Description  : Get cached HVP mode/output configuration state.

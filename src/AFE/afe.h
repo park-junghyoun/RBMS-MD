@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: afe.h
-* Contents		: AFE header file
+* Contents		: AFE Driver header file
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -42,8 +42,6 @@
 // - Include header file -------------------------------------------------------
 #include "define.h"
 #include "device_register.h"
-
-/* Public AFE driver interface: enums, configs, callbacks, and exported APIs. */
 
 #ifdef	_AFE_C
 #define		GLOBAL

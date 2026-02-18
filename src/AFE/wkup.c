@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: wkup.c
-* Contents		: RAA241xxx Wakeup Current Detection Circuit control
+* Contents		: charger/discharger wake-up source configuration and wake interrupt control. 
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -41,8 +41,6 @@
 #include "afe.h"
 #include "wkup_mapping.h"
 #include "device_register.h"
-
-/* Module overview: charger/discharger wake-up source configuration and wake interrupt control. */
 
 
 
@@ -63,12 +61,6 @@ static U8 afe_WKUP_Pon_Setting(U8 u8_pon_en);
 // - Internal variable ---------------------------------------------------------
 
 // - Define function -----------------------------------------------------------
-/*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
-*******************************************************************************/
 /*******************************************************************************
 * Function Name: AFE_WKUP_Init
 * Description  : Initialize wake-up block using charger/discharger wake sources.
@@ -104,10 +96,10 @@ U8 AFE_WKUP_Init(st_afe_hw2_config_t st_afe_wakeup_config)
 	return init_seq;
 }
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
+* Function Name: afe_WKUP_Setting
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 U8 afe_WKUP_Setting(st_afe_wkup_config_t st_wkup_chg_setting, st_afe_wkup_config_t st_wkup_dsg_setting, U8 u8_wkup_time)
 {
@@ -209,13 +201,6 @@ U8 afe_WKUP_Setting(st_afe_wkup_config_t st_wkup_chg_setting, st_afe_wkup_config
 	return TRUE;
 }
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
-*******************************************************************************/
-
-/*******************************************************************************
 * Function Name: AFE_WKUP_Dsg_Control
 * Description  : Enable/disable discharge-side wake-up detection.
 * Arguments    : u8_con : ON/OFF
@@ -278,20 +263,32 @@ U8 AFE_WKUP_Chg_Control(U8 u8_con)
 	
 	return u8_seq_check;
 }
+/*******************************************************************************
+* Function Name: afe_WKUP_Chg_ReStart
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 void afe_WKUP_Chg_ReStart(void)
 {
 	AFE_Reg_Write(p8_WKUPRESTART_Reg_Mapping, u8_WKUPCRESTART_Data_Mapping);
 }
+/*******************************************************************************
+* Function Name: afe_WKUP_Dsg_ReStart
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 void afe_WKUP_Dsg_ReStart(void)
 {
 	AFE_Reg_Write(p8_WKUPRESTART_Reg_Mapping, u8_WKUPDRESTART_Data_Mapping);
 }
 
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
+* Function Name: afe_WKUP_Interrupt
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 U8 afe_WKUP_Interrupt(U8 u8_onoff)
 {
@@ -335,10 +332,10 @@ U8 afe_WKUP_Interrupt(U8 u8_onoff)
 
 }
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
+* Function Name: afe_WKUP_Pon_Setting
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 U8 afe_WKUP_Pon_Setting(U8 u8_pon_en)
 {
@@ -375,10 +372,10 @@ U8 afe_WKUP_Pon_Setting(U8 u8_pon_en)
 	return u8_seq_check;
 }
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
+* Function Name: afe_WKUP_Get
+* Description  : 
 * Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
+* Return Value : void
 *******************************************************************************/
 void afe_WKUP_Get(void)
 {
@@ -396,12 +393,6 @@ void afe_WKUP_Get(void)
 		f_AFE_PON_Status =  OFF;														// return value = Low
 	}
 }
-/*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
-*******************************************************************************/
 /*******************************************************************************
 * Function Name: _int_WakeUpDtct
 * Description  : Wake-up detection ISR handler.
@@ -442,10 +433,10 @@ void _int_WakeUpDtct(void)
 	f_AFE_Int_Opr = OFF;
 }
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
+* Function Name: afe_PON_Overflow_Chk
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 void afe_PON_Overflow_Chk(void)
 {
@@ -459,10 +450,10 @@ void afe_PON_Overflow_Chk(void)
 	}
 }
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
+* Function Name: afe_DWU_Overflow_Chk
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 void afe_DWU_Overflow_Chk(void)
 {
@@ -476,10 +467,10 @@ void afe_DWU_Overflow_Chk(void)
 	}
 }
 /*******************************************************************************
-* Function Name: AFE_GetFETstatus
-* Description  : Get VCHG pin status
-* Arguments    : void
-* Return Value : U8 : 1:High(NOT Connected), 0:Low(Connected)
+* Function Name: afe_CWU_Overflow_Chk
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 void afe_CWU_Overflow_Chk(void)
 {

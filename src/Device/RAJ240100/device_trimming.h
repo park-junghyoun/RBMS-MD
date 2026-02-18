@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
-* File Name		: trim.h
-* Contents		: RAA241xxx AFE Trimming data setup header
+* System Name	: RBMS-M Series Driver for Renesas
+* File Name		: device_trimming.h
+* Contents		: trimming mapping
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************

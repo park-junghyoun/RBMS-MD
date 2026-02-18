@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
-* File Name		: fet.h
-* Contents		: RAA241xxx Charge/Discharge MOSFET control header
+* System Name	: RBMS-M Series Driver for Renesas
+* File Name		: mcu_mapping.h
+* Contents		: mcu mapping
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************

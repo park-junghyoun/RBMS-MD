@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: pwr.c
-* Contents		: RAA241xxx AFE Operation Mode control
+* Contents		: AFE power/clock mode transitions and reset-sequence control
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -41,8 +41,6 @@
 #include "afe.h"
 #include  "pwr_mapping.h"
 #include  "device_register.h"
-
-/* Module overview: AFE power/clock mode transitions and reset-sequence control. */
 
 
 // - Declare Internal function -------------------------------------------------
@@ -106,7 +104,6 @@ U8 AFE_PWR_Control( E_AFE_CLOCK_ITEM e_pwr_con )
 
 	return u8_reg_check;
 }
-
 /*******************************************************************************
 * Function Name: AFE_PWR_Get_State
 * Description  : Get cached AFE power-control state.
@@ -117,7 +114,6 @@ U8 AFE_PWR_Get_State(void)
 {
 	return u8_pwr_state;
 }
-
 /*******************************************************************************
 * Function Name: AFE_PWR_PowerDown
 * Description  : Request AFE power-down sequence.

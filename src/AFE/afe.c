@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: afe.c
-* Contents		: RAA241xxx AFE
+* Contents		: 
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -62,12 +62,11 @@ static afe_callback_t st_callback  = (afe_callback_t)0;
 static U8 u8_psw_error;
 // - Define function -----------------------------------------------------------
 /*******************************************************************************
-* Function Name: PSW_PUSH
+* Function Name: MCU_PSW_PUSH
 * Description  : PSW_PUSH
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-
 void MCU_PSW_PUSH(void)
 {
 	/* On first entry, save PSW and disable interrupts. */
@@ -83,7 +82,12 @@ void MCU_PSW_PUSH(void)
 		u8_psw_error = ON;
 	}
 }
-
+/*******************************************************************************
+* Function Name: MCU_PSW_POP
+* Description  : PSW_POP
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
 void MCU_PSW_POP(void)
 {
 	/* Prevent underflow when pop is called without matching push. */
@@ -101,16 +105,22 @@ void MCU_PSW_POP(void)
 		 __set_psw(u8_psw);	
 	}
 }
+/*******************************************************************************
+* Function Name: MCU_PSW_Get_Error
+* Description  : PSW Error
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 U8 MCU_PSW_Get_Error(void)
 {
 	/* Return sticky error state for critical-section misuse diagnostics. */
 	return u8_psw_error;
 }
 /*******************************************************************************
-* Function Name: PSW_POP
-* Description  : PSW_POP
-* Arguments    : void
-* Return Value : void
+* Function Name: afe_HW_Init
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 U8 afe_HW_Init(void)
 {
@@ -131,6 +141,12 @@ U8 afe_HW_Init(void)
 	
 	return u8_reg_check;
 }
+/*******************************************************************************
+* Function Name: AFE_Init
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 st_afe_init_result_t AFE_Init( st_afe_config_t st_afe_config )
 {
 	st_afe_init_result_t init_result;
@@ -143,16 +159,16 @@ st_afe_init_result_t AFE_Init( st_afe_config_t st_afe_config )
 		return init_result;
 	}
 	// Configure the AFE clock source.
-	init_result.u8_init_result = AFE_PWR_Control(st_afe_config.e_afe_clock); 														// Clock = OCO
+	init_result.u8_init_result = AFE_PWR_Control(st_afe_config.e_afe_clock);
 	if(init_result.u8_init_result == FALSE)
 	{
 		return init_result;
 	}
 	afe_ISR_Clear();
 	// Configure AFE timers.
-	AFE_Timer_Init(); 													// Initialize AFE timer
+	AFE_Timer_Init();
 	
-	// Configure the ADC block.
+	// AD settubg
 	init_result.u8_init_result = AFE_AD_Init(st_afe_config.st_afe_adc_config);
 	if(init_result.u8_init_result == FALSE)
 	{
@@ -196,9 +212,9 @@ st_afe_init_result_t AFE_Init( st_afe_config_t st_afe_config )
 }
 /*******************************************************************************
 * Function Name: AFE_Reg_Write
-* Description  : AFE_Reg_Write
-* Arguments    : void
-* Return Value : void
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 void AFE_Reg_Write( volatile __far U8 *p_reg, U8 u8_data )
 {
@@ -211,12 +227,11 @@ void AFE_Reg_Write( volatile __far U8 *p_reg, U8 u8_data )
 	MCU_PSW_POP(); 								// Restore PSW when the nested critical section exits.
 }
 
-
 /*******************************************************************************
 * Function Name: AFE_Reg_Read
-* Description  : AFE_Reg_Read
-* Arguments    : void
-* Return Value : void
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 void AFE_Reg_Read( volatile __far U8 *p_reg, U8 u8_size, U8 __near *p_data )
 {
@@ -237,6 +252,12 @@ void AFE_Reg_Read( volatile __far U8 *p_reg, U8 u8_size, U8 __near *p_data )
 		MCU_PSW_POP(); 							// Restore PSW when the nested critical section exits.
 	}
 }
+/*******************************************************************************
+* Function Name: AFE_WindowTo
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 U8 AFE_WindowTo( E_AFE_WINDOW_ITEM e_window )
 {
 	U8 u8_window_check = TRUE;
@@ -283,13 +304,23 @@ U8 AFE_WindowTo( E_AFE_WINDOW_ITEM e_window )
 
 	return u8_window_check;
 }
-
+/*******************************************************************************
+* Function Name: AFE_Get_Window
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 U8 AFE_Get_Window( void )
 {
 	/* Return cached logical window state. */
 	return u8_AFE_Window;
 }
-
+/*******************************************************************************
+* Function Name: AFE_Callback_ISR
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 void AFE_Callback_ISR(afe_callback_t st_cb, void * p_context)
 {
 	/* Update callback atomically to avoid ISR/main race on function pointer. */
@@ -298,7 +329,12 @@ void AFE_Callback_ISR(afe_callback_t st_cb, void * p_context)
 	p_ctx = p_context;
 	MCU_PSW_POP();
 }
-
+/*******************************************************************************
+* Function Name: AFE_Int_HwOvf_Get
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 U32 AFE_Int_HwOvf_Get(void)
 {
 	U32 u32_snap;
@@ -308,18 +344,26 @@ U32 AFE_Int_HwOvf_Get(void)
 	MCU_PSW_POP();
 	return u32_snap;
 }
-
+/*******************************************************************************
+* Function Name: AFE_Int_HwOvf_Clear
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 void AFE_Int_HwOvf_Clear(U32 mask)
 {
-	/* Clear only the requested overflow bits. */
 	MCU_PSW_PUSH();
 	u32_AFE_IntOVF_Flg &= ~mask;
 	MCU_PSW_POP();
 }
-
+/*******************************************************************************
+* Function Name: AFE_DispatchFrom_ISR
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 void AFE_DispatchFrom_ISR(E_AFE_EVENT_ITEM e_ev)
 {
-	/* Bridge ISR events to user callback while preserving critical section. */
 	MCU_PSW_PUSH();
 	if (st_callback)
 	{
@@ -328,23 +372,32 @@ void AFE_DispatchFrom_ISR(E_AFE_EVENT_ITEM e_ev)
 	}
 	MCU_PSW_POP();
 }
-
+/*******************************************************************************
+* Function Name: afe_ISR_Clear
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 void afe_ISR_Clear(void)
 {
 	U8 u8_afe_seq = 0;
 	
-	/* Execute mandatory reset-write sequence for internal ISR flags. */
 	for(u8_afe_seq = 0; u8_afe_seq < U8_ISR_RESET_SEQ; u8_afe_seq++)
 	{
 		AFE_Reg_Write((volatile U8 __far *)p8_ISR_Reset_Sequence_Mapping,0x00);	
 	}
 	
 }
+/*******************************************************************************
+* Function Name: afe_Get_Info
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 st_afe_init_result_t afe_Get_Info(void)
 {
 	st_afe_init_result_t init_result;
 	
-	/* Provide static capabilities and driver identity information. */
 	init_result.u8_init_result = TRUE;
 	init_result.u8_max_cell_series = U8_MAX_CELL_COUNT;
 	init_result.u8_max_thermistor_series =  U8_MAX_THERMISTOR_COUNT;

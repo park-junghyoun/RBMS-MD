@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RBMS-M Firmware for Renesas
-* File Name		: afe_ad_map.h
-* Contents		: general define
+* System Name	: RBMS-M Series Driver for Renesas
+* File Name		: afe_abn_mapping.h
+* Contents		: abn mapping
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -112,8 +112,4 @@ volatile U8 __near * const p8_AWDTCON_Reg_Mapping = &AFE_AWDTCON;
 U8 const u8_AWDTCON_DATA_Mapping[3] = {WDT_STOP,WDT_8S|WDT_MTRSEL_DIS,WDT_8S|WDT_MTRSEL_EN};
 
 volatile U8 __near * const p8_AWDTRF_Reg_Mapping = &AFE_AWDTRF;
-
-/***********************************************************************
-ADC SETTING DEVICE PROFILE
-***********************************************************************/
 #endif

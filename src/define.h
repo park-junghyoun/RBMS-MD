@@ -43,8 +43,6 @@
 // - includes -
 #include "iodefine.h"
 
-/* Project-wide primitive types, boolean constants, and common compile-time macros. */
-
 #define MAX2(a, b)  (( (a) > (b) ) ? (a) : (b))
 
 #define DI      __DI

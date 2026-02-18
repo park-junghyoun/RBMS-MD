@@ -28,7 +28,7 @@
 /*""FILE COMMENT""*******************************************************
 * System Name	: RBMS-M Series Driver for Renesas
 * File Name		: ad.c
-* Contents		: RAA241xxx Sigma-delta A/D Converter control
+* Contents		: ADC channel setup, conversion control, and conversion-result access
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -40,8 +40,6 @@
 #include "define.h"
 #include "afe.h"
 #include "ad_mapping.h"
-
-/* Module overview: ADC channel setup, conversion control, and conversion-result access. */
 #include "device_register.h"
 
 
@@ -93,15 +91,6 @@ U8 AFE_AD_Init( st_afe_adc_config_t config )
 	return u8_reg_check;
 }
 /*******************************************************************************
-* Function Name: AD_Setting_ADEn
-* Description  : Enable A/D conversion
-* Caution      : Select and enable the AD to operate.
-* Arguments    : u64_ad_enable : Bit table
-*	              : E_AFE_AD_SETTINGTIME : AD setting time
-*	              : E_AFE_AD_TIME : AD conversion time
-* Return Value : void
-*******************************************************************************/
-/*******************************************************************************
 * Function Name: AFE_AD_Setting
 * Description  : Program AD enable map and conversion timing registers.
 * Arguments    : config : ADC enable/time configuration
@@ -121,9 +110,7 @@ U8 AFE_AD_Setting( st_afe_adc_config_t config )
 	for(u8_mode_index = 0; u8_mode_index <E_AD_MODE_NUM; u8_mode_index++)
 	{
 		// Fleid mask
-		u64_bit_mask = (1 << (u8_Mode_Real_Size[u8_mode_index]+1
-)) -1;
-)) -1;
+		u64_bit_mask = (1 << (u8_Mode_Real_Size[u8_mode_index]+1)) -1;
 		// Fleid output
 		u8_ad_enable_item[u8_mode_index] = (config.u64_adc_enable >> (U8_AD_MEA_SIZE *u8_mode_index)) & u64_bit_mask;
 		//If the ADC you want to measure is not empty
@@ -153,24 +140,6 @@ U8 AFE_AD_Setting( st_afe_adc_config_t config )
 	}
 	if(config.u8_adc_time > U8_AD_TIME_MAX)
 	{
-/*******************************************************************************
-* Function Name: AFE_AD_Start_SW_Trigger
-* Description  : Start ADC software-trigger conversion sequence.
-* Arguments    : void
-* Return Value : U8 : TRUE/FALSE
-*******************************************************************************/
-/*******************************************************************************
-* Function Name: AFE_AD_Stop_SW_Trigger
-* Description  : Stop ADC software-trigger conversion sequence.
-* Arguments    : void
-* Return Value : void
-*******************************************************************************/
-/*******************************************************************************
-* Function Name: AFE_AD_Get_AdData
-* Description  : Read last converted ADC value for selected measurement item.
-* Arguments    : u8_ad_num : Measurement item index
-* Return Value : U16 : Converted raw ADC value
-*******************************************************************************/
 		u8_ad_limit_time = U8_AD_TIME_MAX;
 	}
 	else
@@ -191,11 +160,10 @@ U8 AFE_AD_Setting( st_afe_adc_config_t config )
 	return u8_reg_check;
 }
 /*******************************************************************************
-* Function Name: AD_Start_SW_Trigger
-* Description  : Start A/D conversion
-* Caution      : Start AD to operate.
+* Function Name: AFE_AD_Start_SW_Trigger
+* Description  : Start ADC software-trigger conversion sequence.
 * Arguments    : void
-* Return Value : void
+* Return Value : U8 : TRUE/FALSE
 *******************************************************************************/
 U8 AFE_AD_Start_SW_Trigger( void )
 {
@@ -233,12 +201,10 @@ void AFE_AD_Stop_SW_Trigger( void )
 }
 
 /*******************************************************************************
-* Function Name: AD_Get_AdData(U8 u8_ad_num, U16 u16_ad )
-* Description  : Set Ad data
-* Caution      : ad input ad buffer
-* Arguments    : u8_ad_num : ad number
-*	              : u16_ad : AD data
-* Return Value : void
+* Function Name: AFE_AD_Get_AdData
+* Description  : Read last converted ADC value for selected measurement item.
+* Arguments    : u8_ad_num : Measurement item index
+* Return Value : U16 : Converted raw ADC value
 *******************************************************************************/
 U16 AFE_AD_Get_AdData( E_AFE_MEA_MODE_ITEM u8_ad_num )
 {
@@ -257,7 +223,6 @@ U16 AFE_AD_Get_AdData( E_AFE_MEA_MODE_ITEM u8_ad_num )
 /*******************************************************************************
 * Function Name: AD_ReadAD
 * Description  : AD read Register Read
-* Caution      : ad input ad buffer
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
@@ -283,7 +248,12 @@ void afe_ReadAD( void )
 		}
 	}
 }
-
+/*******************************************************************************
+* Function Name: afe_SW_TriggerAD
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 void afe_SW_TriggerAD( void )
 {
 	U8 u8_item_index = 0;
@@ -313,12 +283,11 @@ void afe_SW_TriggerAD( void )
 	e_ad_run_mode++;
 	AFE_Reg_Write(p8_ADMODSEL_Reg_Mapping,u8_ADMODSEL_Data_Mapping[e_ad_run_mode]);
 }
-
 /*******************************************************************************
-* Function Name: _int_SwTrigAdComp
-* Description  : End of Software trigger A/D
-* Arguments    : void
-* Return Value : void
+* Function Name: _int_AD_Comple
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 void _int_AD_Comple( void )
 {
@@ -328,6 +297,7 @@ void _int_AD_Comple( void )
 	
 	AFE_Reg_Read(p8_ADIF_Reg_Mapping,1,&u8_reg_data);
 
+	if(u8_reg_data & u8_ADIR_Data_Mapping)
 	{
 		AFE_Reg_Write(p8_ADIF_Reg_Mapping,~u8_ADIR_Data_Mapping);								// Clear IF flag
 		afe_ReadAD();
@@ -337,7 +307,12 @@ void _int_AD_Comple( void )
 
 	f_AFE_Int_Opr= OFF;
 }
-
+/*******************************************************************************
+* Function Name: afe_AD_Overflow_Chk
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
 void afe_AD_Overflow_Chk( void )
 {
 	U8 u8_reg_data = 0;

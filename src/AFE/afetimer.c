@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: afetimer.c
-* Contents		: RAA241xxx AFE Timer control
+* Contents		: Module overview: AFE timer A/B configuration, control, and timer interrupt dispatch
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -40,8 +40,6 @@
 #include "define.h"
 #include "afe.h"
 #include "afetimer_mapping.h"
-
-/* Module overview: AFE timer A/B configuration, control, and timer interrupt dispatch. */
 #include "device_register.h"
 
 
@@ -59,7 +57,7 @@ static void afe_TimerA_Overflow_Chk(void);
 
 // - Define function -----------------------------------------------------------
 /*******************************************************************************
-* Function Name: Init_AfeTimer
+* Function Name: _int_AfeTimer
 * Description  : Timer interrupt routine (AFE Timer A or B)
 * Arguments    : void
 * Return Value : void
@@ -86,13 +84,6 @@ void _int_AfeTimer(void)
 	}
 	f_AFE_Int_Opr = OFF;
 }
-
-/*******************************************************************************
-* Function Name: AFE_TimerA_Start
-* Description  : Initialize and start 1sec timer by using AFE Timer A.
-* Arguments    : void
-* Return Value : void
-*******************************************************************************/
 /*******************************************************************************
 * Function Name: AFE_TimerA_Control
 * Description  : Enable or disable AFE Timer A operation.
@@ -126,10 +117,10 @@ U8 AFE_TimerA_Control(U8 u8_con)
 }
 
 /*******************************************************************************
-* Function Name: AFE_TimerAStartReg
-* Description  : Initialize and start AFE Timer A. Register value specified.
-* Arguments    : U8 u8_CountReg : ATMAR register value
-* Return Value : void
+* Function Name: afe_TimerA_1sec_Init
+* Description  : 
+* Arguments    :
+* Return Value :
 *******************************************************************************/
 void afe_TimerA_1sec_Init( void )
 {
@@ -146,9 +137,9 @@ void afe_TimerA_1sec_Init( void )
 
 /*******************************************************************************
 * Function Name: AFE_Timer_Init
-* Description  : AFE Timer A interrupt
-* Arguments    : void
-* Return Value : void
+* Description  : 
+* Arguments    : 
+* Return Value : 
 *******************************************************************************/
 void AFE_Timer_Init( void )
 {
@@ -157,11 +148,10 @@ void AFE_Timer_Init( void )
 }
 
 /*******************************************************************************
-* Function Name: AFE_TimerBStartReg
-* Description  : Initialize and start AFE Timer B. Register value specified.
-* Arguments    : U8 u8_CountReg : ATMBR register value
-*              : U8 u8_PreScalerReg : ATMBPRE1 register value
-* Return Value : void
+* Function Name: afe_TimerB_5ms_Init
+* Description  : 
+* Arguments    : 
+* Return Value :
 *******************************************************************************/
 void afe_TimerB_5ms_Init( void )
 {
@@ -182,12 +172,6 @@ void afe_TimerB_5ms_Init( void )
 	AFE_Reg_Write(p8_TIMERIF_Reg_Mapping,~u8_TIMERIR_data_Mapping[E_TIMER_B_IR]);
 }
 
-/*******************************************************************************
-* Function Name: AFE_TimerB_LOCO1secStart
-* Description  : Initialize and start 1sec timer by using AFE Timer B form LOCO.
-* Arguments    : void
-* Return Value : void
-*******************************************************************************/
 /*******************************************************************************
 * Function Name: AFE_TimerB_Control
 * Description  : Enable or disable AFE Timer B operation.
@@ -217,6 +201,12 @@ U8 AFE_TimerB_Control(U8 u8_con)
 	
 	return TRUE;
 }
+/*******************************************************************************
+* Function Name: afe_TimerB_Overflow_Chk
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 void afe_TimerB_Overflow_Chk(void)
 {
 	U8 u8_reg_data = 0;
@@ -228,6 +218,12 @@ void afe_TimerB_Overflow_Chk(void)
 		f_AFE_TIMERB_Int_OVF = ON;
 	}
 }
+/*******************************************************************************
+* Function Name: afe_TimerA_Overflow_Chk
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 void afe_TimerA_Overflow_Chk(void)
 {
 	U8 u8_reg_data = 0;

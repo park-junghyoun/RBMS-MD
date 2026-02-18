@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: fet.c
-* Contents		: RAA241xxx Charge/Discharge MOSFET control
+* Contents		: charge/discharge FET initialization and on/off state control
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -41,8 +41,6 @@
 #include "afe.h"
 #include "fet_mapping.h"
 #include "device_register.h"
-
-/* Module overview: charge/discharge FET initialization and on/off state control. */
 
 // - Declare Internal function -------------------------------------------------
 
@@ -57,11 +55,11 @@
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void AFE_FET_Init(void)
+void AFE_FET_Init( void )
 {
 	/* Program charge/discharge FET operation defaults from mapping tables. */
 	AFE_Reg_Write(p8_CFOCON_Reg_Mapping,	u8_CFOCON_Data_Mapping);
-	AFE_Reg_Write(p8_DFOCON_Reg_Mapping, u8_DFOCON_Data_Mapping);
+	AFE_Reg_Write(p8_DFOCON_Reg_Mapping,u8_DFOCON_Data_Mapping);
 
 }
 /*******************************************************************************
@@ -70,16 +68,16 @@ void AFE_FET_Init(void)
 * Arguments    : u8_cfet/u8_dfet : ON/OFF/MAINTAIN
 * Return Value : void
 *******************************************************************************/
-void AFE_FET_Set(U8 u8_cfet, U8 u8_dfet)
+void AFE_FET_Set( U8 u8_cfet, U8 u8_dfet)
 {
 	U8 u8_fetst = 0;
 	U8 u8_fetcon = 0;
 	
 	/* Read current state first so MAINTAIN can preserve selected bits. */
-	AFE_Reg_Read(p8_FCON_Reg_Mapping, 1, &u8_fetst);
-	
+	AFE_Reg_Read(p8_FCON_Reg_Mapping,1,&u8_fetst);
+
 	/* Build new D-FET control bits based on requested policy. */
-	if (u8_dfet == OFF)
+	if(u8_dfet == OFF)
 	{
 		u8_fetcon |= u8_FET_Data_Mapping[E_FET_D][OFF];
 	}else if (u8_dfet == ON)
@@ -91,9 +89,8 @@ void AFE_FET_Set(U8 u8_cfet, U8 u8_dfet)
 		u8_fetcon |= (u8_fetst & u8_FET_Data_Mapping[E_FET_D][ON]);
 	}
 
-	
 	/* Build new C-FET control bits based on requested policy. */
-	if (u8_cfet == OFF)
+	if(u8_cfet == OFF)
 	{
 		u8_fetcon |= u8_FET_Data_Mapping[E_FET_C][OFF];
 	}else if (u8_cfet == ON)
@@ -110,8 +107,6 @@ void AFE_FET_Set(U8 u8_cfet, U8 u8_dfet)
 	AFE_Reg_Write(p8_FCON_Reg_Mapping, u8_fetcon);
 
 }
-
-
 /*******************************************************************************
 * Function Name: AFE_FET_Get
 * Description  : Get FET status
@@ -123,7 +118,7 @@ U8 AFE_FET_Get(void)
 	U8 u8_Ret = 0;
 	
 	/* Return raw FCON state so caller can decode per-FET status bits. */
-	AFE_Reg_Read(p8_FCON_Reg_Mapping, 1, &u8_Ret);
+	AFE_Reg_Read(p8_FCON_Reg_Mapping,1,&u8_Ret);
 
 	return u8_Ret;
 }

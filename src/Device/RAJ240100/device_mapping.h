@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RBMS-M Firmware for Renesas
-* File Name		: afe_ad_map.h
-* Contents		: general define
+* System Name	: RBMS-M Series Driver for Renesas
+* File Name		: device_mapping.h
+* Contents		: device mapping
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************

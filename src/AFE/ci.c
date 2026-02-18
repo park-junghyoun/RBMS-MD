@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: ci.c
-* Contents		: RAA241xxx Current integration control
+* Contents		: coulomb-counter (current integration) setup, ISR handling, and data reads
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -41,8 +41,6 @@
 #include "afe.h"
 #include "ci_mapping.h"
 #include "device_register.h"
-
-/* Module overview: coulomb-counter (current integration) setup, ISR handling, and data reads. */
 
 
 // - Declare Internal function -------------------------------------------------
@@ -59,8 +57,8 @@ typedef union {
 static U_CI_ADC u_ci_adc_raw;
 // - Define function -----------------------------------------------------------
 /*******************************************************************************
-* Function Name: _int_CurrentIntegComp
-* Description  : Current integration interrupt
+* Function Name: AFE_CI_Init
+* Description  : 
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
@@ -73,7 +71,6 @@ void AFE_CI_Init( void )
 	AFE_Reg_Read(p8_CCMK_Reg_Mapping,1,&u8_reg_data);
 	AFE_Reg_Write(p8_CCMK_Reg_Mapping,u8_reg_data | u8_CCMK_Data_Mapping);
 }
-
 /*******************************************************************************
 * Function Name: _int_CI_Comple
 * Description  : Current integration completion ISR handler.
@@ -104,12 +101,6 @@ void _int_CI_Comple( void )
 }
 
 /*******************************************************************************
-* Function Name: AFE_StartCurrentInteg
-* Description  : Start current integration (1000ms period)
-* Arguments    : void
-* Return Value : void
-*******************************************************************************/
-/*******************************************************************************
 * Function Name: AFE_CI_Start
 * Description  : Start current integration measurement.
 * Arguments    : void
@@ -126,10 +117,8 @@ U8 AFE_CI_Start( void )
 
 	return TRUE;
 }
-
-
 /*******************************************************************************
-* Function Name: AFE_CI_CStopCC
+* Function Name: AFE_CI_Stop
 * Description  : Stop current integration
 * Arguments    : void
 * Return Value : void
@@ -138,7 +127,6 @@ void AFE_CI_Stop( void )
 {
 	AFE_Reg_Write(p_CCEN_Reg_Mapping,u8_CCEN_Data_Mapping[OFF]);
 }
-
 /*******************************************************************************
 * Function Name: AFE_CI_Get_AdData
 * Description  : Get latest current-integration raw count value.
@@ -149,7 +137,12 @@ U32 AFE_CI_Get_AdData( void )
 {
 	return u_ci_adc_raw.data;
 }
-
+/*******************************************************************************
+* Function Name: afe_CI_Overflow_Chk
+* Description  :
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 void afe_CI_Overflow_Chk( void )
 {
 	U8 u8_reg_data = 0;

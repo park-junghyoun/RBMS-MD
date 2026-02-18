@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
-* File Name		: oc.c
-* Contents		: RAA241xxx Overcurrent Detection Circuit control
+* System Name	: RBMS-M Series Driver for Renesas
+* File Name		: abn.c
+* Contents		: abnormal detection (SC/DOC/COC/WDT) initialization and ISR handling
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -40,8 +40,6 @@
 #include "define.h"
 #include "afe.h"
 #include "abn_mapping.h"
-
-/* Module overview: abnormal detection (SC/DOC/COC/WDT) initialization and ISR handling. */
 #include "device_register.h"
 
 
@@ -126,10 +124,10 @@ U8 AFE_Abn_WDT_Init(U8 u8_wdt_config)
 	return TRUE; 
 }
 /*******************************************************************************
-* Function Name: _int_CircuitShortCurrDtct
-* Description  : Circuit short current detection
-* Arguments    : void
-* Return Value : void
+* Function Name: _int_AbnormalDtct
+* Description  : 
+* Arguments    :
+* Return Value :
 *******************************************************************************/
 void _int_AbnormalDtct( void )
 {
@@ -170,6 +168,12 @@ void _int_AbnormalDtct( void )
 	f_AFE_Int_Opr = OFF;
 
 }
+/*******************************************************************************
+* Function Name: afe_Abn_SCC_Setting
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 U8 afe_Abn_SCC_Setting( st_afe_oc_config_t st_oc_config )
 {
 	U8 u8_sccmpv_data;
@@ -208,6 +212,12 @@ U8 afe_Abn_SCC_Setting( st_afe_oc_config_t st_oc_config )
 
 	return TRUE;
 }
+/*******************************************************************************
+* Function Name: afe_Abn_DOC_Setting
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 U8 afe_Abn_DOC_Setting( st_afe_oc_config_t st_oc_config )
 {
 	U8 u8_odcmpv_data;
@@ -247,6 +257,12 @@ U8 afe_Abn_DOC_Setting( st_afe_oc_config_t st_oc_config )
 
 	return TRUE;
 }
+/*******************************************************************************
+* Function Name: afe_Abn_COC_Setting
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 U8 afe_Abn_COC_Setting( st_afe_oc_config_t st_oc_config )
 {
 	U8 u8_cocmpv_data;
@@ -285,6 +301,12 @@ U8 afe_Abn_COC_Setting( st_afe_oc_config_t st_oc_config )
 
 	return TRUE;
 }
+/*******************************************************************************
+* Function Name: afe_Abn_DOC_Calibration
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 U8 afe_Abn_DOC_Calibration(void)
 {
 	U8 u8_docsts = 0;												// OCDSTS register read
@@ -337,6 +359,12 @@ U8 afe_Abn_DOC_Calibration(void)
 	return u8_reg_check;
 
 }
+/*******************************************************************************
+* Function Name: afe_Abn_COC_Calibration
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 U8 afe_Abn_COC_Calibration(void)
 {
 	U8 u8_cocsts = 0;												// OCDSTS register read
@@ -388,7 +416,12 @@ U8 afe_Abn_COC_Calibration(void)
 	return u8_reg_check;
 
 }
-
+/*******************************************************************************
+* Function Name: afe_Abn_Interrupt
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 void afe_Abn_Interrupt(U8 u8_onoff)
 {
 	U8 u8_reg_data;
@@ -405,6 +438,12 @@ void afe_Abn_Interrupt(U8 u8_onoff)
 
 	AFE_Reg_Write(p8_ABIF_Reg_Mapping,~( u8_ABIR_Data_Mapping[E_ABN_SCD_IR] | u8_ABIR_Data_Mapping[E_ABN_DOC_IR] | u8_ABIR_Data_Mapping[E_ABN_COC_IR] | u8_ABIR_Data_Mapping[E_ABN_WDT_IR]));
 }
+/*******************************************************************************
+* Function Name: afe_Abn_SC_Overflow_Chk
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 void afe_Abn_SC_Overflow_Chk(void)
 {
 	U8 u8_reg_data;
@@ -416,6 +455,12 @@ void afe_Abn_SC_Overflow_Chk(void)
 		f_AFE_SC_Int_OVF = ON;
 	}
 }
+/*******************************************************************************
+* Function Name: afe_Abn_COC_Overflow_Chk
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 void afe_Abn_COC_Overflow_Chk(void)
 {
 	U8 u8_reg_data;
@@ -427,6 +472,12 @@ void afe_Abn_COC_Overflow_Chk(void)
 		f_AFE_COC_Int_OVF = ON;
 	}
 }
+/*******************************************************************************
+* Function Name: afe_Abn_DOC_Overflow_Chk
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 void afe_Abn_DOC_Overflow_Chk(void)
 {
 	U8 u8_reg_data;
@@ -438,6 +489,12 @@ void afe_Abn_DOC_Overflow_Chk(void)
 		f_AFE_DOC_Int_OVF = ON;
 	}
 }
+/*******************************************************************************
+* Function Name: afe_Abn_WDT_Overflow_Chk
+* Description  : 
+* Arguments    :
+* Return Value :
+*******************************************************************************/
 void afe_Abn_WDT_Overflow_Chk(void)
 {
 	U8 u8_reg_data;

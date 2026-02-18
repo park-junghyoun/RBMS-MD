@@ -26,9 +26,9 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAA241xxx RBMS-P Firmware for Renesas
+* System Name	: RBMS-M Series Driver for Renesas
 * File Name		: ouv.c
-* Contents		: RAA241xxx Overvoltage/Undervoltage detection circuit control
+* Contents		: Overvoltage/Undervoltage detection circuit control
 * Compiler		: CC-RL
 * Note			:
 *************************************************************************
@@ -39,8 +39,6 @@
 
 #include "define.h"
 #include "afe.h"
-
-/* Module overview: over/under-voltage configuration and threshold management helpers. */
 
 // - Declare Internal function -------------------------------------------------
 
