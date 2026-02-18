@@ -300,7 +300,7 @@ Cell balancing SETTING DEVICE PROFILE
 ***********************************************************************/
 //User CB	PROFILE
 void AFE_CB_Stop( void );
-void AFE_CB_Start( void );
+U16 AFE_CB_Get_State( void );
 void AFE_CB_Control( U16 u16_balancing );
 /***********************************************************************
 Wakeup SETTING DEVICE PROFILE
