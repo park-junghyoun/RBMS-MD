@@ -44,7 +44,7 @@
 #define U16_ANL_VECTOR_MAPPING INTP12
 
 /***********************************************************************
-ADC MAMPPING DEVICE PROFILE
+ABN MAPPING DEVICE PROFILE
 ***********************************************************************/
 typedef enum{
 	E_ABN_SCD_IR = 0,
@@ -54,6 +54,7 @@ typedef enum{
 	E_ABN_IR_ITEM_NUM
 } E_AFE_ABN_IF_ITEM;
 
+/* Hardware-allowed setting ranges used for input clamping. */
 #define U8_ABN_SCCMPV_MAX	0x12
 #define U8_ABN_SCCMPV_MIN	0x00
 #define U8_ABN_SCCTIME_MAX	0x0F
@@ -69,12 +70,14 @@ typedef enum{
 #define U8_ABN_COCTIME_MAX	0xFF
 #define U8_ABN_COCTIME_MIN	0x00
 
+/* ABN interrupt flag/mask register mappings. */
 volatile U8 __near * const p8_ABIF_Reg_Mapping = &AFE_AFIF1;
 U8 const u8_ABIR_Data_Mapping[E_ABN_IR_ITEM_NUM] = {INT_SCDIR,INT_DOC1DIR,INT_COCDIR,INT_WDTIR};
 
 volatile U8 __near * const p8_ABIRMK_Reg_Mapping = &AFE_AFMK1;
 U8 const u8_ABIRMK_Data_Mapping[E_ABN_IR_ITEM_NUM] = {INT_SCDMSK,INT_DOCDMSK,INT_COCDMSK,INT_AWDTMSK};
 
+/* SC/DOC/COC control and timing register mappings. */
 volatile U8 __near * const p8_SCCCON_Reg_Mapping = &AFE_SCDCON;
 U8 const u8_SCCCON_Data_Mapping[3] = {SC_DIS,SC_EN,SC_EN|SC_FETEN};
 
@@ -90,6 +93,7 @@ volatile U8 __near * const p8_COCCON_Reg_Mapping = &AFE_COCDCON;
 U8 const u8_COCCON_Data_Mapping[3] = {COC_DIS,COC_EN,COC_EN|COC_FETEN};
 volatile U8 __near * const p8_COCTIME_Reg_Mapping = &AFE_COCDTIME;
 
+/* Calibration control defaults for DOC/COC comparators. */
 volatile U8 __near * const p8_DOCCAL_Reg_Mapping = &AFE_DOC1CAL;
 U8 const u8_DOCCAL_Data_Mapping[2] = {DOC1CAL_DIS,DOC1CAL_EN};
 U8 const u8_DOCCAL_InitVal_Mapping = 0x18;
@@ -98,6 +102,7 @@ volatile U8 __near * const p8_COCCAL_Reg_Mapping = &AFE_COCCAL;
 U8 const u8_COCCAL_Data_Mapping[2] = {COCCAL_DIS,COCCAL_EN};
 U8 const u8_COCCAL_InitVal_Mapping = 0x18;
 
+/* Status bits (latched flags) versus restart/clear command bits. */
 volatile U8 __near * const p8_OCDSTS_Reg_Mapping = &AFE_OCDSTS;
 U8 const u8_OCDSTS_DOC_Mapping = DOC1FLG;
 U8 const u8_OCDSTS_SC_Mapping = SCRFLG;
@@ -106,8 +111,9 @@ U8 const u8_OCDSTS_COC_Mapping = COCRFLG;
 volatile U8 __near * const p8_OCORSTS_Reg_Mapping = &AFE_OCDRSTRT;
 U8 const u8_OCDRSTS_DOC_Mapping = DOC1RSTRT;
 U8 const u8_OCDRSTS_SC_Mapping = SCRSTRT;
-U8 const u8_OCDRSTS_COC_Mapping = COCRFLG;
+U8 const u8_OCDRSTS_COC_Mapping = COCRSTRT;
 
+/* AWDT control modes mapped by AFE_Abn_WDT_Init(). */
 volatile U8 __near * const p8_AWDTCON_Reg_Mapping = &AFE_AWDTCON;
 U8 const u8_AWDTCON_DATA_Mapping[3] = {WDT_STOP,WDT_8S|WDT_MTRSEL_DIS,WDT_8S|WDT_MTRSEL_EN};
 

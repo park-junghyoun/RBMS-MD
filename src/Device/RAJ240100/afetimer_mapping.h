@@ -42,7 +42,7 @@
 #include "device_register.h"
 
 /***********************************************************************
-ADC MAMPPING DEVICE PROFILE
+AFE TIMER MAPPING DEVICE PROFILE
 ***********************************************************************/
 typedef enum {
 	E_TIMER_A_IR = 0,
@@ -55,10 +55,11 @@ typedef enum {
 volatile U8 __near * const p8_TIMERMK_Reg_Mapping = &AFE_AFMK3;
 U8 const u8_TIMERMK_Data_Mapping[E_TIMER_IR_ITEM_NUM] = {INT_AFETRAMSK,INT_AFETRBMSK};
 
-
-
+/* Timer A/B IF flag register and per-source IF bits. */
 volatile U8 __near * const p8_TIMERIF_Reg_Mapping = &AFE_AFIF3;
 U8 const u8_TIMERIR_data_Mapping[E_TIMER_IR_ITEM_NUM] = {INT_AFETRAIR,INT_AFETRBIR};
+
+/* Timer A period control mappings. */
 volatile U8 __near * const p8_ATMACR_Reg_Mapping = &AFE_ATMACR;
 U8 const u8_ATMACR_Data_Mapping[2] = {AFETRASTOP | AFETRACLKSEL_16K,AFETRASTART_ST | AFETRACLKSEL_16K};
 volatile U8 __near * const  p8_ATMAR_Reg_Mapping = &AFE_ATMAR;
@@ -68,6 +69,8 @@ U8 const u8_ATMAR_Data_Mapping = 3;
 // 0.25 x (0+1) = 250ms
 volatile U8 __near * const p8_ATMBCR_Reg_Mapping = &AFE_ATMBCR;
 U8 const u8_AFETRB_Data_Mapping[2] = {AFETRBSTOP,AFETRBSTART_ST};
+
+/* Timer B period control mappings. */
 volatile U8 __near * const p8_ATMBPRE_Reg_Mapping = &AFE_ATMBPRE1;
 U8 const u8_ATMBPRE_Data_Mapping = 163;
 volatile U8 __near * const p8_ATMBR_Reg_Mapping = &AFE_ATMBR;
@@ -76,6 +79,6 @@ U8 const u8_ATMBR_Data_Mapping = 0;
 // Underflow time (ms) = 0.03052 x (m + 1) x (n + 1)
 // 0.03052 x (163 + 1) x (0 + 1) = 5.00528ms
 /***********************************************************************
-ADC SETTING DEVICE PROFILE
+AFE TIMER SETTING DEVICE PROFILE
 ***********************************************************************/
 #endif

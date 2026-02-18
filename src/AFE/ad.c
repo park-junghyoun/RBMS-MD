@@ -75,7 +75,7 @@ U8 AFE_AD_Init( st_afe_adc_config_t config )
 	U8 u8_reg_data = 0;
 	U8 u8_index = 0;
 
-	// Buffer Init
+	/* Initialize software ADC cache to invalid default values. */
 	for(u8_index = 0; u8_index <E_AFE_MEA_NUM; u8_index++)
 	{
 		u16_get_adc[u8_index] = 0xFFFF;
@@ -106,17 +106,19 @@ U8 AFE_AD_Setting( st_afe_adc_config_t config )
 	U8 u8_reg_data = 0;
 	
 	AFE_AD_Stop_SW_Trigger();
-	// admsel buffer setting
+	/* Build and apply per-mode ADMSEL enable bitmaps. */
 	for(u8_mode_index = 0; u8_mode_index <E_AD_MODE_NUM; u8_mode_index++)
 	{
-		// Fleid mask
-		u64_bit_mask = (1 << (u8_Mode_Real_Size[u8_mode_index]+1)) -1;
-		// Fleid output
-		u8_ad_enable_item[u8_mode_index] = (config.u64_adc_enable >> (U8_AD_MEA_SIZE *u8_mode_index)) & u64_bit_mask;
-		//If the ADC you want to measure is not empty
-		if(u8_ad_enable_item[u8_mode_index] != 0)
-		{
-			// include offset voltage
+		/* Mask width includes the hidden offset-channel bit. */
+		u64_bit_mask = (1 << (u8_Mode_Real_Size[u8_mode_index]+1
+)) -1;
+		/* Slice one mode block from the 64-bit enable map. */
+		/* Program only non-empty mode selections. */
+			/* Hardware requires offset channel enable bit in position 0. */
+			/* Write ADMSEL for this mode. */
+			/* Read back ADMSEL for basic write verification. */
+	/* Clamp and pack set-time/time fields for ADCON2. */
+	/* Clear cached measurements before starting a new sweep. */
 			u8_ad_enable_item[u8_mode_index] = (u8_ad_enable_item[u8_mode_index] << 1) +1;
 			// Write ADMSEL
 			AFE_Reg_Write(p8_ADMSEL_Reg_Mapping[u8_mode_index],u8_ad_enable_item[u8_mode_index]);
@@ -204,28 +206,27 @@ void AFE_AD_Stop_SW_Trigger( void )
 * Function Name: AFE_AD_Get_AdData
 * Description  : Read last converted ADC value for selected measurement item.
 * Arguments    : u8_ad_num : Measurement item index
-* Return Value : U16 : Converted raw ADC value
-*******************************************************************************/
-U16 AFE_AD_Get_AdData( E_AFE_MEA_MODE_ITEM u8_ad_num )
-{
-	U16 u16_ad = 0;
-	
-	if(u8_ad_num >= 0x24)
-	{
-		u16_ad = U16_MAX;
-	}else
-	{
-		u16_ad = u16_get_adc[u8_ad_num];
-	}
-	
-	return u16_ad;
-}
-/*******************************************************************************
-* Function Name: AD_ReadAD
-* Description  : AD read Register Read
+	/* Abort if the run-mode state is invalid. */
+	/* Read all raw channels for the current mode buffer. */
+		/* Commit only channels enabled in this mode mask. */
+			/* Store per-channel conversion result into the global cache. */
+* Description  : Advance to next enabled AD mode or finalize AD sweep event.
 * Arguments    : void
 * Return Value : void
-*******************************************************************************/
+
+
+	/* Find the next enabled mode index based on the current mode. */
+	{
+			e_ad_run_mode++;
+	}
+
+* Description  : ADC conversion-complete ISR dispatcher.
+* Arguments    : void
+* Return Value : void
+/*******************************************************************************
+* Description  : Detect AD interrupt re-assertion while current ISR handling is active.
+* Arguments    : void
+* Return Value : void
 void afe_ReadAD( void )
 {
 	U8 u8_ad_index = 0;

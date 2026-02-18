@@ -44,6 +44,10 @@ void Stop_Mode(void);
 /* ===== ISR-safe Callback ===== */
 void R_BMS_afe_callback(st_afe_callback_args_t *p_args)
 {
+	/*
+	 * In ISR context, queue events into the bitmap instead of processing immediately.
+	 * If the same event arrives again before it is handled, mark software overflow.
+	 */
 	MCU_PSW_PUSH();
 	if(u32_Pending_bitmap & (1u << p_args->event))
 	{
@@ -67,6 +71,7 @@ void R_BMS_afe_callback(st_afe_callback_args_t *p_args)
 }
 void R_BMS_afe_event_hw_overflow(U32 ovf_flg)
 {
+	/* Clear each hardware-reported interrupt overflow bit individually. */
 	if (ovf_flg & U32_AFE_INT_CC_BIT)
 	{
 		//TODO : Over Flow Error
@@ -136,14 +141,17 @@ void R_BMS_afe_event_hw_overflow(U32 ovf_flg)
 }
 void R_BMS_afe_event_process(void)
 {
+	/* Drain and handle pending events in main-loop context. */
 	if(u32_Pending_bitmap & U32_AFE_INT_CC_BIT)
 	{
 		U32 ad = AFE_CI_Get_AdData();
+		(void)ad;
 		u32_Pending_bitmap &= ~U32_AFE_INT_CC_BIT;
 	}
 	if(u32_Pending_bitmap & U32_AFE_INT_AD_BIT)
 	{
 		U16 ad = AFE_AD_Get_AdData(U64_AD_CV4);
+		(void)ad;
 		u32_Pending_bitmap &= ~U32_AFE_INT_AD_BIT;
 	}
 	if(u32_Pending_bitmap & U32_AFE_INT_SC_BIT)
@@ -215,6 +223,7 @@ void R_BMS_afe_event_handler(void)
 
 void R_BMS_afe_load_config(st_afe_config_t *cfg)
 {
+	/* Default sample config: disable WDT/OC and enable representative CV ADC channels. */
 	cfg->u8_afe_clock = E_AFE_CLOCK_NORMAL;
 	cfg->u8_afe_wdt_config = E_AFE_WDT_OFF;
 	cfg->st_afe_hw1_config.st_sc_config.e_setting= E_AFE_OC_DISABLE;
@@ -243,6 +252,7 @@ static U8 u8_afe_init;
 U8 u8_reg_data = 0;
 void main(void)
 {
+	/* Start measurement/protection blocks only after successful AFE initialization. */
 	u8_afe_init = R_BMS_afe_init();
 
 	if(u8_afe_init == TRUE)
@@ -255,8 +265,10 @@ void main(void)
 	}
 	while (1)
 	{
-
-		//AFE_Reg_Read(&AFE_AFIF3,1,&u8_reg_data);
+		/*
+		 * Handle queued events first, then enter STOP mode.
+		 * The next interrupt wakes the MCU and processing resumes in this loop.
+		 */
 		R_BMS_afe_event_handler();
 		Stop_Mode();
 	}
@@ -264,6 +276,7 @@ void main(void)
 
 void Stop_Mode(void)
 {
+	/* Do not enter low-power mode while events are pending. */
 	if(u32_Pending_bitmap) return;
 	
 	DI();
@@ -280,5 +293,4 @@ void Stop_Mode(void)
 	NOP();
 	WUP0 = 0;	
 }
-
 

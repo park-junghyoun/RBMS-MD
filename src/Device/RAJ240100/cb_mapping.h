@@ -42,7 +42,7 @@
 #include "device_register.h"
 
 /***********************************************************************
-ADC MAMPPING DEVICE PROFILE
+CELL BALANCING MAPPING DEVICE PROFILE
 ***********************************************************************/
 typedef enum{
 	E_CB1_C1 = 0,
@@ -65,6 +65,7 @@ typedef enum{
 #define U8_CB_MAXIMUM_CELL_NUM	10
 #define U8_CB_REG_ITEM			2
 
+/* CBEN register banks: COND0 controls C1..C8, COND1 controls C9..C10. */
 volatile U8 __near * const p_CBEN_Reg_Mapping[U8_CB_REG_ITEM] = {&AFE_COND0, &AFE_COND1};
 
 #endif

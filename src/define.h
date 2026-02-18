@@ -74,6 +74,7 @@ typedef signed long		S32;
 typedef signed long long	S64;
 typedef unsigned long long U64;
 
+/* Generic integer limit constants used throughout the driver. */
 
 #define U8_MAX			       ( (U8)0xFFU )
 #define U16_MAX			    ( (U16)0xFFFFU )
@@ -88,6 +89,7 @@ typedef unsigned long long U64;
 
 typedef struct
 {
+	/* Shared bitfield type for bit-level access to 8-bit registers. */
 	unsigned char bit0			:1;	
 	unsigned char bit1			:1;
 	unsigned char bit2			:1;
@@ -108,6 +110,7 @@ typedef struct
 #define DEF8_BIT0(pdata)	((volatile _ST8_BIT*)(pdata))->bit0
 typedef struct
 {
+	/* Shared bitfield type for bit-level access to 16-bit registers. */
 	unsigned char bit0			:1;	
 	unsigned char bit1			:1;
 	unsigned char bit2			:1;
@@ -145,6 +148,7 @@ typedef struct
 
 typedef struct
 {
+	/* Shared bitfield type for bit-level access to 32-bit flags/registers. */
 	unsigned char bit0			:1;	
 	unsigned char bit1			:1;
 	unsigned char bit2			:1;
