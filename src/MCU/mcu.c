@@ -47,9 +47,65 @@ static void mcu_tm03_100usWaitTime(void);
 // - Internal constant ---------------------------------------------------------
 
 // - Internal variable ---------------------------------------------------------
-
-
+/* Saved PSW value used by nested critical-section helpers. */
+static U8 u8_psw;
+/* Nested critical-section depth counter. */
+static U8 u8_nest_dept;
 // - Define function -----------------------------------------------------------
+/*******************************************************************************
+* Function Name: MCU_PSW_PUSH
+* Description  : PSW_PUSH
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
+void MCU_PSW_PUSH(void)
+{
+	if(f_AFE_Sys_PSW_error == OFF)
+	{
+		/* On first entry, save PSW and disable interrupts. */
+		if(u8_nest_dept == 0)
+		{
+			u8_psw = __get_psw();
+			DI();
+		}
+		u8_nest_dept++;
+		/* Detect wrap-around to guard against misuse of push/pop API. */
+		if(u8_nest_dept == 255)
+		{
+			f_AFE_Sys_PSW_error = ON;
+			__set_psw(u8_psw);
+			AFE_DispatchFrom_ISR(E_AFE_EVENT_ERROR);
+		}
+	}
+}
+/*******************************************************************************
+* Function Name: MCU_PSW_POP
+* Description  : PSW_POP
+* Arguments    : void
+* Return Value : void
+*******************************************************************************/
+void MCU_PSW_POP(void)
+{
+	if(f_AFE_Sys_PSW_error == OFF)
+	{
+		/* Prevent underflow when pop is called without matching push. */
+		if(u8_nest_dept == 0)
+		{
+			f_AFE_Sys_PSW_error = ON;
+			__set_psw(u8_psw);
+			AFE_DispatchFrom_ISR(E_AFE_EVENT_ERROR);
+			return;
+		}
+		
+		u8_nest_dept--;
+		
+		if(u8_nest_dept == 0)
+		{
+			/* Restore original PSW only when outermost critical section exits. */
+			 __set_psw(u8_psw);	
+		}
+	}
+}
 /*******************************************************************************
 * Function Name: MCU_Pin_Init
 * Description  : Initialize MCU-side GPIO/peripheral pin configuration sequence.

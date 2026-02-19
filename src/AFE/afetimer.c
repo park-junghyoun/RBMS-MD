@@ -65,8 +65,7 @@ static void afe_TimerA_Overflow_Chk(void);
 void _int_AfeTimer(void)
 {
 	U8 u8_reg_data = 0;
-	
-	f_AFE_Int_Opr = ON;
+
 	AFE_Reg_Read(p8_TIMERIF_Reg_Mapping,1,&u8_reg_data);
 	
 	if( u8_reg_data & u8_TIMERIR_data_Mapping[E_TIMER_A_IR])								// AFE timer A interrupt
@@ -82,7 +81,7 @@ void _int_AfeTimer(void)
 		AFE_DispatchFrom_ISR(E_AFE_EVENT_TIMERB);
 		afe_TimerB_Overflow_Chk();
 	}
-	f_AFE_Int_Opr = OFF;
+
 }
 /*******************************************************************************
 * Function Name: AFE_TimerA_Control
@@ -217,7 +216,7 @@ void afe_TimerB_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_TIMERIR_data_Mapping[E_TIMER_B_IR])
 	{
-		f_AFE_TIMERB_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_TIMERB);
 	}
 }
 /*******************************************************************************
@@ -234,6 +233,6 @@ void afe_TimerA_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_TIMERIR_data_Mapping[E_TIMER_A_IR])
 	{
-		f_AFE_TIMERA_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_TIMERA);
 	}
 }

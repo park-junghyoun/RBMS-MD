@@ -80,8 +80,7 @@ void AFE_CI_Init( void )
 void _int_CI_Comple( void )
 {
 	U8 u8_reg_data;
-	
-	f_AFE_Int_Opr = ON;
+
 	AFE_Reg_Read(p8_CCIF_Reg_Mapping,1,&u8_reg_data);
 	
 	if( u8_reg_data & u8_CCIR_data_Mapping[E_CC_FST_IR])								// First CC interrupt request
@@ -97,7 +96,6 @@ void _int_CI_Comple( void )
 		afe_CI_Overflow_Chk();
 	}
 	
-	f_AFE_Int_Opr = OFF;
 }
 
 /*******************************************************************************
@@ -151,7 +149,7 @@ void afe_CI_Overflow_Chk( void )
 	
 	if(u8_reg_data & u8_CCIR_data_Mapping[E_CC_IR])
 	{
-		f_AFE_CC_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_CC);
 	}
 }
 

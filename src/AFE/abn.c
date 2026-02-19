@@ -139,8 +139,6 @@ void _int_AbnormalDtct( void )
 	/* Snapshot ABN interrupt flags once and service each asserted source. */
 	U8 u8_reg_data;
 	
-	f_AFE_Int_Opr = ON;
-	
 	AFE_Reg_Read(p8_ABIF_Reg_Mapping,1,&u8_reg_data);
 	
 	if( u8_reg_data & u8_ABIR_Data_Mapping[E_ABN_SCD_IR])								//SDC interrupt request
@@ -170,8 +168,6 @@ void _int_AbnormalDtct( void )
 		AFE_DispatchFrom_ISR(E_AFE_EVENT_WDT);
 		afe_Abn_WDT_Overflow_Chk();
 	}
-	
-	f_AFE_Int_Opr = OFF;
 
 }
 /*******************************************************************************
@@ -464,7 +460,7 @@ void afe_Abn_SC_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_ABIR_Data_Mapping[E_ABN_SCD_IR])
 	{
-		f_AFE_SC_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_SC);
 	}
 }
 /*******************************************************************************
@@ -481,7 +477,7 @@ void afe_Abn_COC_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_ABIR_Data_Mapping[E_ABN_COC_IR])
 	{
-		f_AFE_COC_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_COC);
 	}
 }
 /*******************************************************************************
@@ -498,7 +494,7 @@ void afe_Abn_DOC_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_ABIR_Data_Mapping[E_ABN_DOC_IR])
 	{
-		f_AFE_DOC_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_DOC);
 	}
 }
 /*******************************************************************************
@@ -515,6 +511,6 @@ void afe_Abn_WDT_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_ABIR_Data_Mapping[E_ABN_WDT_IR])
 	{
-		f_AFE_WDT_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_WDT);
 	}
 }

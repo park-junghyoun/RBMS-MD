@@ -145,14 +145,14 @@ typedef enum{
 	E_AFE_EVENT_SC,
 	E_AFE_EVENT_DOC,
 	E_AFE_EVENT_COC,
-	E_AFE_EVENT_OV,
-	E_AFE_EVENT_UV,
 	E_AFE_EVENT_TIMERA,
 	E_AFE_EVENT_TIMERB,
 	E_AFE_EVENT_WDT,
 	E_AFE_EVENT_DWU,
 	E_AFE_EVENT_CWU,
-	E_AFE_EVENT_PON
+	E_AFE_EVENT_PON,
+	E_AFE_EVENT_ERROR,
+	E_AFE_EVENT_NUM
 } E_AFE_EVENT_ITEM;
 
 typedef enum{
@@ -165,7 +165,7 @@ typedef enum{
 } E_AFE_DEVICE_ITEM;
 
 typedef struct{
-	E_AFE_EVENT_ITEM event;
+	E_AFE_EVENT_ITEM e_event;
 	void      * p_context; 
 } st_afe_callback_args_t;
 
@@ -175,11 +175,11 @@ typedef struct {
 	U8 u8_init_result;
 	U8 u8_max_cell_series;
 	U8 u8_max_thermistor_series;
-	E_AFE_DEVICE_ITEM e_target_deviece;
+	E_AFE_DEVICE_ITEM e_target_device;
 	U16 u16_driver_version; 
 
 	U16  u16_reserved;
-} st_afe_init_result_t;
+} st_afe_driver_info_t;
 
 typedef struct {
 	E_AFE_WKUP_SETTING_ITEM e_setting;
@@ -223,156 +223,155 @@ typedef struct {
 
 // - Global function -----------------------------------------------------------
 /***********************************************************************
-AFE  PROFILE
+AFE  PROFILE (Public API Profile)
 ***********************************************************************/
-//User ADC	PROFILE
-st_afe_init_result_t AFE_Init( st_afe_config_t st_afe_config );
+st_afe_driver_info_t AFE_Init( st_afe_config_t st_afe_config );
 void AFE_Reg_Read( volatile __far U8 *p_reg, U8 u8_size, U8 __near *p_data );
 void AFE_Reg_Write( volatile __far U8 *p_reg, U8 u8_data );
-void MCU_PSW_PUSH( void );
-void MCU_PSW_POP( void );
-U8 MCU_PSW_Get_Error(void);
+void AFE_Int_HwOvf_Set(E_AFE_EVENT_ITEM e_item);
+U16 AFE_Int_HwOvf_Get(void);
+void AFE_Int_HwOvf_Clear(U16 mask);
 U8 AFE_WindowTo( E_AFE_WINDOW_ITEM e_window );
 U8 AFE_Get_Window( void );
-void AFE_Interrupt_Clear( U32 u32_int_flg );
-
+U16 AFE_System_Get_Error(void);
 /***********************************************************************
-ADC  PROFILE
+ADC  PROFILE (Public API Profile)
 ***********************************************************************/
-U8 AFE_AD_Init( st_afe_adc_config_t config );
-U8 AFE_AD_Setting( st_afe_adc_config_t config );
-//User ADC  PROFILE
 U8 AFE_AD_Start_SW_Trigger( void );
 void AFE_AD_Stop_SW_Trigger( void );
 U16 AFE_AD_Get_AdData( E_AFE_MEA_MODE_ITEM u8_ad_num );
 /***********************************************************************
-TIMER  PROFILE
+TIMER  PROFILE (Public API Profile)
 ***********************************************************************/
-void AFE_Timer_Init( void );
-//User TIMER  PROFILE
 U8 AFE_TimerA_Control(U8 u8_con);
 U8 AFE_TimerB_Control( U8 u8_con );
-
 /***********************************************************************
-PWR DEVICE PROFILE
+TIMER  PROFILE (Internal API Profile)
 ***********************************************************************/
-//User PWR	PROFILE
+void AFE_Timer_Init( void );
+/***********************************************************************
+PWR DEVICE PROFILE (Public API Profile)
+***********************************************************************/
 U8 AFE_PWR_Control( E_AFE_CLOCK_ITEM e_pwr_con );
 U8 AFE_PWR_Get_State(void);
 U8 AFE_PWR_PowerDown( void );
 U8 AFE_PWR_Reset(void);
 /***********************************************************************
-CC SETTING DEVICE PROFILE
+Current Integration PROFILE (Public API Profile)
 ***********************************************************************/
-void AFE_CI_Init( void );
-//User CC	PROFILE
 U8 AFE_CI_Start( void );
 void AFE_CI_Stop( void );
 U32 AFE_CI_Get_AdData( void );
 /***********************************************************************
-FET DEVICE PROFILE
+FET Control PROFILE (Public API Profile)
 ***********************************************************************/
-void AFE_FET_Init( void );
-//User FET	PROFILE
 void AFE_FET_Set( U8 u8_cfet, U8 u8_dfet );
 U8 AFE_FET_Get( void );
 /***********************************************************************
-HVP SETTING DEVICE PROFILE
+High Voltage Pin  PROFILE (Public API Profile)
 ***********************************************************************/
-void AFE_HVP_Init( void );
-//User HVP	PROFILE
 U8 AFE_HVP_Mode_Control(E_AFE_HVIO_ITEM e_hvio, E_AFE_HVP_MODE_ITEM e_mode);
 U8 AFE_HVP_Output_Control(E_AFE_HVIO_ITEM e_hvio, U8 u8_con);
 U8 AFE_HVP_Get_State(E_AFE_HVIO_ITEM e_hvio);
 
 /***********************************************************************
-OC SETTING DEVICE PROFILE
+Cell balancing PROFILE (Public API Profile)
 ***********************************************************************/
-U8 AFE_Abn_OC_Init( st_afe_hw1_config_t config );
-U8 AFE_Abn_WDT_Init(U8 u8_wdt_config);
-
-/***********************************************************************
-Trimming SETTING DEVICE PROFILE
-***********************************************************************/
-U8 AFE_Trimming_Setting( void );
-/***********************************************************************
-Cell balancing SETTING DEVICE PROFILE
-***********************************************************************/
-//User CB	PROFILE
 void AFE_CB_Stop( void );
 U16 AFE_CB_Get_State( void );
 void AFE_CB_Control( U16 u16_balancing );
 /***********************************************************************
-Wakeup SETTING DEVICE PROFILE
+Wakeup  PROFILE (Public API Profile)
 ***********************************************************************/
-U8 AFE_WKUP_Init( st_afe_hw2_config_t st_afe_wakeup_config );
-//User CB	PROFILE
 U8 AFE_WKUP_Dsg_Control(U8 u8_con);
 U8 AFE_WKUP_Chg_Control(U8 u8_con);
-
+U8 AFE_WKUP_Get_PON_State(void);
+/***********************************************************************
+MCU PROFILE (Public API Profile)
+***********************************************************************/
 void MCU_100us_WaitTime(U8 u8_n00us_wait);
+void MCU_PSW_PUSH( void );
+void MCU_PSW_POP( void );
+/***********************************************************************
+Callback PROFILE (Public API Profile)
+***********************************************************************/
+void AFE_Callback_ISR(afe_callback_t st_cb, void * p_context);
+
+
+
+
+/***********************************************************************
+ADC  PROFILE (Internal API Profile)
+***********************************************************************/
+U8 AFE_AD_Init( st_afe_adc_config_t config );
+U8 AFE_AD_Setting( st_afe_adc_config_t config );
+/***********************************************************************
+Current Integration PROFILE (Internal API Profile)
+***********************************************************************/
+void AFE_CI_Init( void );
+/***********************************************************************
+FET Control PROFILE (Internal API Profile)
+***********************************************************************/
+void AFE_FET_Init( void );
+/***********************************************************************
+High Voltage Pin  PROFILE (Internal API Profile)
+***********************************************************************/
+void AFE_HVP_Init( void );
+/***********************************************************************
+Abnormal PROFILE (Internal API Profile)
+***********************************************************************/
+U8 AFE_Abn_OC_Init( st_afe_hw1_config_t config );
+U8 AFE_Abn_WDT_Init(U8 u8_wdt_config);
+/***********************************************************************
+Trimming PROFILE (Internal API Profile)
+***********************************************************************/
+U8 AFE_Trimming_Setting( void );
+/***********************************************************************
+Wakeup  PROFILE (Internal API Profile)
+***********************************************************************/
+U8 AFE_WKUP_Init( st_afe_hw2_config_t st_afe_wakeup_config );
+/***********************************************************************
+MCU PROFILE (Internal API Profile)
+***********************************************************************/
 void MCU_Pin_Init(void);
 void MCU_AFE_Pin_Init(void);
 /***********************************************************************
-Callback PROFILE
+Callback PROFILE (Internal API Profile)
 ***********************************************************************/
-void AFE_Callback_ISR(afe_callback_t st_cb, void * p_context);
 void AFE_DispatchFrom_ISR(E_AFE_EVENT_ITEM e_ev);
-
-U32 AFE_Int_HwOvf_Get(void);
-void AFE_Int_HwOvf_Clear(U32 mask);
-
 // - Global constant -----------------------------------------------------------
 
 
 // - Global variable -----------------------------------------------------------
-GLOBAL U32	u32_AFE_IntOVF_Flg;										// AFE interrupt flag
-#define f_AFE_CC_Int_OVF			DEF32_BIT0(&u32_AFE_IntOVF_Flg)		// Current Integration
-#define f_AFE_AD_Int_OVF			DEF32_BIT1(&u32_AFE_IntOVF_Flg)		// Software Trigger A/D Convert
-#define f_AFE_SC_Int_OVF			DEF32_BIT2(&u32_AFE_IntOVF_Flg)		// Discharge Short current
-#define f_AFE_DOC_Int_OVF			DEF32_BIT3(&u32_AFE_IntOVF_Flg)		// Discharge Overcurrent
-#define f_AFE_COC_Int_OVF			DEF32_BIT4(&u32_AFE_IntOVF_Flg)		// Charge Overcurrent
-#define f_AFE_OV_Int_OVF			DEF32_BIT5(&u32_AFE_IntOVF_Flg)		// Over Voltage
-#define f_AFE_UV_Int_OVF			DEF32_BIT6(&u32_AFE_IntOVF_Flg)		// Under Voltage
-#define f_AFE_TIMERA_Int_OVF		DEF32_BIT7(&u32_AFE_IntOVF_Flg)		// Timer A
-#define f_AFE_TIMERB_Int_OVF		DEF32_BIT8(&u32_AFE_IntOVF_Flg)		// Timer B
-#define f_AFE_WDT_Int_OVF			DEF32_BIT9(&u32_AFE_IntOVF_Flg)		// mcu wdt
-#define f_AFE_DWU_Int_OVF			DEF32_BIT10(&u32_AFE_IntOVF_Flg)		// Discharge WakeUp
-#define f_AFE_CWU_Int_OVF			DEF32_BIT11(&u32_AFE_IntOVF_Flg)		// Charge WakeUp
-#define f_AFE_PON_Int_OVF			DEF32_BIT12(&u32_AFE_IntOVF_Flg)		// PON edge change
+GLOBAL U16	u16_AFE_Sytem_Error;										// AFE interrupt flag
+#define f_AFE_Sys_Int_HwOverflow		DEF16_BIT1(&u16_AFE_Sytem_Error)	// AFE interrupt Hw OverFlow
+#define f_AFE_Sys_PSW_error			DEF16_BIT2(&u16_AFE_Sytem_Error)
 
-GLOBAL U32	u32_AFE_Sytem_Flg;										// AFE interrupt flag
-#define f_AFE_Int_Opr				DEF32_BIT0(&u32_AFE_Sytem_Flg)		// operatiing AFE interrupt 
-#define f_AFE_PON_Status			DEF32_BIT4(&u32_AFE_Sytem_Flg)
+GLOBAL U16	u16_AFE_Run_Flg;											// AFE interrupt flag
+#define f_AFE_CC_Run					DEF16_BIT0(&u16_AFE_Run_Flg)		// Current Integration
+#define f_AFE_AD_Run					DEF16_BIT1(&u16_AFE_Run_Flg)		// Software Trigger A/D Convert
+#define f_AFE_SC_Run					DEF16_BIT2(&u16_AFE_Run_Flg)		// Discharge Short current
+#define f_AFE_DOC_Run					DEF16_BIT3(&u16_AFE_Run_Flg)		// Discharge Overcurrent
+#define f_AFE_COC_Run					DEF16_BIT4(&u16_AFE_Run_Flg)		// Charge Overcurrent
+#define f_AFE_TIMERA_Run				DEF16_BIT5(&u16_AFE_Run_Flg)		// Timer A
+#define f_AFE_TIMERB_Run				DEF16_BIT6(&u16_AFE_Run_Flg)		// Timer B
+#define f_AFE_WDT_Run				DEF16_BIT7(&u16_AFE_Run_Flg)		// mcu wdt
+#define f_AFE_DSGWKUP_Run			DEF16_BIT8(&u16_AFE_Run_Flg)		// discharge wakeup
+#define f_AFE_CHGWKUP_Run			DEF16_BIT9(&u16_AFE_Run_Flg)		// charge wakeup
+#define f_AFE_PON_Run					DEF16_BIT10(&u16_AFE_Run_Flg)		// PON edge change
 
-GLOBAL U32	u32_AFE_Run_Flg;											// AFE interrupt flag
-#define f_AFE_CC_Run				DEF32_BIT0(&u32_AFE_Run_Flg)			// Current Integration
-#define f_AFE_AD_Run				DEF32_BIT1(&u32_AFE_Run_Flg)			// Software Trigger A/D Convert
-#define f_AFE_SC_Run				DEF32_BIT2(&u32_AFE_Run_Flg)			// Discharge Short current
-#define f_AFE_DOC_Run				DEF32_BIT3(&u32_AFE_Run_Flg)			// Discharge Overcurrent
-#define f_AFE_COC_Run				DEF32_BIT4(&u32_AFE_Run_Flg)			// Charge Overcurrent
-#define f_AFE_OV_Run				DEF32_BIT5(&u32_AFE_Run_Flg)			// Over Voltage
-#define f_AFE_UV_Run				DEF32_BIT6(&u32_AFE_Run_Flg)			// Under Voltage
-#define f_AFE_TIMERA_Run			DEF32_BIT7(&u32_AFE_Run_Flg)			// Timer A
-#define f_AFE_TIMERB_Run			DEF32_BIT8(&u32_AFE_Run_Flg)			// Timer B
-#define f_AFE_WDT_Run			DEF32_BIT9(&u32_AFE_Run_Flg)			// mcu wdt
-#define f_AFE_DSGWKUP_Run		DEF32_BIT10(&u32_AFE_Run_Flg)			// discharge wakeup
-#define f_AFE_CHGWKUP_Run		DEF32_BIT11(&u32_AFE_Run_Flg)			// charge wakeup
-#define f_AFE_PON_Run				DEF32_BIT12(&u32_AFE_Run_Flg)			// PON edge change
-
-#define U32_AFE_INT_CC_BIT		((U32)1<<E_AFE_EVENT_CC)
-#define U32_AFE_INT_AD_BIT		((U32)1<<E_AFE_EVENT_AD)
-#define U32_AFE_INT_SC_BIT		((U32)1<<E_AFE_EVENT_SC)
-#define U32_AFE_INT_DOC_BIT		((U32)1<<E_AFE_EVENT_DOC)
-#define U32_AFE_INT_COC_BIT		((U32)1<<E_AFE_EVENT_COC)
-#define U32_AFE_INT_OV_BIT		((U32)1<<E_AFE_EVENT_OV)
-#define U32_AFE_INT_UV_BIT		((U32)1<<E_AFE_EVENT_UV)
-#define U32_AFE_INT_TA_BIT		((U32)1<<E_AFE_EVENT_TIMERA)
-#define U32_AFE_INT_TB_BIT		((U32)1<<E_AFE_EVENT_TIMERB)
-#define U32_AFE_INT_WDT_BIT		((U32)1<<E_AFE_EVENT_WDT)
-#define U32_AFE_INT_DWU_BIT		((U32)1<<E_AFE_EVENT_DWU)
-#define U32_AFE_INT_CWU_BIT		((U32)1<<E_AFE_EVENT_CWU)
-#define U32_AFE_INT_PON_BIT		((U32)1<<E_AFE_EVENT_PON)
+#define U16_AFE_INT_CC_BIT				((U16)1<<E_AFE_EVENT_CC)
+#define U16_AFE_INT_AD_BIT				((U16)1<<E_AFE_EVENT_AD)
+#define U16_AFE_INT_SC_BIT				((U16)1<<E_AFE_EVENT_SC)
+#define U16_AFE_INT_DOC_BIT				((U16)1<<E_AFE_EVENT_DOC)
+#define U16_AFE_INT_COC_BIT				((U16)1<<E_AFE_EVENT_COC)
+#define U16_AFE_INT_TA_BIT				((U16)1<<E_AFE_EVENT_TIMERA)
+#define U16_AFE_INT_TB_BIT				((U16)1<<E_AFE_EVENT_TIMERB)
+#define U16_AFE_INT_WDT_BIT				((U16)1<<E_AFE_EVENT_WDT)
+#define U16_AFE_INT_DWU_BIT				((U16)1<<E_AFE_EVENT_DWU)
+#define U16_AFE_INT_CWU_BIT				((U16)1<<E_AFE_EVENT_CWU)
+#define U16_AFE_INT_PON_BIT				((U16)1<<E_AFE_EVENT_PON)
+#define U16_AFE_INT_ERROR_BIT			((U16)1<<E_AFE_EVENT_ERROR)
 
 #define U64_AD_CV1						((U64)1<<E_AFE_MEA_CELL1)
 #define U64_AD_CV2						((U64)1<<E_AFE_MEA_CELL2)

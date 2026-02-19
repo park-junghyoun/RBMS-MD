@@ -68,14 +68,14 @@ U8 AFE_PWR_Control( E_AFE_CLOCK_ITEM e_pwr_con )
 	MCU_PSW_PUSH();														// PSW -> STACK
 
 																	// AFE Power ctrl
-	if(e_pwr_con == E_AFE_CLOCK_NORMAL)												// AFE Power limit
+	if(e_pwr_con == E_AFE_CLOCK_LOWPOWER)												// AFE Power limit
 	{
 		AFE_Reg_Write(p8_PCON_Reg_Mapping,	u8_PCON_LowPower_Mapping);
 		AFE_Reg_Write(p8_CLCON_Reg_Mapping,	u8_CLCON_LowPower_Mapping); 	// ALOCO select
 
 		MCU_100us_WaitTime(2);
 		AFE_Reg_Read(p8_CLCON_Reg_Mapping,1,&u8_reg_data);			// Read MCLKSTS of AMOCON
-		if(u8_reg_data == u8_CLCON_LowPower_Mapping)
+		if(u8_reg_data == u8_CLCON_LowPower_Status_Mapping)
 		{
 			u8_pwr_state = 1;
 		}else
@@ -90,7 +90,7 @@ U8 AFE_PWR_Control( E_AFE_CLOCK_ITEM e_pwr_con )
 		
 		MCU_100us_WaitTime(2);
 		AFE_Reg_Read(p8_CLCON_Reg_Mapping,1,&u8_reg_data);			// Read MCLKSTS of AMOCON
-		if(u8_reg_data == u8_CLCON_Normal_Mapping)
+		if(u8_reg_data == u8_CLCON_Normal_Status_Mapping)
 		{
 			u8_pwr_state = 0;
 		}else

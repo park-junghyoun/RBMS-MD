@@ -45,8 +45,13 @@ volatile U8 __near * const p8_PCON_Reg_Mapping = &AFE_PCON;
 U8 const u8_PCON_LowPower_Mapping = BUFCEN1_EN | BUFCEN2_EN | BUFCEN3_EN | BUFCEN4_EN | BUFCEN4_EN | VCPC_EN |REG1C_EN;
 U8 const u8_PCON_Normal_Mapping = REG1C_DIS;
 volatile U8 __near * const p8_CLCON_Reg_Mapping = &AFE_AMOCON;
+
 U8 const u8_CLCON_LowPower_Mapping = MCLKSEL_ALOCO;
+U8 const u8_CLCON_LowPower_Status_Mapping = MCLKSTS_ALOCO|MCLKSEL_ALOCO;
+
 U8 const u8_CLCON_Normal_Mapping = MCLKSEL_AOCO;
+U8 const u8_CLCON_Normal_Status_Mapping = MCLKSTS_AOCO;
+
 
 #define U8_AFE_SWRST_SEQ	4
 volatile U8 __near * const p8_SWRST_Reg_Mapping = &AFE_AFESWRST;

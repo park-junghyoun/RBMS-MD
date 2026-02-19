@@ -50,7 +50,6 @@ static U8 afe_WKUP_Setting(st_afe_wkup_config_t st_wkup_chg_setting, st_afe_wkup
 static U8 afe_WKUP_Interrupt(U8 u8_onoff);
 static void afe_WKUP_Chg_ReStart(void);
 static void afe_WKUP_Dsg_ReStart(void);
-static void afe_WKUP_Get(void);
 static void afe_PON_Overflow_Chk(void);
 static void afe_DWU_Overflow_Chk(void);
 static void afe_CWU_Overflow_Chk(void);
@@ -372,12 +371,12 @@ U8 afe_WKUP_Pon_Setting(U8 u8_pon_en)
 	return u8_seq_check;
 }
 /*******************************************************************************
-* Function Name: afe_WKUP_Get
+* Function Name: AFE_WKUP_Get_PON_State
 * Description  : 
 * Arguments    : void
 * Return Value : void
 *******************************************************************************/
-void afe_WKUP_Get(void)
+U8 AFE_WKUP_Get_PON_State(void)
 {
 	U8 u8_Ret = 0;
 	
@@ -386,11 +385,11 @@ void afe_WKUP_Get(void)
 	AFE_WindowTo(E_AFE_WINDOW0);	// Window = 0
 	if( u8_Ret == 0 )																	// VCHG pin == High( NOT Connected ) ?
 	{
-		f_AFE_PON_Status = ON;														// return value = High
+		return HI;																	// return value = High
 	}
 	else																				// VCHG pin == Low
 	{
-		f_AFE_PON_Status =  OFF;														// return value = Low
+		return LOW;																	// return value = Low
 	}
 }
 /*******************************************************************************
@@ -403,13 +402,11 @@ void _int_WakeUpDtct(void)
 {
 	U8	u8_reg_data = 0;
 	
-	f_AFE_Int_Opr = ON;
 	AFE_Reg_Read(p8_WKUPIF_Reg_Mapping, 1, &u8_reg_data);								// Read interrupt request reg.
 
 	if( u8_reg_data & u8_WKUPIR_Data_Mapping[E_WKUP_PON_IR] )						// CHMON pin detect ?
 	{
 		AFE_Reg_Write(p8_WKUPIF_Reg_Mapping, ~u8_WKUPIR_Data_Mapping[E_WKUP_PON_IR]);// Clear interrupt request
-		afe_WKUP_Get();
 		AFE_DispatchFrom_ISR(E_AFE_EVENT_PON);
 		afe_PON_Overflow_Chk();
 	}
@@ -429,8 +426,7 @@ void _int_WakeUpDtct(void)
 		f_AFE_CHGWKUP_Run = OFF;
 		afe_CWU_Overflow_Chk();
 	}
-	
-	f_AFE_Int_Opr = OFF;
+
 }
 /*******************************************************************************
 * Function Name: afe_PON_Overflow_Chk
@@ -446,7 +442,7 @@ void afe_PON_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_WKUPIR_Data_Mapping[E_WKUP_PON_IR])
 	{
-		f_AFE_PON_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_PON);
 	}
 }
 /*******************************************************************************
@@ -463,7 +459,7 @@ void afe_DWU_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_WKUPIR_Data_Mapping[E_WKUP_DWU_IR])
 	{
-		f_AFE_DWU_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_DWU);
 	}
 }
 /*******************************************************************************
@@ -480,7 +476,7 @@ void afe_CWU_Overflow_Chk(void)
 	
 	if(u8_reg_data & u8_WKUPIR_Data_Mapping[E_WKUP_CWU_IR])
 	{
-		f_AFE_CWU_Int_OVF = ON;
+		AFE_Int_HwOvf_Set(E_AFE_EVENT_CWU);
 	}
 }
 

@@ -46,76 +46,16 @@
 // - Declare Internal function -------------------------------------------------
 static void afe_ISR_Clear(void);
 static U8 afe_HW_Init(void);
-static st_afe_init_result_t afe_Get_Info(void);
+static st_afe_driver_info_t afe_Get_Info(void);
 static void         * p_ctx = (void *)0;
 
 // - Internal variable ---------------------------------------------------------
-/* Saved PSW value used by nested critical-section helpers. */
-static U8 u8_psw;
-/* Nested critical-section depth counter. */
-static U8 u8_nest_dept;
 /* Cached current AFE register window selection. */
 static U8 u8_AFE_Window;
 /* User callback and opaque context dispatched from ISR bridge. */
 static afe_callback_t st_callback  = (afe_callback_t)0;
-/* Error flag for invalid PUSH/POP nesting usage. */
-static U8 u8_psw_error;
+static U16	u16_AFE_IntOVF_Flg;										// AFE interrupt flag
 // - Define function -----------------------------------------------------------
-/*******************************************************************************
-* Function Name: MCU_PSW_PUSH
-* Description  : PSW_PUSH
-* Arguments    : void
-* Return Value : void
-*******************************************************************************/
-void MCU_PSW_PUSH(void)
-{
-	/* On first entry, save PSW and disable interrupts. */
-	if(u8_nest_dept == 0)
-	{
-		u8_psw = __get_psw();
-		DI();
-	}
-	u8_nest_dept++;
-	/* Detect wrap-around to guard against misuse of push/pop API. */
-	if(u8_nest_dept == 255)
-	{
-		u8_psw_error = ON;
-	}
-}
-/*******************************************************************************
-* Function Name: MCU_PSW_POP
-* Description  : PSW_POP
-* Arguments    : void
-* Return Value : void
-*******************************************************************************/
-void MCU_PSW_POP(void)
-{
-	/* Prevent underflow when pop is called without matching push. */
-	if(u8_nest_dept == 0)
-	{
-		u8_psw_error = ON;
-		return;
-	}
-	
-	u8_nest_dept--;
-	
-	if(u8_nest_dept == 0)
-	{
-		/* Restore original PSW only when outermost critical section exits. */
-		 __set_psw(u8_psw);	
-	}
-}
-/*******************************************************************************
-* Function Name: MCU_PSW_Get_Error
-* Description  : PSW Error
-* Arguments    : 
-* Return Value : 
-*******************************************************************************/
-U8 MCU_PSW_Get_Error(void)
-{
-	/* Return sticky error state for critical-section misuse diagnostics. */
-	return u8_psw_error;
-}
 /*******************************************************************************
 * Function Name: afe_HW_Init
 * Description  : 
@@ -147,9 +87,9 @@ U8 afe_HW_Init(void)
 * Arguments    : 
 * Return Value : 
 *******************************************************************************/
-st_afe_init_result_t AFE_Init( st_afe_config_t st_afe_config )
+st_afe_driver_info_t AFE_Init( st_afe_config_t st_afe_config )
 {
-	st_afe_init_result_t init_result;
+	st_afe_driver_info_t init_result;
 	
 	init_result = afe_Get_Info();
 	// Perform hardware-level initialization.
@@ -330,17 +270,42 @@ void AFE_Callback_ISR(afe_callback_t st_cb, void * p_context)
 	MCU_PSW_POP();
 }
 /*******************************************************************************
+* Function Name: AFE_System_Get_Error
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
+U16 AFE_System_Get_Error(void)
+{
+	return u16_AFE_Sytem_Error;
+}
+
+/*******************************************************************************
 * Function Name: AFE_Int_HwOvf_Get
 * Description  : 
 * Arguments    : 
 * Return Value : 
 *******************************************************************************/
-U32 AFE_Int_HwOvf_Get(void)
+void AFE_Int_HwOvf_Set(E_AFE_EVENT_ITEM e_item)
+{
+	MCU_PSW_PUSH();
+	u16_AFE_IntOVF_Flg |= (1<<e_item);
+	f_AFE_Sys_Int_HwOverflow = ON;
+	AFE_DispatchFrom_ISR(E_AFE_EVENT_ERROR);
+	MCU_PSW_POP();
+}
+/*******************************************************************************
+* Function Name: AFE_Int_HwOvf_Get
+* Description  : 
+* Arguments    : 
+* Return Value : 
+*******************************************************************************/
+U16 AFE_Int_HwOvf_Get(void)
 {
 	U32 u32_snap;
 	/* Snapshot overflow bits atomically for main-loop inspection. */
 	MCU_PSW_PUSH();
-	u32_snap = u32_AFE_IntOVF_Flg;
+	u32_snap = u16_AFE_IntOVF_Flg;
 	MCU_PSW_POP();
 	return u32_snap;
 }
@@ -350,10 +315,14 @@ U32 AFE_Int_HwOvf_Get(void)
 * Arguments    : 
 * Return Value : 
 *******************************************************************************/
-void AFE_Int_HwOvf_Clear(U32 mask)
+void AFE_Int_HwOvf_Clear(U16 mask)
 {
 	MCU_PSW_PUSH();
-	u32_AFE_IntOVF_Flg &= ~mask;
+	u16_AFE_IntOVF_Flg &= ~mask;
+	if(u16_AFE_IntOVF_Flg == 0x00)
+	{
+		f_AFE_Sys_Int_HwOverflow = OFF;
+	}
 	MCU_PSW_POP();
 }
 /*******************************************************************************
@@ -394,14 +363,14 @@ void afe_ISR_Clear(void)
 * Arguments    : 
 * Return Value : 
 *******************************************************************************/
-st_afe_init_result_t afe_Get_Info(void)
+st_afe_driver_info_t afe_Get_Info(void)
 {
-	st_afe_init_result_t init_result;
+	st_afe_driver_info_t init_result;
 	
 	init_result.u8_init_result = TRUE;
 	init_result.u8_max_cell_series = U8_MAX_CELL_COUNT;
 	init_result.u8_max_thermistor_series =  U8_MAX_THERMISTOR_COUNT;
-	init_result.e_target_deviece = E_AFE_DEV_RAJ240100;
+	init_result.e_target_device = E_AFE_DEV_RAJ240100;
 	init_result.u16_driver_version= U16_DRVICE_VERSION;
 
 	return init_result;

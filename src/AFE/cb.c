@@ -59,6 +59,7 @@ U16 u16_balancing_cell;
 void AFE_CB_Stop( void )
 {
 	U8 u8_cb_reg = 0;
+	U8 u8_cb_item[U8_CB_REG_ITEM];
 	
 	for(u8_cb_reg = 0; u8_cb_reg < U8_CB_REG_ITEM; u8_cb_reg++)
 	{
@@ -66,6 +67,7 @@ void AFE_CB_Stop( void )
 		u8_cb_item[u8_cb_reg] = 0x00;
 		AFE_Reg_Write(p_CBEN_Reg_Mapping[u8_cb_reg],u8_cb_item[u8_cb_reg]);
 	}
+	u16_balancing_cell = 0;
 
 }
 /*******************************************************************************
