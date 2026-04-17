@@ -78,15 +78,7 @@ void main(void)
 	
 	app_init_leds();
 	SMBus_initialize();										// SMBus initializing
-	u8_ret = FLASH_Check_FixedData();
-	if(u8_ret == FALSE)
-	{
-		f_init_fixed_none = TRUE;
-		while(1)
-		{
-			
-		}
-	}
+
 	
 	u8_ret = APP_BMS_Core_Init() 
 	if(u8_ret == FALSE)

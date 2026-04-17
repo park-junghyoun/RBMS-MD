@@ -47,6 +47,28 @@ U8 APP_BMS_Core_Init(void)
 	return APP_ReportBMSCoreResult(e_ret);
 
 }
+
+void APP_Check_FlashData(void)
+{
+	U8 u8_ret;
+
+	u8_ret = FLASH_Check_FixedData();
+	if(u8_ret == FALSE)
+	{
+		f_init_fixed_none = TRUE;
+		while(1)
+		{
+			
+		}
+	}
+	u8_ret = FLASH_C();
+	if(u8_ret == FALSE)
+	{
+		f_init_cal_none = TRUE;
+	}
+
+}
+
 U8 APP_ReportBMSCoreResult_Fixed(E_BMS_RESULT_ITEM e_ret)
 {
 	if( e_ret != E_BMS_OK)
