@@ -48,6 +48,7 @@ typedef struct
 GLOBAL st_cal_data_t	st_cal_data_dataflash;
 
 st_cal_data_t CalbirationData_Read(void);						// Read own data
+U8 FLASH_Check_CalibrationData(void);						// Check calibration data empty(0xFF)
 
 #undef 		GLOBAL
 
