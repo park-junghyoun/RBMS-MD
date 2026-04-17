@@ -56,24 +56,18 @@
 
 #endif	// _DATAFLASH
 
-#include "dataflash_custom.h"
+#include "define.h"
 
-// - Function declaration -
-void DataFlash_update_check(void);							// DataFlash updating
+// - Function declaration (internal use only) -
 U8 DataFlash_Write(U8 *p8_addr, U8 *p8_data, U16 u16_size);		// DataFlash write
 U8 DataFlash_Erase(U8 u8_block);								// DataFlash erase
 void DataFlash_Enable(void);									// Set DFLEN=1
-void DataFlash_Disable(void);									// Set DFLEN=0
-void FlexibleData_Read(void);								// Read Flexible data
+void DataFlash_Disable(void);								// Set DFLEN=0
 void Search_FlexibleData_read(U16 *p16_tblock, U8 *p8_aidx);		// Search read index
 void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx);		// Search write index
-U8 Write_FlexibleData(void);									// Write Flexible data
-U8 FlexibleData_Write(void);									// Legacy alias
-st_cal_data_t CalbirationData_Read(void);						// Read Own data
 
 
-
-// - Grobal variable -
+// - Grobal variable (internal use only) -
 GLOBAL U8			u8_df_flg;				// Flags for DataFlash
 #define f_df0_erase_req		DEF_BIT0(&u8_df_flg)	// Block0 erase request
 #define f_df1_erase_req		DEF_BIT1(&u8_df_flg)	// Block1 erase request
@@ -84,7 +78,7 @@ GLOBAL U8			u8_df_flg;				// Flags for DataFlash
 #define f_dfe				DEF_BIT6(&u8_df_flg)	// DataFlash erasing flag
 
 
-// - Define definition -
+// - Define definition (internal use only) -
 // DataFlash definition
 #define U16_BLOCK_0				0x1000				// Start address of Block 0
 #define U16_BLOCK_1				0x1400				// Start address of Block 1
@@ -95,7 +89,6 @@ GLOBAL U8			u8_df_flg;				// Flags for DataFlash
 #define U8_FLEX_INDEX_WOK		0xA0				// Flexible data index : OK
 #define U8_FLEX_INDEX_WNG		0x07				// Flexible data index : NG
 #define U8_FLEX_INDEX_EMPTY		0xFF				// Flexible data index : Empty
-
 
 
 #undef 		GLOBAL

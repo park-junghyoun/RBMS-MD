@@ -44,11 +44,13 @@
 * 				: Replace overall
 *				: 
 *""FILE COMMENT END""*****************************************************/
-#define _DATAFLASH_CUSTOM
+#define _DATAFLASH_FLEXIBLE
+#define _DATAFLASH_CALIBRATION
 
 // - Include header file -
 #include "define.h"								// Common definition
 #include "dataflash_custom.h"
+#include "dataflash.h"							// Internal dataflash interface
 #include <string.h>
 
 /*""FUNC COMMENT""***************************************************
@@ -77,6 +79,11 @@
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
+void Request_FlexibleData_update(void)
+{
+	f_flex_update_req = ON;
+}
+
 void DataFlash_update_check(void)
 {
 	if( f_flex_update_req == ON )				// Flexible data update req. ?

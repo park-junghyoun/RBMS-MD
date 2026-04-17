@@ -51,7 +51,6 @@
 // - Include header file -
 #include "define.h"								
 #include "flashrom.h"							
-#include "dataflash.h"
 #include "dataflash_custom.h"
 #include "ram.h"
 #include "smbus.h"
@@ -469,7 +468,7 @@ void __SMB_StoreReceiveData(void)
 			{
 				a_com1b[0] = au8_smb_buff[0];
 				a_com1b[1] = au8_smb_buff[1];
-				f_flex_update_req = ON;
+				Request_FlexibleData_update();
 				aflex_reason = FLEXUP_SMB;		// Set Reason of Flex update
 			}
 			break;
@@ -479,7 +478,7 @@ void __SMB_StoreReceiveData(void)
 			{
 				a_com1c[0] = au8_smb_buff[0];
 				a_com1c[1] = au8_smb_buff[1];				
-				f_flex_update_req = ON;
+				Request_FlexibleData_update();
 				aflex_reason = FLEXUP_SMB;		// Set Reason of Flex update
 			}
 			break;
@@ -834,7 +833,7 @@ void Seal_Proc(void)
 			f_unseal_1st = OFF;					// Clear unseal 1st command
 			tseal = STS_SEAL;					// Set Seal status
 			f_ss = ON;							// Set PackStatus[SS]
-			f_flex_update_req = ON;
+			Request_FlexibleData_update();
 			aflex_reason = FLEXUP_SMB;			// Set Reason of Flex update
 		}
 		
@@ -857,7 +856,7 @@ void Seal_Proc(void)
 					f_unseal = ON;				// Set Unseal
 					tseal = STS_UNSEAL;			// Set Unseal status
 					f_ss = OFF;					// Set PackStatus[SS]
-					f_flex_update_req = ON;
+					Request_FlexibleData_update();
 					aflex_reason = FLEXUP_SMB;	// Set Reason of Flex update
 
 				} else {						// Incorrect
