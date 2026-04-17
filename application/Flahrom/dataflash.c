@@ -50,13 +50,9 @@
 
 // - Include header file -
 #include "define.h"								// Common definition
+#include "uif_pfdl.h"
 #include "dataflash.h"
 #include "dataflash_custom.h"
-#include "ram.h"
-#include "mode.h"
-#include <string.h>
-#include "uif_pfdl.h"
-
 
 
 // - Define definition -

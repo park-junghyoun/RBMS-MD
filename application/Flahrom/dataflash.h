@@ -59,17 +59,17 @@
 #include "dataflash_custom.h"
 
 // - Function declaration -
-void DataFlash_update_check(void);				// DataFlash updating
-U8 DataFlash_Write(U8 *, U8 *, U16);				// DataFlash write
-U8 DataFlash_Erase(U8);						// DataFlash erase
-void DataFlash_Enable(void);							// Set DFLEN=1
-void DataFlash_Disable(void);							// Set DFLEN=0
-void FlexibleData_Read(void);					// Read Flexible data
-void Search_FlexibleData_read(U16 *, U8 *);			// Search read index
-void Search_FlexibleData_write(U16 *, U8 *);			// Search write index
-U8 Write_FlexibleData(void);					// Write Flexible data
-U8 FlexibleData_Write(void);					// Legacy alias
-st_cal_data_t CalbirationData_Read(void);			// Read Own data
+void DataFlash_update_check(void);							// DataFlash updating
+U8 DataFlash_Write(U8 *p8_addr, U8 *p8_data, U16 u16_size);		// DataFlash write
+U8 DataFlash_Erase(U8 u8_block);								// DataFlash erase
+void DataFlash_Enable(void);									// Set DFLEN=1
+void DataFlash_Disable(void);									// Set DFLEN=0
+void FlexibleData_Read(void);								// Read Flexible data
+void Search_FlexibleData_read(U16 *p16_tblock, U8 *p8_aidx);		// Search read index
+void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx);		// Search write index
+U8 Write_FlexibleData(void);									// Write Flexible data
+U8 FlexibleData_Write(void);									// Legacy alias
+st_cal_data_t CalbirationData_Read(void);						// Read Own data
 
 
 
