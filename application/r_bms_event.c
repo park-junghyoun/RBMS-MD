@@ -39,20 +39,15 @@ void APP_Alarm_Event(E_BMS_ALARM_ITEM e_alarm)
 	switch(e_alarm)
 	{
 		case E_ALARM_CC_COMP:
-			app_process_cc_measurement_api();
-			app_poll_cc_raw_signal();
+			APP_Get_CC_measurement_snapshot();
+			//APP_Get_CC_RAW_measurement_snapshot();
 			break;
 		case E_ALARM_AD_COMP:
-			LED4 = ~LED4;
-			app_process_ad_measurement_api();
-			app_poll_ad_raw_signal();
+			APP_Get_AD_measurement_snapshot();
+			//APP_Get_CC_RAW_measurement_snapshot();
 			break;
 		case E_ALARM_125MS:
 			APP_Get_FETstatus();
-			app_service_mode_manager();
-			//app_service_balancing_control();
-			//app_service_fet_override();
-			//app_service_latched_protection();
 			break;
 		case E_ALARM_5MS:
 			break;

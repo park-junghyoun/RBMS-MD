@@ -45,7 +45,7 @@ U8 APP_BMS_Core_Init(void)
 	E_BMS_RESULT_ITEM e_ret;
 
 	e_ret = BMS_Core_Initialize(&st_fixed_data.st_bms_init_config);
-	return APP_ReportBMSCoreResult(e_ret);
+	return APP_ReportBMSCoreResult_Fixed(e_ret);
 
 }
 

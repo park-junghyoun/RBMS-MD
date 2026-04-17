@@ -2,7 +2,7 @@
 #include "r_bms_api.h"
 #include "r_bms_config.h"
 
-void APP_CFG_Set_Config_profile(void)
+void APP_CFG_Set_Fixed_Profile(void)
 {
 	U8 u8_ret = FALSE;
 	if(app_CFG_Set_Mode_profile() == FALSE) return;
@@ -203,9 +203,5 @@ U8 APP_CFG_Apply_Calibration_Profiles(void)
 	}
 
 	return TRUE;
-}
-void APP_CFG_Set_Config_profile(void)
-{
-	
 }
 

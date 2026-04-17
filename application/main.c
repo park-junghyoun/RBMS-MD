@@ -78,8 +78,8 @@ void main(void)
 	
 	app_init_leds();
 	SMBus_initialize();										// SMBus initializing
+	APP_Check_FlashData();
 
-	
 	u8_ret = APP_BMS_Core_Init() 
 	if(u8_ret == FALSE)
 	{
@@ -88,16 +88,15 @@ void main(void)
 
 		}
 	}
-	u8_ret = APP_Callbacks_Register();
-	if(u8_ret == FALSE)
+	(void)APP_Callbacks_Register();
+	if(f_init_fixed_none != TRUE)
 	{
-		while (1)
-		{
-
-		}
+		APP_CFG_Set_Fixed_Profile();
 	}
-	APP_CFG_Set_Config_profile();
-	APP_CALIB_Set_Config();
+	if(f_init_cal_none != TRUE)
+	{
+		APP_CFG_Apply_Calibration_Profiles();
+	}
 	while (1)
 	{
 		BMS_Event_Process();

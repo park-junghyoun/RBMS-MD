@@ -358,10 +358,6 @@ void _int_TM01_SMBus1ms(void)
 void _int_TM03(void)
 {
 	Stop_TM03();								// Stop TM03
-	if( aad_sts == AFE_AD_WAIT )				// AD status = Wait ?
-	{
-		aad_sts = AFE_AD_FAIL;					// Set AD status = Failed
-	}
 }
 
 /*""FUNC COMMENT""***************************************************
@@ -391,7 +387,6 @@ void _int_TM03(void)
 *""FUNC COMMENT END""**********************************************/
 void _int_IT_125ms(void)
 {
-	ITMC &= IT_STOP;							// Stop timer
-	f_125ms_int = ON;							// Set 125ms interval flag
+	
 }
 
