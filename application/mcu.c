@@ -35,8 +35,6 @@
 * Order			: 
 * CPU			: RAJ240xxx
 * Compiler		: CC-RL (V1.08.00)
-* OS			: None
-* Programmer	: Ryoji Kato
 * Note			: 
 ************************************************************************
 * Copyright,2020 (2012-2020) RENESAS ELECTRONICS CORPORATION,
@@ -52,19 +50,18 @@
 // - Include header file -
 #include "define.h"									// Common definition
 #pragma interrupt _int_TM01_SMBus1ms(vect=INTTM01)	// Timer for SMBus
-#pragma interrupt _int_TM03(vect=INTTM03)			// Timer for AD convert
-#pragma interrupt _int_IT_125ms(vect=INTIT)			// Timer for main 125msec cycle
 
-#include "flashrom.h"
-#include "ram.h"
+#include "iodefine.h"
 #include "mcu.h"
-#include "afe.h"
 #include "smbus.h"
-#include "mode.h"
-#include "dataflash_custom.h"
-#include "safety_custom.h"
+#include "r_bms_api.h"
 
-
+void MCU_Init(void)
+{
+	mcu_LED_Init();
+	mcu_TM01_1ms_Init();
+	SMBus_initialize();										// SMBus initializing
+}
 /*""FUNC COMMENT""***************************************************
 * ID : 1.0
 * module outline	: TM01 initialize function
@@ -90,7 +87,7 @@
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void Init_TM01_1msTimer(void)
+void mcu_TM01_1ms_Init(void)
 {
 	TAU0EN = 1;									// Timer array unit0
 												// Supplies input clock
@@ -111,182 +108,6 @@ void Init_TM01_1msTimer(void)
 
 	TMIF01 = 0;									// Clear INTTM01 interrupt flag
 	TMMK01 = 0;									// Enable INTTM01 interrupt
-}
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: 12Bit interval timer initialize function
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void Init_IT_125msTimer(void)
-*-------------------------------------------------------------------
-* Function			: Initializing 12Bit interval timer (125ms timer).
-*-------------------------------------------------------------------
-* Argument			: None
-*-------------------------------------------------------------------
-* Return			: None
-*-------------------------------------------------------------------
-* Input				: None
-* Output			: None
-*-------------------------------------------------------------------
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2020.10.21 Ver 0.01
-* 					: Replace overall
-* 
-*""FUNC COMMENT END""**********************************************/
-void Init_IT_125msTimer(void)
-{
-	RTCEN = 1;									// 12bit interval timer
-												//  supplies input clock
-
-	ITMC = 0;									// Stop timer
-
-	ITMK = 1;									// Disable INTIT interrupt
-	ITIF = 0;									// Clear INTIT interrupt flag
-
-	ITPR0 = 1;									// INTIT interrupt priority
-	ITPR1 = 0;									//  Level 1
-
-	OSMC = OSMC_LOCO;							// Select Low-speed OCO clock
-												// (15kHz)
-
-	ITMC = 1874;								// 15kHz * (1874+1) = 125msec
-
-	ITIF = 0;									// Clear INTIT interrupt flag
-	ITMK = 0;									// Enable INTIT interrupt
-}
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: Wait function by using timer
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void WaitTimer(U8 atime)
-*-------------------------------------------------------------------
-* Function			: Waiting specified time by using Timer UNIT0 Channel0.
-*-------------------------------------------------------------------
-* Argument			: U8 atime	: Wait time
-*					: The time is "(atime+1)x 128us".
-*-------------------------------------------------------------------
-* Return			: None
-*-------------------------------------------------------------------
-* Input				: None
-* Output			: None
-*-------------------------------------------------------------------
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2020.11.05 Ver 0.01
-* 					: Replace overall
-* 
-*""FUNC COMMENT END""**********************************************/
-void WaitTimer(U8 atime)
-{
-	TT0L.3 = 1;								// Stop TM03
-
-	TPS0 &= TPS_CKm3_mask;
-	TPS0 |= TPS_CKm3_7KHz;					// CKm3 : Clock=7.8125kHz
-
-	TMMK03 = 1;								// Disable INTTM03 interrupt
-	TMIF03 = 0;								// Clear INTTM03 interrupt flag
-
-	TMPR003 = 1;							// TM03 interrupt priority
-	TMPR103 = 0;							//  Level 1
-
-	//TMR03 = TMR_CKm3_8Bit;				// Select CKm3, 8Bit
-	TMR03 = TMR_CKm3_16Bit;					// Select CKm3, 16Bit
-	TDR03 = atime;							// 7.8125kHz(128us) x ( atime + 1 )
-
-	TS0L.3 = 1;								// Start TM03
-	while( TMIF03 == 0 ) ;					// Wait for interrupt
-	TMIF03 = 0;								// Clear INTTM03 interrupt flag
-
-	TT0L.3 = 1;								// Stop TM03
-}
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: TM03 start function
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void Start_TM03(void)
-*-------------------------------------------------------------------
-* Function			: Start Timer UNIT0 Channel3 for AD wait.
-*-------------------------------------------------------------------
-* Argument			: None
-*-------------------------------------------------------------------
-* Return			: None
-*-------------------------------------------------------------------
-* Input				: None
-* Output			: None
-*-------------------------------------------------------------------
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2020.12.11 Ver 0.01
-* 					: Replace overall
-* 
-*""FUNC COMMENT END""**********************************************/
-void Start_TM03(void)
-{
-	TT0L.3 = 1;									// Stop TM03
-
-	TPS0 &= TPS_CKm3_mask;
-	TPS0 |= TPS_CKm3_7KHz;						//	CKm3 :	Clock=7.8125kHz
-
-	TMMK03 = 0;									// Enable INTTM03 interrupt
-	TMIF03 = 0;									// Clear INTTM03 interrupt flag
-
-	TMPR003 = 1;								// TM03 interrupt priority
-	TMPR103 = 0;								//  Level 1
-
-//	TMR03 = TMR_CKm3_8Bit;						// Select CKm3, 8Bit
-//	TDR03 = 100;								// 128us * 100
-	TMR03 = TMR_CKm3_16Bit;						// Select CKm3, 16Bit
-	TDR03 = 599;								// 128us * 600(n+1) = 76.8ms
-	// Note: Maximum time of AD conversion of Tasman is "8ms x 7items = 56ms".
-	//       The timeout time is set with about 30% margin.
-
-	TS0L.3 = 1;									// Start TM03
-}
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: TM03 stop function
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void Stop_TM03(void)
-*-------------------------------------------------------------------
-* Function			: Stop Timer UNIT0 Channel3 for AD wait.
-*-------------------------------------------------------------------
-* Argument			: None
-*-------------------------------------------------------------------
-* Return			: None
-*-------------------------------------------------------------------
-* Input				: None
-* Output			: None
-*-------------------------------------------------------------------
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2020.12.11 Ver 0.01
-* 					: Replace overall
-* 
-*""FUNC COMMENT END""**********************************************/
-void Stop_TM03(void)
-{
-	TMIF03 = 0;									// Clear INTTM03 interrupt flag
-	TT0L.3 = 1;									// Stop TM03
 }
 
 /*""FUNC COMMENT""***************************************************
@@ -329,64 +150,45 @@ void _int_TM01_SMBus1ms(void)
 		u8_smbus_scl_timeout_cnt++;							// Count the time
 	}
 }
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: [TM03] AD convert timeout interrupt routine
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void _int_TM03(void)
-*-------------------------------------------------------------------
-* Function			: TM03 interrupt routine for AD wait.
-*-------------------------------------------------------------------
-* Argument			: None
-*-------------------------------------------------------------------
-* Return			: None
-*-------------------------------------------------------------------
-* Input				: None
-* Output			: None
-*-------------------------------------------------------------------
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2020.12.11 Ver 0.01
-* 					: Replace overall
-* 
-*""FUNC COMMENT END""**********************************************/
-void _int_TM03(void)
+/*******************************************************************************
+* Function Name: app_init_leds
+* Description  : Executes app_init_leds routine in the BMS module.
+* Arguments    : None
+* Return Value : None
+* Notes        : Auto-generated API comment block for maintainability.
+*******************************************************************************/
+void mcu_LED_Init(void)
 {
-	Stop_TM03();								// Stop TM03
+	PM0 = PM0 & 0b11111100;
+	PM1 =  PM1 & 0b10000110;
+	/* initialize the LEDs to low. */
+	LED1=1;
+	LED2=1;
+	LED3=1;
+	LED4=1;
+	LED5=1;
+	LED6=1;
+	LED7=1;
 }
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: [IT] 125ms timer function for main cycle
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void _int_IT_125ms(void)
-*-------------------------------------------------------------------
-* Function			: 125ms timer for main cycle.
-*-------------------------------------------------------------------
-* Argument			: None
-*-------------------------------------------------------------------
-* Return			: None
-*-------------------------------------------------------------------
-* Input				: None
-* Output			: None
-*-------------------------------------------------------------------
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2020.12.17 Ver 0.01
-* 					: Replace overall
-* 
-*""FUNC COMMENT END""**********************************************/
-void _int_IT_125ms(void)
+void Stop_Mode(void)
 {
-	
+	DI();
+	if(BMS_Event_HasPending())
+	{
+		EI();
+		return;
+	}
+	WUP0 = 1;
+	NOP();										// wait 3clock
+	NOP();
+	NOP();
+	EI();									// Interrupt enable
+	STOP();								// Stop mode
+	NOP();							// wait 5clock
+	NOP();
+	NOP();
+	NOP();
+	NOP();
+	WUP0 = 0;
 }
 

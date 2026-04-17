@@ -35,8 +35,6 @@
 * Order			: 
 * CPU			: RAJ240xxx
 * Compiler		: CC-RL (V1.08.00)
-* OS			: None
-* Programmer	: Ryoji Kato
 * Note			: 
 ************************************************************************
 * Copyright,2020 (2012-2020) RENESAS ELECTRONICS CORPORATION,
@@ -50,16 +48,13 @@
 #define _MCU_H
 
 
-
-// - Function declaration -
-void Init_TM01_1msTimer(void);					// Initialize TM01(1ms)
-void Init_IT_125msTimer(void);					// Initialize 12Bit int.timer
-												// (125ms)
-void WaitTimer(U8 atime);						// Wait timer
-void Start_TM03(void);							// Start TM03
-void Stop_TM03(void);							// Stop TM03
-
-// - Define definition -
+#define LED7			P0.0				//LED 1 Pin
+#define LED6			P0.1				//LED 1 Pin
+#define LED5			P1.0				//LED 1 Pin
+#define LED4			P1.3				//LED 1 Pin
+#define LED3			P1.4				//Led 2 Pin
+#define LED2			P1.5				//Led 3 Pin
+#define LED1			P1.6
 
 // MCU register setting (by 8MHz)
 #define TPS_CKm0_mask		0xFFF0				// TPS: masking CKm0
@@ -75,20 +70,6 @@ void Stop_TM03(void);							// Stop TM03
 #define IT_START			0x8000				// ITMC: Start counting
 #define IT_STOP				0x7FFF				// ITMC: Stop counting
 #define OSMC_LOCO			0x10				// OSMC: Low-speed OCO
-
-
-// Wait time of WaitTimer()
-#define WAIT_1MS			8					// 128us x 8 = 1ms (1.024ms)
-#define WAIT_9MS			70					// 128us x 70 = 9ms (8.96ms)
-#define WAIT_128US			1					// 128us x 1 = 128us
-#define WAIT_256US			2					// 128us x 2 = 256us
-
-// Trimming data for MCU
-#define B_TH25_AN0_REG		*(U16*)0x0DC40		// AN0 Pullup res 25degC
-#define B_TH25_AN1_REG		*(U16*)0x0DC42		// AN1 Pullup res 25degC
-#define B_TH25_AN2_REG		*(U16*)0x0DC44		// AN2 Pullup res 25degC
-
-
 
 #endif	// _MCU_H
 

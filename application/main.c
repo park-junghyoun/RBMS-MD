@@ -35,7 +35,9 @@
 * Copyright,2022 (2012-2022) RENESAS ELECTRONICS CORPORATION,
 *                            All right reserved.
 *""FILE COMMENT END""*****************************************************/
-#include "bms_user_firmware_example.h"
+#include "mcu.h"
+#include "smbus.h"
+
 /*
  * Example application integrating the BMS library on target hardware.
  *
@@ -44,26 +46,6 @@
  * platform power control.
  */
 
-/*******************************************************************************
-* Function Name: app_init_leds
-* Description  : Executes app_init_leds routine in the BMS module.
-* Arguments    : None
-* Return Value : None
-* Notes        : Auto-generated API comment block for maintainability.
-*******************************************************************************/
-void app_init_leds(void)
-{
-	PM0 = PM0 & 0b11111100;
-	PM1 =  PM1 & 0b10000110;
-	/* initialize the LEDs to low. */
-	LED1=1;
-	LED2=1;
-	LED3=1;
-	LED4=1;
-	LED5=1;
-	LED6=1;
-	LED7=1;
-}
 
 /*******************************************************************************
 * Function Name: main
@@ -75,9 +57,7 @@ void app_init_leds(void)
 void main(void)
 {
 	U8 u8_ret;
-	
-	app_init_leds();
-	SMBus_initialize();										// SMBus initializing
+	MCU_Init();
 	APP_Check_FlashData();
 
 	u8_ret = APP_BMS_Core_Init() 
