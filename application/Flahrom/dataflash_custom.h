@@ -35,8 +35,6 @@
 * Order			: 
 * CPU			: RAJ240xxx
 * Compiler		: CC-RL (V1.08.00)
-* OS			: None
-* Programmer	: Ryoji Kato
 * Note			: 
 ************************************************************************
 * Copyright,2020 (2012-2020) RENESAS ELECTRONICS CORPORATION,
@@ -58,7 +56,6 @@
 #include "define.h"
 
 // - Function declaration -
-void FlexibleData_SetDefault(void);				// Set Flex. default value
 
 // - Grobal variable -
 
@@ -181,10 +178,9 @@ GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 // - Own data -
 typedef struct
 {
-	// - Initial calibration data -
 	st_bms_cal_voltage_points_t	ast_cal_cell[R_BMS_USER_API_CELL_COUNT];	// [20byte] Low voltage side of V
 	st_bms_cal_voltage_points_t st_cal_pack;
-	st_bms_cal_current_points_t	ast_cal_curr;
+	st_bms_cal_current_points_t	st_cal_curr;
 } st_cal_data_t;
 
 #pragma address st_cal_data_dataflash = 0x0F1800

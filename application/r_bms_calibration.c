@@ -26,26 +26,15 @@
 ******************************************************************************/
 
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAJ240xxx Smart Battery Standard firmware
-* File Name		: dataflash_custom.c
-* Version		: 0.01
-* Contents		: Data flash controlling functions (custom)
-* Customer		: Renesas Electronics Corp.
-* Model			: RAJ240xxx Standard firmware
-* Order			: 
-* CPU			: RAJ240xxx
-* Compiler		: CC-RL (V1.08.00)
-* Note			: 
-************************************************************************
-* Copyright,2020 (2012-2020) RENESAS ELECTRONICS CORPORATION,
+* System Name	: RAJ240xxx RBMS Core for renesas
+* File Name		: r_bms_calibration.c
+* Contents		: RBMS Modifiable Application
+* Compiler		: CC-RL
+* Note			:
+*************************************************************************
+* Copyright,2022 (2012-2022) RENESAS ELECTRONICS CORPORATION,
 *                            All right reserved.
-************************************************************************
-* History		: 2020.12.01 Ver 0.01
-* 				: Replace overall
-*				: 
 *""FILE COMMENT END""*****************************************************/
-#define _DATAFLASH_CUSTOM
+#define _CALI
+#include "r_bms_calibration.h"
 
-// - Include header file -
-#include "define.h"								// Common definition
-#include "dataflash_custom.h"

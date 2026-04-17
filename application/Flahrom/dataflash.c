@@ -562,8 +562,6 @@ void FlexibleData_Read(void)
 				FLEX_SIZE);
 	} else {									// No valid data
 		memset((char*)&st_flexible_data_ram, 0, FLEX_SIZE);	// Set default data
-		// TODO: Add default data setting to __Set_default_FlexibleData().
-		FlexibleData_SetDefault();			// Set default data (custom)
 	}
 	DataFlash_Disable();								// Disable DataFlash access
 }
