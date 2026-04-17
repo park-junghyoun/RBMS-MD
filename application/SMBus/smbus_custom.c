@@ -277,9 +277,16 @@ U8 __SMB_ReceiveCommand(void)
 			|| u8_reseived_cmd == 0x21							// or DeviceName()
 			|| u8_reseived_cmd == 0x22 )						// or DeviceChemistry() ?
 		{
-														// Check valid data
-			for( al1=0; st_smb_frame.p8_data[al1]!=NULL && al1<st_smb_frame.u8_len; al1++ );
-			st_smb_frame.u8_len = al1;
+			// Check valid data
+			if( st_smb_frame.p8_data != (U8*)NULL )
+			{
+				for( al1=0; al1<st_smb_frame.u8_len && st_smb_frame.p8_data[al1] != 0x00; al1++ );
+				st_smb_frame.u8_len = al1;
+			}
+			else
+			{
+				st_smb_frame.u8_len = 0;
+			}
 			// Note: It is not necessary if the data length is fixed.
 			// Note: It needs to consider the number of NULL if there is
 			//       the data including NULL.
