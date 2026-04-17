@@ -85,14 +85,16 @@ void main(void)
 	{
 		while (1)
 		{
-
+			SMBus_timeout_check();							// SMBus timeout check
 		}
 	}
 	(void)APP_Callbacks_Register();
+	
 	if(f_init_fixed_none != TRUE)
 	{
 		APP_CFG_Set_Fixed_Profile();
 	}
+	
 	if(f_init_cal_none != TRUE)
 	{
 		APP_CFG_Apply_Calibration_Profiles();
