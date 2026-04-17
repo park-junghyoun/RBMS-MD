@@ -142,18 +142,18 @@ typedef struct										// Flexible data structure
 
 GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 
-#define f_dfet			DEFS_BIT0(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// DFET	1=ON, 0=OFF
-#define f_cfet			DEFS_BIT1(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// CFET	1=ON, 0=OFF
-#define f_pf			DEFS_BIT2(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// PF	1=PF, 0=Other
-#define f_ss			DEFS_BIT3(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// SS	1=unseal, 0=Seal
-#define f_calemp		DEFS_BIT4(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// Calib value empty
-#define f_fixedemp		DEFS_BIT5(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// fixed value empty
-#define f_pinst			DEFS_BIT6(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// pin status
-#define f_wdt			DEFS_BIT7(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// wdt status
+#define f_dfet			DEFS_BIT0(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// DFET	1=ON, 0=OFF
+#define f_cfet			DEFS_BIT1(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// CFET	1=ON, 0=OFF
+#define f_pf			DEFS_BIT2(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// PF	1=PF, 0=Other
+#define f_ss			DEFS_BIT3(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// SS	1=unseal, 0=Seal
+#define f_calemp		DEFS_BIT4(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// Calib value empty
+#define f_fixedemp		DEFS_BIT5(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// fixed value empty
+#define f_pinst			DEFS_BIT6(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// pin status
+#define f_wdt			DEFS_BIT7(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// wdt status
 
-#define f_rl			DEFS_BIT0(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// RL	1=relearning, 0=no rel.
-#define f_cp_h		DEFS_BIT1(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// CPH	1=detect, 0=not detect
-#define f_cp_l			DEFS_BIT2(&st_flexible_data_ram.st_status.u16_packstatus_bit)		// CPL	1=detect, 0=not detect
+#define f_rl			DEFS_BIT0(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// RL	1=relearning, 0=no rel.
+#define f_cp_h		DEFS_BIT1(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// CPH	1=detect, 0=not detect
+#define f_cp_l			DEFS_BIT2(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// CPL	1=detect, 0=not detect
 
 #define s16_SMB08_temp		st_flexible_data_ram.st_measurement.ad.as16_cell_temperature_0p1dC[0]
 #define s32_SMB0A_curr		st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA

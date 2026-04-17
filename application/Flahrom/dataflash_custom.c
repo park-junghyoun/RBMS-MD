@@ -84,7 +84,7 @@ void DataFlash_update_check(void)
 		{
 			f_flex_update_req = OFF;			// Clear the request
 		}
-		// ÅöClear Flex. update RC counter
+		// Clear Flex. update RC counter
 	}
 	
 }
@@ -145,7 +145,7 @@ void FlexibleData_Read(void)
 	DataFlash_Disable();								// Disable DataFlash access
 }
 
-U8 FlexibleData_Ram_to_Flash(void)
+U8 Write_FlexibleData(void)
 {
 	U16	u16_tblock;
 	U8	u8_dfl_en;
@@ -225,5 +225,11 @@ U8 FlexibleData_Ram_to_Flash(void)
 	}
 
 	return TRUE;
+}
+
+
+U8 FlexibleData_Write(void)
+{
+	return Write_FlexibleData();
 }
 
