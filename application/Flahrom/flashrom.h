@@ -248,6 +248,27 @@ typedef struct
 
 typedef struct
 {
+	U8	au8_init_rsoc_table[6];					// [5byte] Initial capacity table
+	U16	au16_init_volt_table[6];					// [10byte] Initial voltage table
+}st_init_capacity_t;
+
+typedef struct
+{
+	U8	au8_imp_table[4];						// [4bytes] Internal impedance table
+}st_impedance_t;
+
+typedef struct
+{
+	U8	u8_cph;					// [1byte] Correction point(H) [%]
+	U8	u8_cpl;					// [1byte] Correction point(L) [%]
+	U8	au8_crate[4];				// [4byte] CP table C-rate [0.01C]
+	S8	au8_trate[6];				// [5byte] CP table T-rate [-128Åé]
+	U16	au16_cph_volt[20];		// [40byte] Correction point High Voltage table
+	U16	au16_cpl_volt[20];			// [40byte] Correction point Low Voltage table
+}st_correction_point_t;
+
+typedef struct
+{
 	st_device_info_t st_device_info;
 	st_bms_core_init_t st_bms_init_config;
 	st_bms_core_mode_t st_bms_normal_config;
@@ -270,25 +291,11 @@ typedef struct
 											//
 	st_control_flag2_t	st_control_flag3;			// [2byte] Control flag 2
 	st_smbus_t st_smbus;
-	
-	//  ===== Initial capacity table (2)=====
-	// Reserved starts from 11_01
+	st_init_capacity_t st_init_cap;
+	st_correction_point_t st_cp;
+	st_impedance_t st_imp;					
 
-	U8	INIT_CAP_tbl[5];			// 0xDB30	// [5byte] Initial capacity table
-	U16	INIT_V_tbl[5];				// 0xDB3A	// [10byte] Initial voltage table
-
-	//  ===== Look-up table(6) =====
-	// Reserved starts from 12_01
-	
-	U8	d_CP_H;					// 0xDB70	// [1byte] Correction point(H) [%]
-	U8	d_CP_L;					// 0xDB71	// [1byte] Correction point(L) [%]
-	U8	d_CRATE[4];				// 0xDB72	// [4byte] CP table C-rate [0.01C]
-	S8	d_TRATE[5];				// 0xDB76	// [5byte] CP table T-rate [-128Åé]
-	U16	CPH_tbl[20];				// 0xDB7C	// [40byte] Correction point High Voltage table
-	U16	CPL_tbl[20];				// 0xDBA4	// [40byte] Correction point Low Voltage table
-						
-	U8	INREG_tbl[4];				// 0xDBD0	// [5bytes] Internal impedance table
-	U16	d_CHKSUM;				// 0xDBFE	// [2bytes] Fixed Data Checksum
+	U16	u16_fixed_chekcsum;					// [2bytes] Fixed Data Checksum
 	
 	
 }st_fixed_data_t;									// - FlashROM fixed data definition -
