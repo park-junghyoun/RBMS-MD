@@ -76,11 +76,19 @@ void main(void)
 {
 	U8 u8_ret;
 	
-	SMBus_initialize();										// SMBus initializing
 	app_init_leds();
+	SMBus_initialize();										// SMBus initializing
+	u8_ret = FLASH_Check_FixedData();
+	if(u8_ret == FALSE)
+	{
+		f_init_fixed_none = TRUE;
+		while(1)
+		{
+			
+		}
+	}
 	
 	u8_ret = APP_BMS_Core_Init() 
-
 	if(u8_ret == FALSE)
 	{
 		while (1)
@@ -89,13 +97,15 @@ void main(void)
 		}
 	}
 	u8_ret = APP_Callbacks_Register();
-	
-	app_configure_mode_profile();
-	app_configure_protection();
-	app_configure_hw_protection_path();
-	//app_configure_thermistor_tables();
-	app_apply_calibration_profiles();
+	if(u8_ret == FALSE)
+	{
+		while (1)
+		{
 
+		}
+	}
+	APP_CFG_Set_Config_profile();
+	APP_CALIB_Set_Config();
 	while (1)
 	{
 		BMS_Event_Process();

@@ -61,12 +61,11 @@ GLOBAL u16_byte_t u16_charging_voltage;
 
 GLOBAL U16 u16_init_status;				 //Initialization Status Bit
 #define f_init_hw_error			DEF16_BIT0(&u16_init_status)	// Initialization hw error
-#define f_init_config_error		DEF16_BIT1(&u16_init_status)	// Initialization config error
-#define f_init_cal_none			DEF16_BIT2(&u16_init_status)	// calibration data none
-#define f_init_cal_error			DEF16_BIT3(&u16_init_status)	// calibration data error
+#define f_init_fixed_error		DEF16_BIT1(&u16_init_status)	// Initialization config error
+#define f_init_cal_error			DEF16_BIT2(&u16_init_status)	// fixed data none	
+#define f_init_cal_none			DEF16_BIT3(&u16_init_status)	// calibration data none
 #define f_init_fixed_none		DEF16_BIT4(&u16_init_status)	// fixed data none
-#define f_init_fixed_error		DEF16_BIT5(&u16_init_status)	// fixed data error
-
+	
 #undef		GLOBAL
 
 #endif	// _RAM_H

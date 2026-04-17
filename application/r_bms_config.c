@@ -2,11 +2,14 @@
 #include "r_bms_api.h"
 #include "r_bms_config.h"
 
-U8 APP_CFG_Set_Config_profile(void)
+void APP_CFG_Set_Config_profile(void)
 {
 	U8 u8_ret = FALSE;
-	u8_ret = app_CFG_Set_Mode_profile();
-	u8_ret = app_CFG_Set_Protection_profile();
+	if(app_CFG_Set_Mode_profile() == FALSE) return;
+	if(app_CFG_Set_Protection_profile() == FALSE) return;
+	if(app_CFG_Set_HW_profile() == FALSE) return;
+	if(app_CFG_Set_Thermistor_tables() == FALSE) return;
+	if(app_CFG_Set_Bal_profile() == FALSE) return;
 }
 /*******************************************************************************
 * Function Name: app_configure_mode_profile
@@ -24,19 +27,22 @@ U8 app_CFG_Set_Mode_profile(void)
 	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_NORMAL, st_fixed_data.st_bms_normal_config);
 	if(e_ret != E_BMS_OK)
 	{
-		return APP_ReportBMSCoreResult();
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SLEEP, st_fixed_data.st_bms_sleep_config) != E_BMS_OK)
+	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SLEEP, st_fixed_data.st_bms_sleep_config);
+	if(e_ret != E_BMS_OK)
 	{
-		return APP_ReportBMSCoreResult();
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SLEEP2, st_fixed_data.st_bms_sleep2_config) != E_BMS_OK)
+	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SLEEP2, st_fixed_data.st_bms_sleep2_config);
+	if(e_ret != E_BMS_OK)
 	{
-		return APP_ReportBMSCoreResult();
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SHIP, st_fixed_data.st_bms_ship_config) != E_BMS_OK)
+	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SHIP, st_fixed_data.st_bms_ship_config);
+	if(e_ret != E_BMS_OK)
 	{
-		return APP_ReportBMSCoreResult();
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	return TRUE;
 }
@@ -52,9 +58,12 @@ U8 app_CFG_Set_Mode_profile(void)
 *******************************************************************************/
 U8 app_CFG_Set_Protection_profile(void)
 {
-	if(BMS_Protection_SetConfig(st_fixed_data.st_bms_prot_config) != E_BMS_OK)
+	E_BMS_RESULT_ITEM e_ret;
+	
+	e_ret = BMS_Protection_SetConfig(st_fixed_data.st_bms_prot_config);
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	return TRUE;
 }
@@ -70,13 +79,17 @@ U8 app_CFG_Set_Protection_profile(void)
 *******************************************************************************/
 U8 app_CFG_Set_HW_profile(void)
 {
-	if(BMS_Config_SetHw1(st_fixed_data.st_hw1_config) != E_BMS_OK)
+	E_BMS_RESULT_ITEM e_ret;
+
+	e_ret = BMS_Config_SetHw1(st_fixed_data.st_hw1_config)
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	if(BMS_Config_SetHw2(st_fixed_data.st_hw2_config) != E_BMS_OK)
+	e_ret = BMS_Config_SetHw2(st_fixed_data.st_hw2_config)
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	return TRUE;
 }
@@ -92,29 +105,36 @@ U8 app_CFG_Set_HW_profile(void)
 *******************************************************************************/
 U8 app_CFG_Set_Thermistor_tables(void)
 {
-	if(BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN0, st_fixed_data.st_thermister1_table) != E_BMS_OK)
+	E_BMS_RESULT_ITEM e_ret;
+	
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN0, st_fixed_data.st_thermister1_table);
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	
-	if(BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN1, st_fixed_data.st_thermister2_table) != E_BMS_OK)
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN1, st_fixed_data.st_thermister2_table);
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	
-	if(BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN2, st_fixed_data.st_thermister3_table) != E_BMS_OK)
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN2, st_fixed_data.st_thermister3_table);
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	
-	if(BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN3, st_fixed_data.st_thermister4_table) != E_BMS_OK)
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN3, st_fixed_data.st_thermister4_table);
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	
-	if(BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN4, st_fixed_data.st_thermister5_table) != E_BMS_OK)
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN4, st_fixed_data.st_thermister5_table);
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	return TRUE;	
 }
@@ -127,15 +147,19 @@ U8 app_CFG_Set_Thermistor_tables(void)
 * Notes        : Balancing is forced only when delta/absolute conditions are
 *                met; otherwise control returns to automatic mode.
 *******************************************************************************/
-void app_CFG_Set_Bal_profile(void)
+U8 app_CFG_Set_Bal_profile(void)
 {
-	if(BMS_Balancing_SetBalConfig(st_fixed_data.st_bal_config) != E_BMS_OK)
+	E_BMS_RESULT_ITEM e_ret;
+	
+	e_ret = BMS_Balancing_SetBalConfig(st_fixed_data.st_bal_config);
+	if(e_ret != E_BMS_OK)	
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	if(BMS_Balancing_SetSelfDischargeConfig(st_fixed_data.st_self_dsg_config) != E_BMS_OK)
+	e_ret = BMS_Balancing_SetSelfDischargeConfig(st_fixed_data.st_self_dsg_config);
+	if(e_ret != E_BMS_OK)
 	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	return TRUE;
 }
@@ -148,8 +172,9 @@ void app_CFG_Set_Bal_profile(void)
 * Return Value : None
 * Notes        : Computed calibration coefficients are applied immediately.
 *******************************************************************************/
-U8 APP_Apply_Calibration_Profiles(void)
+U8 APP_CFG_Apply_Calibration_Profiles(void)
 {
+	E_BMS_RESULT_ITEM e_ret;
 	st_bms_cal_voltage_coeff_t st_cell_coeff = {0};
 	st_bms_cal_pack_coeff_t st_pack_coeff = {0};
 	st_bms_cal_current_coeff_t st_current_coeff = {0};
@@ -157,38 +182,30 @@ U8 APP_Apply_Calibration_Profiles(void)
 	
 	for(u8_index = 0; u8_index<R_BMS_USER_API_CELL_COUNT; u8_index++)
 	{
-		if(BMS_Calib_ComputeCellCoeff((E_BMS_CELL_ITEM)u8_index, &st_cal_data_dataflash.ast_cal_cell[u8_index], &st_cell_coeff) == E_BMS_OK)
+		e_ret = BMS_Calib_ApplyCellCoeff((E_BMS_CELL_ITEM)u8_index, &st_cal_data_dataflash.ast_coeff_cell[u8_index]);
+		if(e_ret != E_BMS_OK)
 		{
-			if(BMS_Calib_ApplyCellCoeff((E_BMS_CELL_ITEM)u8_index, &st_cell_coeff) != E_BMS_OK)
-			{
-				return FALSE;
-			}
-		}else
-		{
-			return FALSE;
+			return APP_ReportBMSCoreResult_Calib(e_ret);
 		}
-	}
-	
-	if(BMS_Calib_ComputePackCoeff(&st_cal_data_dataflash.st_cal_pack, &st_pack_coeff) == E_BMS_OK)
-	{
-		if(BMS_Calib_ApplyPackCoeff(&st_pack_coeff) != E_BMS_OK)
-		{
-			return FALSE;
-		}
-	}else
-	{
-		return FALSE;
 	}
 
-	if(BMS_Calib_ComputeCurrentCoeff(&st_cal_data_dataflash.ast_cal_curr, &st_current_coeff) == E_BMS_OK)
+	e_ret = BMS_Calib_ApplyPackCoeff(&st_cal_data_dataflash.st_coeff_pack);
+	if(e_ret != E_BMS_OK)
 	{
-		if(BMS_Calib_ApplyCurrentCoeff(&st_current_coeff) != E_BMS_OK)
-		{
-			return FALSE;
-		}
-	}else
-	{
-		return FALSE;
+		return APP_ReportBMSCoreResult_Calib(e_ret);
 	}
+
+
+	e_ret = BMS_Calib_ApplyCurrentCoeff(&st_cal_data_dataflash.st_coeff_curr);
+	if(e_ret != E_BMS_OK)
+	{
+		return APP_ReportBMSCoreResult_Calib(e_ret);
+	}
+
 	return TRUE;
 }
+void APP_CFG_Set_Config_profile(void)
+{
+	
+}
+

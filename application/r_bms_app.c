@@ -47,7 +47,7 @@ U8 APP_BMS_Core_Init(void)
 	return APP_ReportBMSCoreResult(e_ret);
 
 }
-U8 APP_ReportBMSCoreResult(E_BMS_RESULT_ITEM e_ret)
+U8 APP_ReportBMSCoreResult_Fixed(E_BMS_RESULT_ITEM e_ret)
 {
 	if( e_ret != E_BMS_OK)
 	{
@@ -57,7 +57,7 @@ U8 APP_ReportBMSCoreResult(E_BMS_RESULT_ITEM e_ret)
 				f_init_hw_error = ON;
 				break;
 			case E_BMS_ERR_INVALID_PARAM:
-				f_init_config_error = ON;
+				f_init_fixed_error = ON;
 				break;
 			case E_BMS_ERR_NOT_INIT:
 			case E_BMS_ERR_NOT_READY:
@@ -68,6 +68,28 @@ U8 APP_ReportBMSCoreResult(E_BMS_RESULT_ITEM e_ret)
 	}
 	return TRUE;
 }
+U8 APP_ReportBMSCoreResult_Calib(E_BMS_RESULT_ITEM e_ret)
+{
+	if( e_ret != E_BMS_OK)
+	{
+		switch(e_ret)
+		{
+			case E_BMS_ERR_HW:
+				f_init_hw_error = ON;
+				break;
+			case E_BMS_ERR_INVALID_PARAM:
+				f_init_cal_error = ON;
+				break;
+			case E_BMS_ERR_NOT_INIT:
+			case E_BMS_ERR_NOT_READY:
+			default:
+				break;
+		}
+		return FALSE;
+	}
+	return TRUE;
+}
+
 /*******************************************************************************
 * Function Name: app_refresh_ad_measurement_snapshot
 * Description  : Executes app_refresh_ad_measurement_snapshot routine in the BMS module.
@@ -130,7 +152,7 @@ void APP_Get_CC_RAW_measurement_snapshot(void)
 * Return Value : None
 * Notes        : Auto-generated API comment block for maintainability.
 *******************************************************************************/
-void APP_Get_AD_RAW_measurement_snapshotl(void)
+void APP_Get_AD_RAW_measurement_snapshot(void)
 {
 	st_bms_ad_raw_snapshot_t st_ad_raw_snapshot = {0};
 
