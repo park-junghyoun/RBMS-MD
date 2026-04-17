@@ -27,32 +27,39 @@
 
 /*""FILE COMMENT""*******************************************************
 * System Name	: RAJ240xxx Smart Battery Standard firmware
-* File Name		: dataflash_custom.c
+* File Name		: ram.h
 * Version		: 0.01
-* Contents		: Data flash custom interface aggregation unit
+* Contents		: Global RAM data definition header file
 * Customer		: Renesas Electronics Corp.
 * Model			: RAJ240xxx Standard firmware
 * Order			: 
 * CPU			: RAJ240xxx
 * Compiler		: CC-RL (V1.08.00)
-* Note			: Real implementations are split to
-*               : dataflash_flexible.c / dataflash_calibration.c.
+* Note			: 
 ************************************************************************
 * Copyright,2020 (2012-2020) RENESAS ELECTRONICS CORPORATION,
 *                            All right reserved.
 ************************************************************************
-* History		: 2020.12.01 Ver 0.01
+* History		: 2020.10.01 Ver 0.01
 * 				: Replace overall
-* 				: 2026.04.17 Split flexible/calibration implementations
+*				: 
 *""FILE COMMENT END""*****************************************************/
+#ifndef _CONFIG_H
+#define _CONFIG_H
 
-// - Include header file -
-#include "define.h"                             // Common definition
-#include "dataflash_custom.h"
+#ifdef	_CONFIG
+#define		GLOBAL
+#else	// _CONFIG
+#define		GLOBAL	extern
+#endif	// _CONFIG
 
-/*
- * This file is intentionally kept as a lightweight compatibility unit.
- * Functional implementations are located in:
- *  - dataflash_flexible.c
- *  - dataflash_calibration.c
- */
+
+GLOBAL u16_byte_t u16_charging_current;
+GLOBAL u16_byte_t u16_charging_voltage;
+
+#undef		GLOBAL
+
+#endif	// _CONFIG_H
+
+
+

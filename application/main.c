@@ -74,27 +74,22 @@ void app_init_leds(void)
 *******************************************************************************/
 void main(void)
 {
+	U8 u8_ret;
+	
 	SMBus_initialize();										// SMBus initializing
-	st_sys_config_t st_sys_config = {0};
-	E_BMS_RESULT_ITEM e_result;
 	app_init_leds();
-	st_sys_config.u8_cell_series_count = 10u;
-	st_sys_config.u8_ntc_count = 2u;
-	st_sys_config.u8_ntc_prot_bitmask = 0x03u;
-	st_sys_config.u8_shunt_R_0p1mOhm = 10u;
-	st_sys_config.u16_mask_current_mA = 5u;
+	
+	u8_ret = APP_BMS_Core_Init() 
 
-	e_result = BMS_Core_Initialize(&st_sys_config);
-	if(e_result != E_BMS_OK)
+	if(u8_ret == FALSE)
 	{
-		LED7 = 0;
 		while (1)
 		{
-			Stop_Mode();
+
 		}
 	}
-
-	app_configure_callbacks();
+	u8_ret = APP_Callbacks_Register();
+	
 	app_configure_mode_profile();
 	app_configure_protection();
 	app_configure_hw_protection_path();

@@ -38,6 +38,36 @@
 #define _APP
 #include "r_bms_app.h"
 
+
+U8 APP_BMS_Core_Init(void)
+{
+	E_BMS_RESULT_ITEM e_ret;
+
+	e_ret = BMS_Core_Initialize(&st_fixed_data.st_bms_init_config);
+	return APP_ReportBMSCoreResult(e_ret);
+
+}
+U8 APP_ReportBMSCoreResult(E_BMS_RESULT_ITEM e_ret)
+{
+	if( e_ret != E_BMS_OK)
+	{
+		switch(e_ret)
+		{
+			case E_BMS_ERR_HW:
+				f_init_hw_error = ON;
+				break;
+			case E_BMS_ERR_INVALID_PARAM:
+				f_init_config_error = ON;
+				break;
+			case E_BMS_ERR_NOT_INIT:
+			case E_BMS_ERR_NOT_READY:
+			default:
+				break;
+		}
+		return FALSE;
+	}
+	return TRUE;
+}
 /*******************************************************************************
 * Function Name: app_refresh_ad_measurement_snapshot
 * Description  : Executes app_refresh_ad_measurement_snapshot routine in the BMS module.
