@@ -87,7 +87,7 @@
  *					:  New Create
  *					: 
  *""FUNC COMMENT END""*****************************************************/
-U8 InitFixed_Chk(void)
+U8 FLASH_Check_FixedData(void)
 {
 	return TRUE;
 }
