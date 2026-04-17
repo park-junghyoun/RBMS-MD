@@ -135,12 +135,8 @@ U8 FLASH_Check_FixedData(void)
 	pu8_fixed_data = (U8 *)&st_fixed_data;
 	for( u16_index = 0; u16_index < FDSIZE; u16_index++ )
 	{
-		if( FLASH_IsReservedFixedDataIndex(u16_index) == TRUE )
-		{
-			continue;
-		}
-
-		if( pu8_fixed_data[u16_index] == 0xFF )
+		if( FLASH_IsReservedFixedDataIndex(u16_index) == FALSE &&
+			pu8_fixed_data[u16_index] == 0xFF )
 		{
 			return FALSE;
 		}
