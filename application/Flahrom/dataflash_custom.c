@@ -49,6 +49,7 @@
 // - Include header file -
 #include "define.h"								// Common definition
 #include "dataflash_custom.h"
+#include <string.h>
 
 /*""FUNC COMMENT""***************************************************
 * ID : 1.0
@@ -190,6 +191,10 @@ U8 Write_FlexibleData(void)
 			{
 				u8_data = U8_FLEX_INDEX_WNG;			// Write index(WRITE NG)
 				DataFlash_Write((U8*)(u16_tblock + u8_flex_index), &u8_data, 1);
+			}
+			if( u8_dfl_en == 0 )					// DFLEN is set by this ?
+			{
+				DataFlash_Disable();					// Restore DFLEN
 			}
 			return FALSE;
 		}
