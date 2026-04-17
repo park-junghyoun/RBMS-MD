@@ -1256,7 +1256,7 @@ void Master_BusFree_Chk(void)
 *	 				: New create
 *					: 
 *""FUNC COMMENT END""**********************************************/
-void Master_Chk(void)
+void SMBus_Master_Function(void)
 {
 	if (st_fixed_data.st_smbus.u8_charger_addr == 0x00)				// Charger address is 0?
 	{
@@ -1299,10 +1299,10 @@ void Master_Chk(void)
 		
 		if( IICBSY0 == OFF && CLD0 == HI && DAD0 == HI )			// Bus is free & SMBus available ?
 		{
-			au8_m_smbus_buff[4] = D_CHGSLADDR;								// Set Charger(W) slave address
+			au8_m_smbus_buff[4] = st_fixed_data.st_smbus.u8_charger_addr;		// Set Charger(W) slave address
 			au8_m_smbus_buff[3] = 0x16;										// ChargingCurrent()
-			au8_m_smbus_buff[2] = abatsts[0];								// Data U8(L)
-			au8_m_smbus_buff[1] = abatsts[1];								// Data U8(H)
+			//au8_m_smbus_buff[2] = abatsts[0];								// Data U8(L)
+			//au8_m_smbus_buff[1] = abatsts[1];								// Data U8(H)
 			CRC8_Master();											// Calculate PEC
 			if( Master_Send())										// Succeed to send ?
 			{

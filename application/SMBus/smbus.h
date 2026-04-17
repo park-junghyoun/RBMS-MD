@@ -59,7 +59,7 @@
 void SMBus_initialize(void);						// SMBus initializing
 void SMBus_timeout_check(void);					// SMBus timeout check
 void SMBus_state_check(void);					// SMBus state check
-void Master_Chk(void);
+void SMBus_Master_Function(void);
 
 // - Grobal variable -
 typedef struct									// SMBus comm. information

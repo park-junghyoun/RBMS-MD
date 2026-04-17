@@ -48,6 +48,7 @@ void APP_Alarm_Event(E_BMS_ALARM_ITEM e_alarm)
 			break;
 		case E_ALARM_125MS:
 			APP_Get_FETstatus();
+			app_Charger_Timer();
 			break;
 		case E_ALARM_5MS:
 			break;
@@ -122,4 +123,28 @@ void APP_Protection_Latched_Event(E_BMS_LATCHED_PROTECTION_ITEM e_prot, U8 u8_en
 			break;
 	}
 
+}
+void app_Charger_Timer(void)
+{
+	static U16 u16_timer_125ms;
+	// - CC/CV sending period check -
+	
+	u16_timer_125ms++;						// Increment the counter
+	
+	if( u16_timer_125ms >= 80)							// 10sec has passed ?
+	{
+		//if ( (F_SMBMSTR == ON) && (f_alrm1st == ON))// Master comm enabled & ALARM state ?
+		//{
+			f_mster10 = ON;						// Set BatteryStatus send to charger request
+		//}
+	}
+
+	if (u16_timer_125ms >= 240)						// 30sec has passed ?
+	{
+		//if( F_SMBMSTR == ON )					// Master comm enabled ?
+		//{
+			f_mster30 = ON;						// Set CC/CV send to charger request
+		//}
+		u16_timer_125ms = 0;							// Clear the counter
+	}
 }
