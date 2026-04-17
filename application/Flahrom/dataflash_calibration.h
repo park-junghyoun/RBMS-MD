@@ -25,28 +25,30 @@
 * http://www.renesas.com/disclaimer
 ******************************************************************************/
 
-/*""FILE COMMENT""*******************************************************
-* System Name	: RAJ240xxx Smart Battery Standard firmware
-* File Name		: dataflash_custom.h
-* Version		: 0.01
-* Contents		: Data Flash custom interface aggregator
-* Customer		: Renesas Electronics Corp.
-* Model			: RAJ240xxx Standard firmware
-* Order			: 
-* CPU			: RAJ240xxx
-* Compiler		: CC-RL (V1.08.00)
-* Note			: 
-************************************************************************
-* Copyright,2020 (2012-2020) RENESAS ELECTRONICS CORPORATION,
-*                            All right reserved.
-************************************************************************
-* History		: 2020.12.01 Ver 0.01
-* 				: Replace overall
-*""FILE COMMENT END""*****************************************************/
-#ifndef _DATAFLASH_CUSTOM_H
-#define _DATAFLASH_CUSTOM_H
+#ifndef _DATAFLASH_CALIBRATION_H
+#define _DATAFLASH_CALIBRATION_H
 
-#include "dataflash_flexible.h"
-#include "dataflash_calibration.h"
+#ifdef	_DATAFLASH_CALIBRATION
+#define		GLOBAL
+#else	// _DATAFLASH_CALIBRATION
+#define		GLOBAL	extern
+#endif	// _DATAFLASH_CALIBRATION
 
-#endif	// _DATAFLASH_CUSTOM_H
+#include "define.h"
+
+// - Own data -
+typedef struct
+{
+	st_bms_cal_voltage_points_t	ast_cal_cell[R_BMS_USER_API_CELL_COUNT];	// [20byte] Low voltage side of V
+	st_bms_cal_voltage_points_t st_cal_pack;
+	st_bms_cal_current_points_t	st_cal_curr;
+} st_cal_data_t;
+
+#pragma address st_cal_data_dataflash = 0x0F1800
+GLOBAL st_cal_data_t	st_cal_data_dataflash;
+
+st_cal_data_t CalbirationData_Read(void);						// Read own data
+
+#undef 		GLOBAL
+
+#endif	// _DATAFLASH_CALIBRATION_H

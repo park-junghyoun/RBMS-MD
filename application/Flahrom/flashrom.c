@@ -51,7 +51,6 @@
 #include "define.h"								// Common definition
 #include "flashrom.h"
 #include "ram.h"
-#include "dataflash.h"
 #include "dataflash_custom.h"
 #include "afe.h"
 #include "uif_fsl.h"
