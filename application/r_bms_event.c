@@ -48,7 +48,7 @@ void APP_Alarm_Event(E_BMS_ALARM_ITEM e_alarm)
 			app_poll_ad_raw_signal();
 			break;
 		case E_ALARM_125MS:
-			APP_Get_FET_status();
+			APP_Get_FETstatus();
 			app_service_mode_manager();
 			//app_service_balancing_control();
 			//app_service_fet_override();

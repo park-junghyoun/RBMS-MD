@@ -92,39 +92,3 @@ U8 InitFixed_Chk(void)
 	return TRUE;
 }
 
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: Move to Flash update mode operation
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void MoveToFlashUpdate(void)
-*-------------------------------------------------------------------
-* Function			: Move to Flash update mode operation.
-*-------------------------------------------------------------------
-* Argument			: None
-*-------------------------------------------------------------------
-* Return			: None
-*-------------------------------------------------------------------
-* Input				: None
-* Output			: None
-*-------------------------------------------------------------------
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2020.10.16 Ver 0.01
-* 					: Replace overall
-* 
-*""FUNC COMMENT END""**********************************************/
-void MoveToFlashUpdate(void)
-{
-
-	st_flexible_data_ram.st_reason.u8_update_reason = FLEXUP_FLASH;			// Set Reason of Flex update
-	Write_FlexibleData();					// Update Flexible data
-
-	DI();										// Disable interrupt
-	Stop_AFEWDT();								// Stop AFE WDT
-	ASM_JUMP_BOOT_64();							// To Flash update mode
-}
-

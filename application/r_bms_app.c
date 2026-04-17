@@ -147,7 +147,7 @@ void APP_Get_AD_RAW_measurement_snapshotl(void)
 * Return Value : None
 * Notes        : Auto-generated API comment block for maintainability.
 *******************************************************************************/
-void APP_Get_FET_status(void)
+void APP_Get_FETstatus(void)
 {
 	st_bms_fet_state_t st_policy_state;
 	st_bms_fet_state_t st_hw_state;
@@ -164,3 +164,39 @@ void APP_Get_FET_status(void)
 	f_cfet = st_hw_state.u8_chg_fet_state;
 	f_dfet = st_hw_state.u8_dsg_fet_state;
 }
+/*""FUNC COMMENT""***************************************************
+* ID : 1.0
+* module outline	: Move to Flash update mode operation
+*-------------------------------------------------------------------
+* Include			: 
+*-------------------------------------------------------------------
+* Declaration		: void MoveToFlashUpdate(void)
+*-------------------------------------------------------------------
+* Function			: Move to Flash update mode operation.
+*-------------------------------------------------------------------
+* Argument			: None
+*-------------------------------------------------------------------
+* Return			: None
+*-------------------------------------------------------------------
+* Input				: None
+* Output			: None
+*-------------------------------------------------------------------
+* Used function 	: 
+*-------------------------------------------------------------------
+* Caution			: 
+*-------------------------------------------------------------------
+* History			: 2020.10.16 Ver 0.01
+* 					: Replace overall
+* 
+*""FUNC COMMENT END""**********************************************/
+void APP_MoveToBoot(void)
+{
+
+	st_flexible_data_ram.st_reason.u8_update_reason = FLEXUP_FLASH;			// Set Reason of Flex update
+	Write_FlexibleData();					// Update Flexible data
+
+	DI();										// Disable interrupt
+	Stop_AFEWDT();								// Stop AFE WDT
+	ASM_JUMP_BOOT_64();							// To Flash update mode
+}
+
