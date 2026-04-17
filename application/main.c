@@ -74,8 +74,6 @@ void app_init_leds(void)
 *******************************************************************************/
 void main(void)
 {
-	FlexibleData_Read();									// Read Flexible data
-	CalbirationData_Read();									// Read Own data
 	SMBus_initialize();										// SMBus initializing
 	st_sys_config_t st_sys_config = {0};
 	E_BMS_RESULT_ITEM e_result;
