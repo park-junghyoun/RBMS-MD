@@ -27,32 +27,38 @@
 
 /*""FILE COMMENT""*******************************************************
 * System Name	: RAJ240xxx Smart Battery Standard firmware
-* File Name		: dataflash_custom.c
+* File Name		: dataflash_calibration.c
 * Version		: 0.01
-* Contents		: Data flash custom interface aggregation unit
+* Contents		: Data flash calibration data control
 * Customer		: Renesas Electronics Corp.
 * Model			: RAJ240xxx Standard firmware
 * Order			: 
 * CPU			: RAJ240xxx
 * Compiler		: CC-RL (V1.08.00)
-* Note			: Real implementations are split to
-*               : dataflash_flexible.c / dataflash_calibration.c.
+* Note			: Split from dataflash_custom.c
 ************************************************************************
 * Copyright,2020 (2012-2020) RENESAS ELECTRONICS CORPORATION,
 *                            All right reserved.
 ************************************************************************
-* History		: 2020.12.01 Ver 0.01
-* 				: Replace overall
-* 				: 2026.04.17 Split flexible/calibration implementations
+* History		: 2026.04.17 Ver 0.01
+* 				: Split calibration implementation from dataflash_custom.c
 *""FILE COMMENT END""*****************************************************/
+#define _DATAFLASH_CALIBRATION
 
-// - Include header file -
-#include "define.h"                             // Common definition
-#include "dataflash_custom.h"
+#include "define.h"
+#include "dataflash_calibration.h"
+#include "dataflash.h"
+#include <string.h>
 
-/*
- * This file is intentionally kept as a lightweight compatibility unit.
- * Functional implementations are located in:
- *  - dataflash_flexible.c
- *  - dataflash_calibration.c
- */
+st_cal_data_t CalbirationData_Read(void)
+{
+	st_cal_data_t st_cal_dumy;
+
+	DataFlash_Enable();								// Enable DataFlash access
+
+												// Copy from DataFlash to RAM
+	memcpy((U8*)&st_cal_dumy, (U8*)&st_cal_data_dataflash, sizeof(st_cal_data_t));
+
+	DataFlash_Disable();								// Disable DataFlash access
+	return st_cal_dumy;
+}
