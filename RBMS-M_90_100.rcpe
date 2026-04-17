@@ -1,0 +1,525 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<MicomToolCommonProjectFile Version="1.00">
+  <CreatorType Name="CubeSuite+" Version="V8.10.00  [06 Jun 2023]" />
+  <Placeholders>
+    <PlaceholderPrefix>%</PlaceholderPrefix>
+    <PlaceholderPostfix>%</PlaceholderPostfix>
+  </Placeholders>
+  <Project Name="RBMS-M_90_100" Type="Application">
+    <Files>
+      <Category Name="Startup">
+        <Path>application\cstart.asm</Path>
+        <Path>application\stkinit.asm</Path>
+      </Category>
+      <Path>afe_lib\lib\RAJ240100_90\iodefine.h</Path>
+      <Category Name="AFE_driver">
+        <Path>afe_lib\include\afe_api.h</Path>
+        <Path>afe_lib\include\afe_config.h</Path>
+        <Path>afe_lib\include\afe_types.h</Path>
+      </Category>
+      <Category Name="BMS_Core">
+        <Path>bms_core_lib\include\r_bms_api.h</Path>
+        <Path>bms_core_lib\include\r_bms_api_limits.h</Path>
+        <Path>bms_core_lib\include\r_bms_calibration.h</Path>
+        <Path>bms_core_lib\include\r_bms_callbacks.h</Path>
+        <Path>bms_core_lib\include\r_bms_config.h</Path>
+        <Path>bms_core_lib\include\r_bms_measurement.h</Path>
+        <Path>bms_core_lib\include\r_bms_protection.h</Path>
+        <Path>bms_core_lib\include\r_bms_types.h</Path>
+        <Path>bms_core_lib\include\r_bms_version.h</Path>
+      </Category>
+      <Path>application\bms_user_firmware_example.c</Path>
+      <Path>application\bms_user_firmware_example_config.c</Path>
+      <Path>application\bms_user_firmware_example_measurement.c</Path>
+      <Path>application\bms_user_firmware_example_platform.c</Path>
+    </Files>
+    <DebugOptions>
+      <ConnectSettings>
+        <MainClock>0</MainClock>
+      </ConnectSettings>
+      <DebugToolSettings />
+    </DebugOptions>
+    <Device Series="RL78">RAJ240100(FGIC)</Device>
+    <BuildOptions Name="CC-RL" Version="V1.12.01">
+      <BuildMode Name="DefaultBuild" Active="False">
+        <LinkOrder>
+          <Path>DefaultBuild\cstart.obj</Path>
+          <Path>DefaultBuild\stkinit.obj</Path>
+          <Path>DefaultBuild\bms_user_firmware_example.obj</Path>
+          <Path>DefaultBuild\bms_user_firmware_example_config.obj</Path>
+          <Path>DefaultBuild\bms_user_firmware_example_measurement.obj</Path>
+          <Path>DefaultBuild\bms_user_firmware_example_platform.obj</Path>
+        </LinkOrder>
+        <CommonOptions>
+          <IncludePathForC>bms_core_lib\include</IncludePathForC>
+          <IncludePathForC>afe_lib\include</IncludePathForC>
+          <IncludePathForC>afe_lib\lib\RAJ240100_90</IncludePathForC>
+          <IncludePathForC>src</IncludePathForC>
+          <IncludePathForC>%ProjectDir%</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src\UIF</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src\FlashLib</IncludePathForC>
+        </CommonOptions>
+        <GeneralOptions>
+          <SimultaneouslyBuild>False</SimultaneouslyBuild>
+        </GeneralOptions>
+        <CompileOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-g_line</Option>
+          <Option>-Osize</Option>
+          <Option>-I bms_core_lib\include</Option>
+          <Option>-I afe_lib\include</Option>
+          <Option>-I afe_lib\lib\RAJ240100_90</Option>
+          <Option>-I src</Option>
+          <Option>-I %ProjectDir%</Option>
+          <Option>-I %ProjectDir%\src</Option>
+          <Option>-I %ProjectDir%\src\UIF</Option>
+          <Option>-I %ProjectDir%\src\FlashLib</Option>
+          <Option>-memory_model=medium</Option>
+          <Option>-pass_source</Option>
+          <Option>-asm_path=%BuildModeName%</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-convert_cc=ca78k0r</Option>
+          <Option>-c</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-asmopt=-convert_asm</Option>
+          <Option>-c</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-SECURITY_ID=00000000000000000000</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-DEBug</Option>
+          <Option>-NOCOmpress</Option>
+          <Option>-NOOPtimize</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-LIBrary=src\SHA1.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4s.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\malloc_n.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4r.lib</Option>
+          <Option>-USER_OPT_BYTE=6EFFAA</Option>
+          <Option>-LISt=%BuildModeName%\%ProjectName%.map</Option>
+          <Option>-SHow=ALL</Option>
+          <Option>-STARt=.callt0/00080,VERINFO_f/00FF8,.text,.textf,.const,.constf,.data,.sdata,.RLIB,.SLIB,PFDL_COD,FSL_FCD,FSL_RCD,FSL_BCD/01000,KEY_DATA/0D400,FIXED_DATA/0D800,@@CODE2_f/0E800,Reserved/0FC00,.dataR,.bss/FF300,.sdataR,.sbss/FFE20</Option>
+          <Option>-ROm=.data=.dataR</Option>
+          <Option>-ROm=.sdata=.sdataR</Option>
+          <Option>-CPu=ROM=00000-0FFFF</Option>
+          <Option>-CPu=ROM=F1000-F1FFF</Option>
+          <Option>-CPu=ROM=FD400-FDFFF</Option>
+          <Option>-CPu=RAM=FF300-FFFFF</Option>
+          <Option>-NO_CHECK_SECTION_LAYOUT</Option>
+          <Option>-NOMessage</Option>
+          <Option>-NOLOgo</Option>
+          <Option>-END</Option>
+          <Option>-Input=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.mot</Option>
+          <Option>-FOrm=Stype</Option>
+          <Option>-REcord=S2</Option>
+          <Option>-END_RECORD=S8</Option>
+          <Option>-NOMessage</Option>
+          <Option>-EXIt</Option>
+        </LinkOptions>
+        <IOHeaderGenerationOptions>
+          <Option>-df=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-o=%ProjectDir%\iodefine.h</Option>
+          <Option>-f</Option>
+          <UpdateIOMode>None</UpdateIOMode>
+        </IOHeaderGenerationOptions>
+      </BuildMode>
+      <BuildMode Name="95_Debug" Active="False">
+        <LinkOrder>
+          <Path>95_Debug\cstart.obj</Path>
+          <Path>95_Debug\stkinit.obj</Path>
+          <Path>95_Debug\bms_user_firmware_example.obj</Path>
+          <Path>95_Debug\bms_user_firmware_example_config.obj</Path>
+          <Path>95_Debug\bms_user_firmware_example_measurement.obj</Path>
+          <Path>95_Debug\bms_user_firmware_example_platform.obj</Path>
+        </LinkOrder>
+        <CommonOptions>
+          <IncludePathForC>bms_core_lib\include</IncludePathForC>
+          <IncludePathForC>afe_lib\include</IncludePathForC>
+          <IncludePathForC>afe_lib\lib\RAJ240100_90</IncludePathForC>
+          <IncludePathForC>src</IncludePathForC>
+          <IncludePathForC>%ProjectDir%</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src\UIF</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src\FlashLib</IncludePathForC>
+          <MacroForC>DEBUG_NOT_CHECKSUM</MacroForC>
+          <MacroForC>DEBUG_AFE_WDT_STOP</MacroForC>
+        </CommonOptions>
+        <GeneralOptions>
+          <SimultaneouslyBuild>False</SimultaneouslyBuild>
+        </GeneralOptions>
+        <CompileOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-g_line</Option>
+          <Option>-Onothing</Option>
+          <Option>-I bms_core_lib\include</Option>
+          <Option>-I afe_lib\include</Option>
+          <Option>-I afe_lib\lib\RAJ240100_90</Option>
+          <Option>-I src</Option>
+          <Option>-I %ProjectDir%</Option>
+          <Option>-I %ProjectDir%\src</Option>
+          <Option>-I %ProjectDir%\src\UIF</Option>
+          <Option>-I %ProjectDir%\src\FlashLib</Option>
+          <Option>-D DEBUG_NOT_CHECKSUM,DEBUG_AFE_WDT_STOP</Option>
+          <Option>-memory_model=medium</Option>
+          <Option>-pass_source</Option>
+          <Option>-asm_path=%BuildModeName%</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-convert_cc=ca78k0r</Option>
+          <Option>-c</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-asmopt=-convert_asm</Option>
+          <Option>-c</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-SECURITY_ID=00000000000000000000</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-DEBug</Option>
+          <Option>-NOCOmpress</Option>
+          <Option>-NOOPtimize</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4s.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\malloc_n.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4r.lib</Option>
+          <Option>-OCDBG=85</Option>
+          <Option>-DEBUG_MONITOR=1FE00-1FFFF</Option>
+          <Option>-USER_OPT_BYTE=6EFFAA</Option>
+          <Option>-LISt=%BuildModeName%\%ProjectName%.map</Option>
+          <Option>-SHow=ALL</Option>
+          <Option>-STARt=VERINFO_f/00FF8,.text,.textf,.const,.constf,.data,.sdata,.RLIB,.SLIB/01000,.dataR,.bss/FF300,.sdataR,.sbss/FFE20</Option>
+          <Option>-ROm=.data=.dataR</Option>
+          <Option>-ROm=.sdata=.sdataR</Option>
+          <Option>-CPu=ROM=00000-1FFFF</Option>
+          <Option>-CPu=ROM=F1000-F1FFF</Option>
+          <Option>-CPu=ROM=FD400-FDFFF</Option>
+          <Option>-CPu=RAM=FED90-FFFFF</Option>
+          <Option>-NO_CHECK_SECTION_LAYOUT</Option>
+          <Option>-NOMessage=1321,1110</Option>
+          <Option>-NOLOgo</Option>
+          <Option>-END</Option>
+          <Option>-Input=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.mot</Option>
+          <Option>-FOrm=Stype</Option>
+          <Option>-REcord=S2</Option>
+          <Option>-END_RECORD=S8</Option>
+          <Option>-NOMessage=1321,1110</Option>
+          <Option>-EXIt</Option>
+        </LinkOptions>
+        <IOHeaderGenerationOptions>
+          <Option>-df=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-o=%ProjectDir%\iodefine.h</Option>
+          <Option>-f</Option>
+          <UpdateIOMode>None</UpdateIOMode>
+        </IOHeaderGenerationOptions>
+      </BuildMode>
+      <BuildMode Name="100_Release" Active="True">
+        <LinkOrder>
+          <Path>100_Release\cstart.obj</Path>
+          <Path>100_Release\stkinit.obj</Path>
+          <Path>100_Release\bms_user_firmware_example.obj</Path>
+          <Path>100_Release\bms_user_firmware_example_config.obj</Path>
+          <Path>100_Release\bms_user_firmware_example_measurement.obj</Path>
+          <Path>100_Release\bms_user_firmware_example_platform.obj</Path>
+        </LinkOrder>
+        <CommonOptions>
+          <IncludePathForC>%ProjectDir%</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\application</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\bms_core_lib\include</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\afe_lib\include</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\afe_lib\lib\RAJ240100_90</IncludePathForC>
+        </CommonOptions>
+        <GeneralOptions>
+          <SimultaneouslyBuild>False</SimultaneouslyBuild>
+        </GeneralOptions>
+        <CompileOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-g_line</Option>
+          <Option>-Onothing</Option>
+          <Option>-I %ProjectDir%</Option>
+          <Option>-I %ProjectDir%\application</Option>
+          <Option>-I %ProjectDir%\bms_core_lib\include</Option>
+          <Option>-I %ProjectDir%\afe_lib\include</Option>
+          <Option>-I %ProjectDir%\afe_lib\lib\RAJ240100_90</Option>
+          <Option>-memory_model=medium</Option>
+          <Option>-pass_source</Option>
+          <Option>-asm_path=%BuildModeName%</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-convert_cc=ca78k0r</Option>
+          <Option>-c</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-asmopt=-convert_asm</Option>
+          <Option>-c</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-SECURITY_ID=00000000000000000000</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-DEBug</Option>
+          <Option>-NOCOmpress</Option>
+          <Option>-NOOPtimize</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-LIBrary=afe_lib\lib\RAJ240100_90\r_bms_driver.lib</Option>
+          <Option>-LIBrary=bms_core_lib\lib\r_bms_bms_core.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4s.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\malloc_n.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4r.lib</Option>
+          <Option>-OCDBG=85</Option>
+          <Option>-DEBUG_MONITOR=1FE00-1FFFF</Option>
+          <Option>-USER_OPT_BYTE=6EFEAA</Option>
+          <Option>-LISt=%BuildModeName%\%ProjectName%.map</Option>
+          <Option>-SHow=ALL</Option>
+          <Option>-STARt=VERINFO_f/00FF8,.text,.textf,.const,.constf,.data,.sdata,.RLIB,.SLIB/01000,.dataR,.bss/FF300,.sdataR,.sbss/FFE20</Option>
+          <Option>-ROm=.data=.dataR</Option>
+          <Option>-ROm=.sdata=.sdataR</Option>
+          <Option>-CPu=ROM=00000-1FFFF</Option>
+          <Option>-CPu=ROM=F1000-F1FFF</Option>
+          <Option>-CPu=ROM=FD400-FDFFF</Option>
+          <Option>-CPu=RAM=FED90-FFFFF</Option>
+          <Option>-NO_CHECK_SECTION_LAYOUT</Option>
+          <Option>-NOMessage=1321,1110</Option>
+          <Option>-NOLOgo</Option>
+          <Option>-END</Option>
+          <Option>-Input=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-OUtput=%BuildModeName%\RBMSM_FW_S_RAJ240100.mot</Option>
+          <Option>-FOrm=Stype</Option>
+          <Option>-REcord=S2</Option>
+          <Option>-END_RECORD=S8</Option>
+          <Option>-NOMessage=1321,1110</Option>
+          <Option>-EXIt</Option>
+        </LinkOptions>
+        <IOHeaderGenerationOptions>
+          <Option>-df=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-o=%ProjectDir%\iodefine.h</Option>
+          <Option>-f</Option>
+          <UpdateIOMode>None</UpdateIOMode>
+        </IOHeaderGenerationOptions>
+      </BuildMode>
+      <BuildMode Name="94_Debug" Active="False">
+        <LinkOrder>
+          <Path>94_Debug\cstart.obj</Path>
+          <Path>94_Debug\stkinit.obj</Path>
+          <Path>94_Debug\bms_user_firmware_example.obj</Path>
+          <Path>94_Debug\bms_user_firmware_example_config.obj</Path>
+          <Path>94_Debug\bms_user_firmware_example_measurement.obj</Path>
+          <Path>94_Debug\bms_user_firmware_example_platform.obj</Path>
+        </LinkOrder>
+        <CommonOptions>
+          <IncludePathForC>bms_core_lib\include</IncludePathForC>
+          <IncludePathForC>afe_lib\include</IncludePathForC>
+          <IncludePathForC>afe_lib\lib\RAJ240100_90</IncludePathForC>
+          <IncludePathForC>src</IncludePathForC>
+          <IncludePathForC>%ProjectDir%</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src\UIF</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src\FlashLib</IncludePathForC>
+          <MacroForC>DEBUG_NOT_CHECKSUM</MacroForC>
+          <MacroForC>DEBUG_AFE_WDT_STOP</MacroForC>
+          <MacroForC>RAJ240094</MacroForC>
+        </CommonOptions>
+        <GeneralOptions>
+          <SimultaneouslyBuild>False</SimultaneouslyBuild>
+        </GeneralOptions>
+        <CompileOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-g_line</Option>
+          <Option>-Onothing</Option>
+          <Option>-I bms_core_lib\include</Option>
+          <Option>-I afe_lib\include</Option>
+          <Option>-I afe_lib\lib\RAJ240100_90</Option>
+          <Option>-I src</Option>
+          <Option>-I %ProjectDir%</Option>
+          <Option>-I %ProjectDir%\src</Option>
+          <Option>-I %ProjectDir%\src\UIF</Option>
+          <Option>-I %ProjectDir%\src\FlashLib</Option>
+          <Option>-D DEBUG_NOT_CHECKSUM,DEBUG_AFE_WDT_STOP,RAJ240094</Option>
+          <Option>-memory_model=medium</Option>
+          <Option>-pass_source</Option>
+          <Option>-asm_path=%BuildModeName%</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-convert_cc=ca78k0r</Option>
+          <Option>-c</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-asmopt=-convert_asm</Option>
+          <Option>-c</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-SECURITY_ID=00000000000000000000</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-DEBug</Option>
+          <Option>-NOCOmpress</Option>
+          <Option>-NOOPtimize</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4s.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\malloc_n.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4r.lib</Option>
+          <Option>-OCDBG=85</Option>
+          <Option>-DEBUG_MONITOR=1FE00-1FFFF</Option>
+          <Option>-USER_OPT_BYTE=6EFFAA</Option>
+          <Option>-LISt=%BuildModeName%\%ProjectName%.map</Option>
+          <Option>-SHow=ALL</Option>
+          <Option>-STARt=VERINFO_f/00FF8,.text,.textf,.const,.constf,.data,.sdata,.RLIB,.SLIB/01000,.dataR,.bss/FF300,.sdataR,.sbss/FFE20</Option>
+          <Option>-ROm=.data=.dataR</Option>
+          <Option>-ROm=.sdata=.sdataR</Option>
+          <Option>-CPu=ROM=00000-1FFFF</Option>
+          <Option>-CPu=ROM=F1000-F1FFF</Option>
+          <Option>-CPu=ROM=FD400-FDFFF</Option>
+          <Option>-CPu=RAM=FED90-FFFFF</Option>
+          <Option>-NO_CHECK_SECTION_LAYOUT</Option>
+          <Option>-NOMessage=1321,1110</Option>
+          <Option>-NOLOgo</Option>
+          <Option>-END</Option>
+          <Option>-Input=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.mot</Option>
+          <Option>-FOrm=Stype</Option>
+          <Option>-REcord=S2</Option>
+          <Option>-END_RECORD=S8</Option>
+          <Option>-NOMessage=1321,1110</Option>
+          <Option>-EXIt</Option>
+        </LinkOptions>
+        <IOHeaderGenerationOptions>
+          <Option>-df=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-o=%ProjectDir%\iodefine.h</Option>
+          <Option>-f</Option>
+          <UpdateIOMode>None</UpdateIOMode>
+        </IOHeaderGenerationOptions>
+      </BuildMode>
+      <BuildMode Name="94_Release" Active="False">
+        <LinkOrder>
+          <Path>94_Release\cstart.obj</Path>
+          <Path>94_Release\stkinit.obj</Path>
+          <Path>94_Release\bms_user_firmware_example.obj</Path>
+          <Path>94_Release\bms_user_firmware_example_config.obj</Path>
+          <Path>94_Release\bms_user_firmware_example_measurement.obj</Path>
+          <Path>94_Release\bms_user_firmware_example_platform.obj</Path>
+        </LinkOrder>
+        <CommonOptions>
+          <IncludePathForC>bms_core_lib\include</IncludePathForC>
+          <IncludePathForC>afe_lib\include</IncludePathForC>
+          <IncludePathForC>afe_lib\lib\RAJ240100_90</IncludePathForC>
+          <IncludePathForC>src</IncludePathForC>
+          <IncludePathForC>%ProjectDir%</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src\UIF</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\src\FlashLib</IncludePathForC>
+          <MacroForC>RAJ240094</MacroForC>
+        </CommonOptions>
+        <GeneralOptions>
+          <SimultaneouslyBuild>False</SimultaneouslyBuild>
+        </GeneralOptions>
+        <CompileOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-g_line</Option>
+          <Option>-Osize</Option>
+          <Option>-I bms_core_lib\include</Option>
+          <Option>-I afe_lib\include</Option>
+          <Option>-I afe_lib\lib\RAJ240100_90</Option>
+          <Option>-I src</Option>
+          <Option>-I %ProjectDir%</Option>
+          <Option>-I %ProjectDir%\src</Option>
+          <Option>-I %ProjectDir%\src\UIF</Option>
+          <Option>-I %ProjectDir%\src\FlashLib</Option>
+          <Option>-D RAJ240094</Option>
+          <Option>-memory_model=medium</Option>
+          <Option>-pass_source</Option>
+          <Option>-asm_path=%BuildModeName%</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-convert_cc=ca78k0r</Option>
+          <Option>-c</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-cpu=S3</Option>
+          <Option>-obj_path=%BuildModeName%</Option>
+          <Option>-dev=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-g</Option>
+          <Option>-asmopt=-prn_path=%BuildModeName%</Option>
+          <Option>-asmopt=-convert_asm</Option>
+          <Option>-c</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-SECURITY_ID=00000000000000000000</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-DEBug</Option>
+          <Option>-NOCOmpress</Option>
+          <Option>-NOOPtimize</Option>
+          <Option>-OUtput=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4s.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\malloc_n.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4r.lib</Option>
+          <Option>-OCDBG=85</Option>
+          <Option>-DEBUG_MONITOR=1FE00-1FFFF</Option>
+          <Option>-USER_OPT_BYTE=6EFFAA</Option>
+          <Option>-LISt=%BuildModeName%\%ProjectName%.map</Option>
+          <Option>-SHow=ALL</Option>
+          <Option>-STARt=VERINFO_f/00FF8,.text,.textf,.const,.constf,.data,.sdata,.RLIB,.SLIB/01000,.dataR,.bss/FF300,.sdataR,.sbss/FFE20</Option>
+          <Option>-ROm=.data=.dataR</Option>
+          <Option>-ROm=.sdata=.sdataR</Option>
+          <Option>-CPu=ROM=00000-1FFFF</Option>
+          <Option>-CPu=ROM=F1000-F1FFF</Option>
+          <Option>-CPu=ROM=FD400-FDFFF</Option>
+          <Option>-CPu=RAM=FED90-FFFFF</Option>
+          <Option>-NO_CHECK_SECTION_LAYOUT</Option>
+          <Option>-NOMessage=1321,1110</Option>
+          <Option>-NOLOgo</Option>
+          <Option>-END</Option>
+          <Option>-Input=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-OUtput=%BuildModeName%\RBMSF_FW_S_RAJ240094.mot</Option>
+          <Option>-FOrm=Stype</Option>
+          <Option>-REcord=S2</Option>
+          <Option>-END_RECORD=S8</Option>
+          <Option>-NOMessage=1321,1110</Option>
+          <Option>-EXIt</Option>
+        </LinkOptions>
+        <IOHeaderGenerationOptions>
+          <Option>-df=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
+          <Option>-o=%ProjectDir%\iodefine.h</Option>
+          <Option>-f</Option>
+          <UpdateIOMode>None</UpdateIOMode>
+        </IOHeaderGenerationOptions>
+      </BuildMode>
+    </BuildOptions>
+  </Project>
+</MicomToolCommonProjectFile>
