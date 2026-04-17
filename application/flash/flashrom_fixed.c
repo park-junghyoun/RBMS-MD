@@ -48,6 +48,7 @@
 #define _FLASHROM
 
 // - Include header file -
+#include <stddef.h>
 #include "define.h"								// Common definition
 #include "flashrom.h"
 #include "ram.h"
@@ -55,6 +56,45 @@
 #include "afe.h"
 #include "uif_fsl.h"
 #include "inline_asm.h"
+
+typedef struct
+{
+	U16 u16_start;
+	U16 u16_end;
+}st_fixed_reserved_range_t;
+
+#define FLASH_SET_RESERVED_RANGE(_member_path) \
+	{ \
+		(U16)offsetof(st_fixed_data_t, _member_path), \
+		(U16)(offsetof(st_fixed_data_t, _member_path) + sizeof(((st_fixed_data_t *)0)->_member_path)) \
+	}
+
+static U8 FLASH_IsReservedFixedDataIndex(U16 u16_index)
+{
+	U8 u8_index;
+	const st_fixed_reserved_range_t *pst_range;
+	static const st_fixed_reserved_range_t st_reserved_ranges[] =
+	{
+		// Add all au8_reserved fields in st_fixed_data here.
+		FLASH_SET_RESERVED_RANGE(st_device_info.au8_reserved),
+		FLASH_SET_RESERVED_RANGE(st_gauging_info.au8_reserved),
+		FLASH_SET_RESERVED_RANGE(st_system_info.au8_reserved),
+		FLASH_SET_RESERVED_RANGE(st_operating_info.au8_reserved),
+	};
+
+	for( u8_index = 0; u8_index < (sizeof(st_reserved_ranges) / sizeof(st_reserved_ranges[0])); u8_index++ )
+	{
+		pst_range = &st_reserved_ranges[u8_index];
+		if( u16_index >= pst_range->u16_start && u16_index < pst_range->u16_end )
+		{
+			return TRUE;
+		}
+	}
+
+	return FALSE;
+}
+
+#undef FLASH_SET_RESERVED_RANGE
 
 /*""FUNC COMMENT""**********************************************************
  * ID				: 1.0
@@ -89,6 +129,22 @@
  *""FUNC COMMENT END""*****************************************************/
 U8 FLASH_Check_FixedData(void)
 {
+	U16	u16_index;
+	U8		*pu8_fixed_data;
+
+	pu8_fixed_data = (U8 *)&st_fixed_data;
+	for( u16_index = 0; u16_index < FDSIZE; u16_index++ )
+	{
+		if( FLASH_IsReservedFixedDataIndex(u16_index) == TRUE )
+		{
+			continue;
+		}
+
+		if( pu8_fixed_data[u16_index] == 0xFF )
+		{
+			return FALSE;
+		}
+	}
+
 	return TRUE;
 }
-
