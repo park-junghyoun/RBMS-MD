@@ -262,9 +262,6 @@ typedef struct
 	U8	u8_cph;					// [1byte] Correction point(H) [%]
 	U8	u8_cpl;					// [1byte] Correction point(L) [%]
 	U8	au8_crate[4];				// [4byte] CP table C-rate [0.01C]
-	st_gauging_info_t st_gauging_info;
-	st_system_t st_system_info;
-	st_operating_t st_operating_info;
 	S8	au8_trate[6];				// [5byte] CP table T-rate [-128]
 	U16	au16_cph_volt[20];		// [40byte] Correction point High Voltage table
 	U16	au16_cpl_volt[20];			// [40byte] Correction point Low Voltage table
@@ -297,6 +294,9 @@ typedef struct
 	st_init_capacity_t st_init_cap;
 	st_correction_point_t st_cp;
 	st_impedance_t st_imp;					
+	st_gauging_info_t st_gauging_info;
+	st_system_t st_system_info;
+	st_operating_t st_operating_info;
 
 	U16	u16_fixed_chekcsum;					// [2bytes] Fixed Data Checksum
 	
