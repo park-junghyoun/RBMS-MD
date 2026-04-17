@@ -62,3 +62,20 @@ st_cal_data_t CalbirationData_Read(void)
 	DataFlash_Disable();								// Disable DataFlash access
 	return st_cal_dumy;
 }
+
+U8 FLASH_Check_CalibrationData(void)
+{
+	U16 u16_index;
+	U8 *pu8_cal_data;
+
+	pu8_cal_data = (U8 *)&st_cal_data_dataflash;
+	for(u16_index = 0; u16_index < sizeof(st_cal_data_t); u16_index++)
+	{
+		if(pu8_cal_data[u16_index] == 0xFF)
+		{
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}

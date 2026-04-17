@@ -37,6 +37,7 @@
 *""FILE COMMENT END""*****************************************************/
 #define _APP
 #include "r_bms_app.h"
+#include "dataflash_calibration.h"
 
 
 U8 APP_BMS_Core_Init(void)
@@ -61,7 +62,7 @@ void APP_Check_FlashData(void)
 			
 		}
 	}
-	u8_ret = FLASH_C();
+	u8_ret = FLASH_Check_CalibrationData();
 	if(u8_ret == FALSE)
 	{
 		f_init_cal_none = TRUE;
@@ -243,4 +244,3 @@ void APP_MoveToBoot(void)
 	Stop_AFEWDT();								// Stop AFE WDT
 	ASM_JUMP_BOOT_64();							// To Flash update mode
 }
-
