@@ -63,6 +63,7 @@
 #define PFDL_FREQUENCY			8				// PFDL CPU frequency (8MHz)
 #define PFDL_FLASH_VOLTAGE		1				// PFDL voltage mode setting
 												// (not 0x00:wide voltage mode)
+#define DATAFLASH_WRITE_CHUNK_SIZE	64			// Chunk size for write/verify
 
 // - Internal variable -
 //	Initialize data for PFDL
@@ -139,9 +140,10 @@ U8 DataFlash_Write(U8 *p8_addr, U8 *p8_data, U16 u16_size)
 		{
 			pfdl_req.index_u16 = (pfdl_u16)p8_write_addr;
 			pfdl_req.data_pu08 = p8_write_data;	// Set write data
-			if( u16_write_cnt >= 64 )				// Size >= 64 bytes ?
+			if( u16_write_cnt >= DATAFLASH_WRITE_CHUNK_SIZE )	// Size >= chunk ?
 			{
-				pfdl_req.bytecount_u16 = 64;		// Set write size = 64
+				pfdl_req.bytecount_u16 = DATAFLASH_WRITE_CHUNK_SIZE;
+												// Set write size = chunk
 			} else {
 												// Set write size
 				pfdl_req.bytecount_u16 = u16_write_cnt;
@@ -169,8 +171,8 @@ U8 DataFlash_Write(U8 *p8_addr, U8 *p8_data, U16 u16_size)
 				break;
 			}
 
-			p8_write_addr += 64;					// Update write address
-			p8_write_data += 64;					// Update write data
+			p8_write_addr += pfdl_req.bytecount_u16;	// Update write address
+			p8_write_data += pfdl_req.bytecount_u16;	// Update write data
 												// Update write count
 			u16_write_cnt -= pfdl_req.bytecount_u16;
 		} while(u16_write_cnt > 0);
@@ -213,7 +215,7 @@ U8 DataFlash_Write(U8 *p8_addr, U8 *p8_data, U16 u16_size)
 U8 DataFlash_Erase(U8 u8_block)
 {
 	pfdl_request_t		pfdl_req;
-	pfdl_status_t		pddl_aret;					// Return code
+	pfdl_status_t		pfdl_ret;					// Return code
 
 	MCU_PSW_PUSH();									// PSW -> STACK
 												// Flash data library open
@@ -221,16 +223,16 @@ U8 DataFlash_Erase(U8 u8_block)
 
 	pfdl_req.index_u16 = (pfdl_u16)u8_block;		// Set block number of erase
 	pfdl_req.command_enu = PFDL_CMD_ERASE_BLOCK;	// Set Erase command
-	pddl_aret = PFDL_Execute( &pfdl_req );				// Erase
-	while( pddl_aret == PFDL_BUSY )					// Wait for finish erasing
+	pfdl_ret = PFDL_Execute( &pfdl_req );				// Erase
+	while( pfdl_ret == PFDL_BUSY )					// Wait for finish erasing
 	{
-		pddl_aret = PFDL_Handler();					// Ststus check
+		pfdl_ret = PFDL_Handler();					// Ststus check
 	}
 	MCU_PSW_POP();										// STACK -> PSW
 
 	PFDL_Close();								// Flash data library close
 
-	return pddl_aret;
+	return pfdl_ret;
 }
 
 
