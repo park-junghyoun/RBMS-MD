@@ -349,7 +349,7 @@ void Search_FlexibleData_read(U16 *p16_tblock, U8 *p8_aidx)
 			*p16_tblock = NULL;						// Set NULL
 		} else {								// Block1 is not empty
 			*p16_tblock = U16_BLOCK_1;					// Use Block1
-			*s8_aidx0 = s8_aidx1;
+			*p8_aidx = (U8)s8_aidx1;
 		}
 	} else {									// Block0 is not empty
 		if( s8_aidx1 < 0 )							// Block1 is empty ?
