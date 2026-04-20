@@ -236,7 +236,6 @@ typedef struct
 typedef struct
 {
 	U8		u8_slave_addr;				// [1byte] smbus slave address	
-	U8		u8_charger_addr;				// [1byte] charge address
 }st_smbus_t;
 
 // - FlashROM fixed data definition -

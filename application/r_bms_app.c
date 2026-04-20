@@ -122,14 +122,10 @@ U8 APP_ReportBMSCoreResult_Calib(E_BMS_RESULT_ITEM e_ret)
 *******************************************************************************/
 void APP_Get_AD_measurement_snapshot(void)
 {
-	st_bms_ad_snapshot_t st_ad_snapshot = {0};
-
 	if(BMS_Measure_GetAdSnapshot(&st_ad_snapshot) != E_BMS_OK)
 	{
 		return;
 	}
-
-	st_flexible_data_ram.st_measurement.ad = st_ad_snapshot;
 }
 
 /*******************************************************************************
@@ -141,14 +137,10 @@ void APP_Get_AD_measurement_snapshot(void)
 *******************************************************************************/
 void APP_Get_CC_measurement_snapshot(void)
 {
-	st_bms_cc_snapshot_t st_cc_snapshot = {0};
-
 	if(BMS_Measure_GetCcSnapshot(&st_flexible_data_ram.st_measurement.cc) != E_BMS_OK)
 	{
 		return;
 	}
-	
-	st_flexible_data_ram.st_measurement.cc = st_cc_snapshot;
 }
 
 /*******************************************************************************
@@ -209,6 +201,19 @@ void APP_Get_FETstatus(void)
 	f_cfet = st_hw_state.u8_chg_fet_state;
 	f_dfet = st_hw_state.u8_dsg_fet_state;
 }
+void APP_Sleep_Check(void)
+{
+	if((st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA <= (S32)st_fixed_data.st_system_info.u16_sleep_current) &&
+		(st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA >= -(S32)st_fixed_data.st_system_info.u16_sleep_current) &&
+		(f_nosmb == ON) &&
+		(st_flexible_data_ram.st_status.u16_safety_bit == 0) &&
+		(st_flexible_data_ram.st_status.u16_permanent_bit == 0))
+	{
+		BMS_Mode_Set(E_BMS_MODE_SLEEP);
+
+	}
+}
+
 /*""FUNC COMMENT""***************************************************
 * ID : 1.0
 * module outline	: Move to Flash update mode operation

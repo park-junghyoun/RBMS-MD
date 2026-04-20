@@ -625,46 +625,6 @@ void SMB_custom_SCLSDA(void)
 
 /*""FUNC COMMENT""***************************************************
 * ID : 1.0
-* module outline	: SMBus master communication check function
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void SMB_master_check(void)
-*-------------------------------------------------------------------
-* Function			: Check SMBus master communication is necessary or not.
-*					: If necessary, master communication will be made.
-*					: 
-*-------------------------------------------------------------------
-* Argument			: None
-*-------------------------------------------------------------------
-* Return			: None
-*-------------------------------------------------------------------
-* Input				: None
-* Output			: None
-*-------------------------------------------------------------------
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: If SMBus master communication is not necessary,
-*					: this function should be made as empty function.
-*-------------------------------------------------------------------
-* History			: 2020.10.16 Ver 0.01
-* 					: Replace overall
-* 
-*""FUNC COMMENT END""**********************************************/
-void SMB_master_check(void)
-{
-	// TODO: Add function of checking SMBus master communication if necessary.
-	if(F_SMBMSTR == ON)												// SMBus master com. enabled ?
-		{
-			if( u8_smbus_on_cnt == 80 )									// 10sec passed from OnState ?
-			{
-				Master_Chk();										// SMBus master function
-			}
-		}
-}
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
 * module outline	: Extra function
 *-------------------------------------------------------------------
 * Include			: 

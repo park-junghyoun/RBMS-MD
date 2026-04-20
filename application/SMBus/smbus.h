@@ -59,7 +59,6 @@
 void SMBus_initialize(void);						// SMBus initializing
 void SMBus_timeout_check(void);					// SMBus timeout check
 void SMBus_state_check(void);					// SMBus state check
-void SMBus_Master_Function(void);
 
 // - Grobal variable -
 typedef struct									// SMBus comm. information
@@ -87,7 +86,6 @@ GLOBAL U8				u8_smb_num;					// SMBus communicated number
 GLOBAL U8				u8_pec;						// PEC
 GLOBAL U8				u8_received_addr;				// Received Slave address
 
-GLOBAL U8				u8_smbus_m_timeout_cnt;		// Master timeout counter
 GLOBAL U8				u8_smbus_s_timeout_cnt;		// Slave timeout counter
 GLOBAL U8				u8_smbus_scl_timeout_cnt;		// SCL timeout counter
 GLOBAL U16				u16_smbus_no_timeout_cnt;		// No SMBus time counter
@@ -101,14 +99,9 @@ GLOBAL U16				u16_tsmbus_flg;				// Flags for SMBus
 #define f_recv				DEF16_BIT1(&u16_tsmbus_flg)	// Data received flag
 #define f_wwpec			DEF16_BIT2(&u16_tsmbus_flg)	// PEC sent flag
 #define f_comerr			DEF16_BIT3(&u16_tsmbus_flg)	// Communication error flag
-#define f_master			DEF16_BIT4(&u16_tsmbus_flg)	// Master communication flag
-#define f_mstto_req		DEF16_BIT5(&u16_tsmbus_flg)	// Master timeout check req.
 #define f_slvto_req			DEF16_BIT6(&u16_tsmbus_flg)	// Slave timeout check req.
 #define f_sclto_req			DEF16_BIT7(&u16_tsmbus_flg)	// SCL timeout check req.
 #define f_tm01_using		DEF16_BIT8(&u16_tsmbus_flg)	// TM01 using flag
-#define f_mster30			DEF16_BIT9(&u16_tsmbus_flg)	// Master 30sec passed flag
-#define f_mster10			DEF16_BIT10(&u16_tsmbus_flg)	// Master 10sec passed flag
-#define f_mtr15			DEF16_BIT11(&u16_tsmbus_flg)	// ChargingVoltage send flag
 
 // - IIC Register setting -
 #define U8_IICWL0_400KHz			0x0A					// IICWL0 setting for 400KHz

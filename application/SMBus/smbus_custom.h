@@ -64,7 +64,6 @@ void SMB_custom_StopCondition(void);						// Function of Stop condition
 void SMB_custom_SlaveComm(void);							// Function of Slave comm.
 void SMB_custom_SlaveAddress_receive(void);				// Function of receive SAdr.
 void SMB_custom_SCLSDA(void);								// Function of SCL/SDA int.
-void SMB_master_check(void);						// SMBus master communication
 
 void ExtraFunction(void);								// ExtraFunction()
 void Seal_Proc(void);									// Seal/Unseal()

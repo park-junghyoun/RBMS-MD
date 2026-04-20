@@ -137,10 +137,6 @@ void mcu_TM01_1ms_Init(void)
 *""FUNC COMMENT END""**********************************************/
 void _int_TM01_SMBus1ms(void)
 {
-	if( f_mstto_req == ON )						// Checking Master timeout ?
-	{
-		u8_smbus_m_timeout_cnt++;							// Count the time
-	}
 	if( f_slvto_req == ON )						// Checking Slave timeout ?
 	{
 		u8_smbus_s_timeout_cnt++;							// Count the time

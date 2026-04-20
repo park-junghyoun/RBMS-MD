@@ -75,8 +75,6 @@ void smb_bus_error(void);							// SMBus error
 void smb_bus_error_nak(void);						// SMBus error with NAK
 void smb_send_ack(void);							// Send ACK
 
-U8	au8_m_smbus_buff[5];								// Master send buffer
-
 // - Internal variable -
 static const __near DWORD SMBusFunction_table[] = {
 												// SMBus function table
@@ -94,38 +92,6 @@ static const __near DWORD SMBusFunction_table[] = {
 
 // - Define definition -
 #define CRC8_Calc(a)	u8_pec = CRC8TBL(a^u8_pec)	// PEC calculation macro
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: PEC calculation function for Master communication
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: void CRC8_Master(void)
-*-------------------------------------------------------------------
-* Function			:  Calculate PEC when master communication.
-*					:
-*-------------------------------------------------------------------
-* Argument			:  None
-*-------------------------------------------------------------------
-* Return			:  None
-*-------------------------------------------------------------------
-* Input				:  None
-* Output			:  None
-*-------------------------------------------------------------------
-* 					: 
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2012.08.01
-*	 				: New create
-*					: 
-*""FUNC COMMENT END""**********************************************/
-void CRC8_Master(void)
-{
-	au8_m_smbus_buff[0] = CRC8TBL(au8_m_smbus_buff[1] ^ CRC8TBL(au8_m_smbus_buff[2] ^ CRC8TBL(au8_m_smbus_buff[3] ^ CRC8TBL(au8_m_smbus_buff[4]))));
-}
 
 /*""FUNC COMMENT""***************************************************
 * ID : 1.0
@@ -187,7 +153,6 @@ void SMBus_initialize(void)
 	// - RAM Initializing for SMBus -
 	st_smb_frame.u8_status = SADR_CHK;					// SMBus status: Slave adr. check
 	u16_tsmbus_flg = 0;							// Clear all flags for SMBus
-	u8_smbus_m_timeout_cnt = 0;							// Clear Master timeout counter
 	u8_smbus_s_timeout_cnt = 0;							// Clear Slave timeout counter
 	u8_smbus_scl_timeout_cnt = 0;							// Clear SCL timeout counter
 
@@ -330,54 +295,12 @@ void SMB_INT_SMBus(void)
 		}
 
 	} else {								// Not stop condition
-
-		if( f_master == OFF )				// Slave communication ?
-		{
-											// Operates current SMBus status
-			((void(*)(void))SMBusFunction_table[st_smb_frame.u8_status])();
-			u16_smbus_no_timeout_cnt = 0;					// Clear no comm time counter
-			f_nosmb = OFF;					// Clear no comm flag
-			f_sclto_req = OFF;				// Clear SCL timeout check req.
-			SMB_custom_SlaveComm();			// Custom function when Slave comm.
-			
-		} else {							// Master communication
-			u8_smbus_m_timeout_cnt = 0;					// Clear master timeout counter
-			if( ALD0 == OFF )				// Not arbitration lost ?
-			{
-				if( ACKD0 == 1 )			// Received ACK ?
-				{					
-					if( u8_smb_num == 0xFF )	// Completed to send ?
-					{
-						SPT0 = 1;			// Make stop condition
-						f_mstto_req = OFF;	// Clear master timeout check req.
-						f_master = OFF;		// Clear master comm flag
-					} else {				// Sending
-											// Set send data to IICA0 reg.
-						IICA0 = au8_m_smbus_buff[u8_smb_num];
-						u8_smb_num--;			// Count communicated number
-					}
-				} else {					// Received NAK
-					st_smb_frame.u8_status = SADR_CHK;	// SMBus status: Slave adr. check
-					SPT0 = 1;				// Make stop condition
-					f_mstto_req = OFF;		// Clear master timeout check req.
-					f_master = OFF;			// Clear master comm flag
-				}
-				u8_smbus_scl_timeout_cnt = 0;				// Clear SCL timeout counter
-				f_sclto_req = ON;			// Set SCL timeout check req.
-			} else {						// Detect arbitration lost
-				f_mstto_req = OFF;			// Clear master timeout check req.
-				f_master = OFF;				// Clear master comm flag
-				if( TRC0 == OFF )			// Receiving condition ?
-				{
-					if( COI0  == ON )		// Slave address match ?
-					{	
-						smb_SlaveAddr_chk();// Slave address check
-					} else {				// Slave address mismatch
-						LREL0 = 1;			// Exit from communication
-					}
-				}
-			}
-		}
+										// Operates current SMBus status
+		((void(*)(void))SMBusFunction_table[st_smb_frame.u8_status])();
+		u16_smbus_no_timeout_cnt = 0;					// Clear no comm time counter
+		f_nosmb = OFF;					// Clear no comm flag
+		f_sclto_req = OFF;				// Clear SCL timeout check req.
+		SMB_custom_SlaveComm();			// Custom function when Slave comm.
 	}
 	u8_smbus_scl_hold_cnt = 0;						// Clear low hold counter
 	u8_smbus_sda_hold_cnt = 0;
@@ -410,19 +333,10 @@ void SMB_INT_SMBus(void)
 *""FUNC COMMENT END""**********************************************/
 void SMBus_timeout_check(void)
 {
-	if( u8_smbus_m_timeout_cnt >= 10 )					// Master timeout(10ms) detected ?
+	if( u8_smbus_s_timeout_cnt < 25					// No Slave timeout(25ms)
+		&& u8_smbus_scl_timeout_cnt < 25 )			// & No SCL timeout(25ms) detect ?
 	{
-		SPT0 = 1;							// Make stop condition
-		LREL0 = 1;
-		f_master = OFF;	
-		f_mstto_req = OFF;					// Clear master timeout check req.
-		
-	} else {
-		if( u8_smbus_s_timeout_cnt < 25					// No Slave timeout(25ms)
-			&& u8_smbus_scl_timeout_cnt < 25 )			// & No SCL timeout(25ms) detect ?
-		{
-			return;
-		}
+		return;
 	}
 	SMBus_timeout();						// SMBus timeout function
 	// Note: Flags and counters should be cleared in SMBus initializing
@@ -1091,224 +1005,6 @@ void SMBus_state_check(void)
 		}
 	} else {									// Not SDA low hold
 		u8_smbus_sda_hold_cnt = 0;						// Clear the counter
-	}
-}
-
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: Master send function
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: U8 Master_Send()
-*-------------------------------------------------------------------
-* Function			: Make master send.
-*					: This function is called from Master_Chk().
-*					: 
-*					: 
-*-------------------------------------------------------------------
-* Argument			:  None
-*-------------------------------------------------------------------
-* Return			:  None
-*-------------------------------------------------------------------
-* Input				:  None
-* Output			:  None
-*-------------------------------------------------------------------
-* 					: 
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2012.08.01
-*	 				: New create
-*					: 
-*""FUNC COMMENT END""**********************************************/
-U8 Master_Send(void)
-{
-	if ( IICBSY0 == ON )											// Bus Busy? ?
-	{
-		// Do Nothing
-	} else {
-		PMK0 = 1;													// SDA interrupt disable
-		WTIM0 = 1;													// 9bit communication
-		STT0 = 1;													// Make Start condition
-
-		IICA0 = au8_m_smbus_buff[4];											// Set slave address
-		u8_smbus_m_timeout_cnt = 0;												// Init master timeout counter
-		f_mstto_req = ON;											// Set master timeout check req.
-		u8_smb_num = 3;												// Set number of remain data
-		f_master = ON;												// Set master comm flag
-		u8_smbus_scl_timeout_cnt = 0;												// Clear SCL timeout counter
-		f_sclto_req = OFF;
-		
-		TT0L.1 = 1;													// Stop timer TM01(1msec timer)
-		while( TE0L.1 == ON ) ;										// Wait until timer stop
-		TS0L.1 = 1;													// Start timer TM01(1msec timer)
-		return TRUE;
-	}
-	return FALSE;
-}
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: Check bus free of master send function
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: U8 Master_BusFree_Chk()
-*-------------------------------------------------------------------
-* Function			: Check the condition of bus free.
-*					: Make stop condition, if  bus busy conditions.
-*					:
-*					: 
-*					: 
-*-------------------------------------------------------------------
-* Argument			:  None
-*-------------------------------------------------------------------
-* Return			:  None
-*-------------------------------------------------------------------
-* Input				:  None
-* Output			:  None
-*-------------------------------------------------------------------
-* 					: 
-* Used function 	: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2012.08.01
-*	 				: New create
-*					: 
-*""FUNC COMMENT END""**********************************************/
-void Master_BusFree_Chk(void)
-{
-#define	SMBUS_FREE_COUNT	15
-#define	SMBUS_STT0_COUNT	15
-
-	U8	acnt;
-	if( IICBSY0 == ON )
-	{
-		for( acnt=0; acnt < SMBUS_FREE_COUNT; acnt++ )
-		{
-			if( IICBSY0 == ON && CLD0 == HI && DAD0 == HI )
-			{
-				// Do Nothing
-			} else {
-				break;
-			}
-		}
-
-		if( acnt == SMBUS_FREE_COUNT )
-		{
-			IICAMK0 = 1;											// SMBus interrupt disabled
-			IICAIF0 = 0;											// SMBus interrupt request flag clear
-			PMK0 = 1;												// SDA interrupt disable
-			IICE0 = 0;												// SMBus disable
-			SPIE0 = 0;												// SMBus stop condition disabled
-			IICE0 = 1;												// SMBus enabled
-			LREL0 = 1;												// Exit from communication
-			SPT0 = 1;												// Make stop condition
-			
-			for( acnt=0; acnt<SMBUS_STT0_COUNT; acnt++ )
-			{
-				if( SPD0 == 1 )										// Stop condition ?
-				{
-					break;
-				}
-			}
-			SPIE0 =1;												// SMBus stop condition enable
-
-			PIF0 = 0;												// Interrupt flag clear
-			PMK0 = 0;												// SCL/SDA Interrupt enable
-
-			IICAIF0 = 0;											// SMBus interrupt request flag clear
- 			IICAMK0 = 0;											// SMBus interrupt enabled
-		}
-	}
-}
-
-/*""FUNC COMMENT""***************************************************
-* ID : 1.0
-* module outline	: Master send function
-*-------------------------------------------------------------------
-* Include			: 
-*-------------------------------------------------------------------
-* Declaration		: U8 Master_Chk()
-*-------------------------------------------------------------------
-* Function			: Check the condition and make master send if 
-*					: it satisfy the conditions.
-*					: 
-*					:  
-*-------------------------------------------------------------------
-* Argument			:  None
-*-------------------------------------------------------------------
-* Return			:  None
-*-------------------------------------------------------------------
-* Input				:  None
-* Output			:  None
-*-------------------------------------------------------------------
-* Used function		: CRC8_Master(), Master_Send()
-*  					: 
-*-------------------------------------------------------------------
-* Caution			: 
-*-------------------------------------------------------------------
-* History			: 2012.08.01
-*	 				: New create
-*					: 
-*""FUNC COMMENT END""**********************************************/
-void SMBus_Master_Function(void)
-{
-	if (st_fixed_data.st_smbus.u8_charger_addr == 0x00)				// Charger address is 0?
-	{
-		st_fixed_data.st_smbus.u8_charger_addr = 0x12;				// Set the default as 0x12
-	}
-	if(f_mster30 == ON )											// 30sec has passed ?
-	{
-		Master_BusFree_Chk();										// check if the bus is free
-		
-		if( IICBSY0 == OFF && CLD0 == HI && DAD0 == HI )				// Bus is free & SMBus available ?
-		{
-			au8_m_smbus_buff[4] = st_fixed_data.st_smbus.u8_charger_addr;		// Set Charger(W) slave address
-			if( f_mtr15 == OFF )									// Send 0x14 command ?
-			{
-				au8_m_smbus_buff[3] = 0x14;									// ChargingCurrent()
-				au8_m_smbus_buff[2] = u16_charging_current.u8_data[0];			// Data U8(L)
-				au8_m_smbus_buff[1] = u16_charging_current.u8_data[1];			// Data U8(H)
-				CRC8_Master();									// Calculate PEC
-				if( Master_Send() )									// Succeed to send ?
-				{
-					f_mtr15 = ON;									// Set 0x15 send request
-				}
-			} else {												// Send 0x15 command
-				au8_m_smbus_buff[3] = 0x15;									// ChargingVoltage()
-				au8_m_smbus_buff[2] = u16_charging_voltage.u8_data[0];			// Data U8(L)
-				au8_m_smbus_buff[1] = u16_charging_voltage.u8_data[1];			// Data U8(H)
-				CRC8_Master();									// Calculate PEC
-				if( Master_Send() )									// Succeed to send ?
-				{
-					f_mtr15 = OFF;								// Clear 0x15 send request
-					f_mster30 = OFF;								// Clear 30sec passed flag
-				}
-			}
-		}
-	}
-	
-	if(f_mster10 == ON) 											// 10sec has passed & OCA or TDA or OTA?
-	{
-		Master_BusFree_Chk();										// check if the bus is free
-		
-		if( IICBSY0 == OFF && CLD0 == HI && DAD0 == HI )			// Bus is free & SMBus available ?
-		{
-			au8_m_smbus_buff[4] = st_fixed_data.st_smbus.u8_charger_addr;		// Set Charger(W) slave address
-			au8_m_smbus_buff[3] = 0x16;										// ChargingCurrent()
-			//au8_m_smbus_buff[2] = abatsts[0];								// Data U8(L)
-			//au8_m_smbus_buff[1] = abatsts[1];								// Data U8(H)
-			CRC8_Master();											// Calculate PEC
-			if( Master_Send())										// Succeed to send ?
-			{
-				f_mster10 = OFF;									// Clear 10sec passed flag
-			}
-		}
 	}
 }
 
