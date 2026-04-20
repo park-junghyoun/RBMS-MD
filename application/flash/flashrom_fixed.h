@@ -145,9 +145,9 @@ typedef struct
 {
 	U8		au8_manufacturer_name[32];	// [32byte] 0x20:manufacturer Name
 	U8		au8_manufacturer_data[32];		// [32byte] 0x23:manufacturer Data
+	U8		au8_serial_number[32];			// [32byte] 0x1C:serial number
 	U8		au8_dev_name[32];			// [32byte] 0x21:DeviceName
 	U8		au8_dev_chem[4];				// [4byte] 0x22:DeviceChemistry
-	U8		u32_design_capacity;			// [2byte] 0x18:DesignCapacity [mAh]
 	U8		au8_seal_pawd[4];				// [4byte] Unseal Password
 	U8		au8_reserved[20];				// [20byte] Reserved
 }st_device_info_t;
@@ -221,7 +221,7 @@ typedef struct
 {
 	U8		u8_force_ship_entry_time;		// [1byte] Force ship mode entry delay time [sec]
 	U16		u16_sleep_current;				// [2byte] sleep current [mA]
-	
+	U8		u8_sleep_entry_time;			// [1byte] sleep entery time [sec]
 	U8		au8_reserved[20];				// [20byte] Reserved
 }st_system_t;
 
@@ -262,7 +262,7 @@ typedef struct
 	U8	u8_cph;					// [1byte] Correction point(H) [%]
 	U8	u8_cpl;					// [1byte] Correction point(L) [%]
 	U8	au8_crate[4];				// [4byte] CP table C-rate [0.01C]
-	S8	au8_trate[6];				// [5byte] CP table T-rate [-128]
+	S8	au8_trate[6];				// [5byte] CP table T-rate [-128??]
 	U16	au16_cph_volt[20];		// [40byte] Correction point High Voltage table
 	U16	au16_cpl_volt[20];			// [40byte] Correction point Low Voltage table
 }st_correction_point_t;
@@ -310,7 +310,12 @@ typedef struct
 #pragma address st_fixed_data = 0x0FD800
 GLOBAL st_fixed_data_t	st_fixed_data;
 
-						
+#define au8_SMB20_mfg_name	st_fixed_data.st_device_info.au8_manufacturer_name
+#define au8_SMB21_mfg_data	st_fixed_data.st_device_info.au8_manufacturer_data
+#define au8_SMB22_serial_num	st_fixed_data.st_device_info.au8_serial_number
+#define au8_SMB23_dev_name	st_fixed_data.st_device_info.au8_dev_name
+#define au8_SMB24_dev_chem	st_fixed_data.st_device_info.au8_dev_chem
+
 
 U8 InitFixed_Chk(void);	
 

@@ -87,144 +87,144 @@ const __near U16	PJ_Suffix = 0x0001;
 const __near st_smb_frame_t st_smb_command_table[] =		// SMBus command info. table
 {
 	// Note: Size of ReadWord/WriteWord should be set to 0.
-	 { SMBUS_ERR		, 0	, (U8*)NULL }			// 00 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 01 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 02 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 03 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 04 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 05 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 06 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 07 Reserved
+	 { SMBUS_ERR		, 0	, (U8*)NULL }					// 00 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 01 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 02 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 03 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 04 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 05 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 06 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 07 Reserved
 	,{ RS_SADR_CHK	, 0	, (U8*)&s16_SMB08_temp}		// 08 Temperature1
-	,{ RS_SADR_CHK	, 0	, (U8*)&ttotalv }			// 09 Voltage()
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB09_total_v }	// 09 Voltage()
 	,{ RS_SADR_CHK	, 4	, (U8*)&s32_SMB0A_curr }		// 0A Current()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 0B Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 0C Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB0D_rsoc }			// 0D RelativeStateOfCharge()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 0E Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 0B Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 0C Reserved
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB0D_rsoc }		// 0D RelativeStateOfCharge()
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 0E Reserved
 	,{ RS_SADR_CHK	, 0	, (U8*)&u32_SMB0F_rc }		// 0F RemainingCapacity()
-	,{ RS_SADR_CHK	, 0	, (U8*)&u32_SBM10_fcc }		// 10 FullChargeCapacity()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 11 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 12 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 13 Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&s32_SMB14_chg_curr }			// 14 ChargingCurrent()
-	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB15_chg_volt }			// 15 ChargingVoltage()
-	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB16_batt_status }		// 16 BatteryStatus()
-	,{ RS_SADR_CHK	, 0	, (U8*)&u32_SMB17_cycle_cnt }		// 17 CycleCount()
-	,{ RS_SADR_CHK	, 0	, (U8*)&t_com18 }		// 18 DesignCapacity()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 19 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 1A Reserved
-	,{ RW_CHK		, 0	, (U8*)&u16_SMB1B_mfg_date }		// 1B ManufactureDate()
-	,{ RW_CHK		, 0	, (U8*)&D_COM1C }		// 1C SerialNumber()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 1D Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 1E Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 1F Reserved
-	,{ RS_SADR_CHK	, 32, (U8*)&D_COM20 }		// 20 ManufacturerName()
-	,{ RS_SADR_CHK	, 32, (U8*)&D_COM21 }		// 21 DeviceName()
-	,{ RS_SADR_CHK	, 4	, (U8*)&D_COM22 }		// 22 DeviceChemistry()
-	,{ RS_SADR_CHK	, 32, (U8*)&D_COM23 }		// 23 ManufacturerData()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 24 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 25 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 26 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 27 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 28 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 29 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 2A Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 2B Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 2C Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 2D Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 2E Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 2F Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 30 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 31 Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&tanmv } 			// 32 ANMVoltage()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 33 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 34 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 35 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 36 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 37 Reserved
+	,{ RS_SADR_CHK	, 0	, (U8*)&u32_SMB10_fcc }		// 10 FullChargeCapacity()
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 11 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 12 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 13 Reserved
+	,{ RS_SADR_CHK	, 0	, (U8*)&s32_SMB14_chg_curr }	// 14 ChargingCurrent()
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB15_chg_volt }	// 15 ChargingVoltage()
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB16_batt_status }	// 16 BatteryStatus()
+	,{ RS_SADR_CHK	, 0	, (U8*)&u32_SMB17_cycle_cnt }	// 17 CycleCount()
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 18 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 19 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 1A Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 1B Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 1C Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 1D Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 1E Reserved
+	,{ RS_SADR_CHK	, 32	, (U8*)NULL }					// 1F Reserved
+	,{ RS_SADR_CHK	, 32	, (U8*)&au8_SMB20_mfg_name }	// 1B ManufacturerName()
+	,{ RS_SADR_CHK	, 32	, (U8*)&au8_SMB21_mfg_data }	// 21 ManufactureDate()
+	,{ RS_SADR_CHK	, 32	, (U8*)&au8_SMB22_serial_num }	// 22 Serial Number()
+	,{ RS_SADR_CHK	, 32	, (U8*)&au8_SMB23_dev_name }	// 23 DeviceName()
+	,{ RS_SADR_CHK	, 4	, (U8*)&au8_SMB24_dev_chem }	// 24 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 25 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 26 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 27 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 28 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 29 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 2A Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 2B Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 2C Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 2D Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 2E Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 2F Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 30 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 31 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL } 					// 32 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 33 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 34 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 35 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 36 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 37 Reserved
 	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB38_safety_status }	// 38 SafetyStatus
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 39 Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&PFStatus }		// 3A PFStatus
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 3B Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 3C Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 3D Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 3E Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 3F Reserved
-	,{ RW_CHK		, 0	, (U8*)&u16_extfunc }		// 40 ExtraFunction()
-	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB41_oper_status }			// 41 OperationStatus()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 42 Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB43_pack_status }		// 43 PackStatus()
-	,{ RS_SADR_CHK	, 0	, (U8*)NULL }		// 44 FETTemperature()
-	,{ SMBUS_ERR	, 0	, (U8*)u16_SMB45_sd_status }			// 45 Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB46_cb_status }		// 46 CBStatus()
-	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB47_pack_volt }			// 47 PACKVoltage
-	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB48_soh}			// 48 StateOfHealth()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 49 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 4A Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 4B Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&t_com4c }		// 4C SDsatus
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 4D Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 4E Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 4F Reserved
-	,{ RW_CHK		, 0	, (U8*)&tseal }			// 50 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 51 Reserved
-	,{ RW_CHK		, 0	, (U8*)NULL }			// 52 Escape from PF
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 53 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 54 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 55 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 56 Reserved
-	,{ RW_CHK		, 0	, (U8*)&tcalib_ref }		// 57 InitialCalibrationRef.()
-	,{ RW_CHK		, 0	, (U8*)&tcalib_cmd }		// 58 InitialCalibration()
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 59 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 5A Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 5B Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 5C Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 5D Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 5E Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 5F Reserved 
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[0]) }		// 60 cell1 voltage
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[1]) }		// 61 cell2 voltage
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[2]) }		// 62 cell3 voltage
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[3]) }		// 63 cell4 voltage
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[4]) }		// 64 cell5 voltage
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[5]) }		// 65 cell6 voltage
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[6]) }		// 66 cell7 voltage
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[7]) }			// 67 Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[8]) }			// 68 Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[9]) }			// 69 Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[0]) }			// 6A Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[1]) }			// 6B Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[2]) }			// 6C Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[3]) }			// 6D Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[4]) }			// 6E Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 6F Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 70 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 71 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 72 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 73 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 74 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 75 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 76 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 77 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 78 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 79 Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 7A Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 7B Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 7C Reserved
-	,{ SMBUS_ERR	, 0	, (U8*)NULL }			// 7D Reserved
-	,{ RS_SADR_CHK	, 0	, (U8*)&tfwsum }		// 7E CheckSUM of Firmware
-	,{ RS_SADR_CHK	, 0	, (U8*)&tfixsum }		// 7F CheckSUM of Fixed data
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB39_pf_status }	// 3A PFStatus
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 39 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 3B Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 3C Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 3D Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 3E Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 3F Reserved
+	,{ RW_CHK		, 0	, (U8*)&u16_extfunc }			// 40 ExtraFunction()
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB41_oper_status }	// 41 OperationStatus()
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB42_pack_status }	// 42 PackStatus()
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 43 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 44 Reserved
+	,{ RS_SADR_CHK	, 0	, (U8*)u16_SMB45_sd_status }	// 45 Reserved
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB46_cb_status }	// 46 CBStatus()
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB47_pack_volt }	// 47 PACKVoltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&u16_SMB48_soh}		// 48 StateOfHealth()
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 49 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 4A Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 4B Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 4C Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 4D Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 4E Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 4F Reserved
+	,{ RW_CHK		, 0	, (U8*)&u16_seal }				// 50 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 51 Reserved
+	,{ RW_CHK		, 0	, (U8*)NULL }					// 52 Escape from PF
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 53 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 54 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 55 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 56 Reserved
+	,{ RW_CHK		, 0	, (U8*)&tcalib_ref }				// 57 InitialCalibrationRef.()
+	,{ RW_CHK		, 0	, (U8*)&tcalib_cmd }			// 58 InitialCalibration()
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 59 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 5A Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 5B Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 5C Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 5D Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 5E Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 5F Reserved 
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[0]) }	// 60 cell1 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[1]) }	// 61 cell2 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[2]) }	// 62 cell3 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[3]) }	// 63 cell4 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[4]) }	// 64 cell5 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[5]) }	// 65 cell6 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[6]) }	// 66 cell7 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[7]) }	// 67 cell8 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[8]) }	// 68 cel9 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB60_volt[9]) }	// 69 cell10 voltage
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[0]) }	// 6A temperature AN0
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[1]) }	// 6B temperature AN1
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[2]) }	// 6C temperature AN2
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[3]) }	// 6D temperature AN3
+	,{ RS_SADR_CHK	, 0	, (U8*)&(u16_SMB6A_temp[4]) }	// 6E temperature AN4
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 6F Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 70 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 71 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 72 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 73 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 74 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 75 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 76 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 77 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 78 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 79 Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 7A Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 7B Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 7C Reserved
+	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 7D Reserved
+	,{ RS_SADR_CHK	, 0	, (U8*)&tfwsum }				// 7E CheckSUM of Firmware
+	,{ RS_SADR_CHK	, 0	, (U8*)&tfixsum }				// 7F CheckSUM of Fixed data
 };
 
 
-const __near st_smb_frame_t st_smb_fwinfo_table[] =		// F/W info command info. table
+const __near st_smb_frame_t st_smb_fwinfo_table[] =			// F/W info command info. table
 {
-	 { RS_SADR_CHK	, 8	, (U8*)&s_tool_info }	// F0 for RSB_TOOL2
-	,{ RS_SADR_CHK	, 0	, (U8*)&Version }		// F1 Firmware version
-	,{ RS_SADR_CHK	, 0	, (U8*)&SubVer }		// F2 Firmware sub version
-	,{ RS_SADR_CHK	, 9	, (U8*)&IC_Name[0] }	// F3 RenesasICName
-	,{ RS_SADR_CHK	, 0	, (U8*)&PJ_Suffix }		// F4 Project suffix
+	 { RS_SADR_CHK	, 8	, (U8*)&s_tool_info }			// F0 for RSB_TOOL2
+	,{ RS_SADR_CHK	, 0	, (U8*)&Version }				// F1 Firmware version
+	,{ RS_SADR_CHK	, 0	, (U8*)&SubVer }				// F2 Firmware sub version
+	,{ RS_SADR_CHK	, 9	, (U8*)&IC_Name[0] }			// F3 RenesasICName
+	,{ RS_SADR_CHK	, 0	, (U8*)&PJ_Suffix }				// F4 Project suffix
 };
 
 
@@ -241,7 +241,7 @@ const __near st_smb_frame_t st_smb_fwinfo_table[] =		// F/W info command info. t
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: U8 __SMB_ReceiveCommand(void)
+* Declaration		: U8 SMB_ReceiveCommand(void)
 *-------------------------------------------------------------------
 * Function			: Check received command.
 *					: And set SMBus comm. information.
@@ -251,7 +251,7 @@ const __near st_smb_frame_t st_smb_fwinfo_table[] =		// F/W info command info. t
 * Return			: U8	: 1 = Valid command
 *					:		  0 = Invalid command
 *-------------------------------------------------------------------
-* Input				: u8_reseived_cmd	: Received command
+* Input				: u8_received_cmd	: Received command
 * Output			: st_smb_frame	: SMBus communication information
 *-------------------------------------------------------------------
 * Used function 	: 
@@ -262,20 +262,20 @@ const __near st_smb_frame_t st_smb_fwinfo_table[] =		// F/W info command info. t
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-U8 __SMB_ReceiveCommand(void)
+U8 SMB_ReceiveCommand(void)
 {
 	U8	al1;
 
-	if( u8_reseived_cmd <= CMD_TABLE_MAX )						// Command is in table ?
+	if( u8_received_cmd <= CMD_TABLE_MAX )						// Command is in table ?
 	{
 														// Set SMBus comm. information
-		st_smb_frame = st_smb_command_table[u8_reseived_cmd];
+		st_smb_frame = st_smb_command_table[u8_received_cmd];
 
 
 		// - variable length data setting -
-		if( u8_reseived_cmd == 0x20							// ManufacturerName()
-			|| u8_reseived_cmd == 0x21							// or DeviceName()
-			|| u8_reseived_cmd == 0x22 )						// or DeviceChemistry() ?
+		if( u8_received_cmd == 0x20							// ManufacturerName()
+			|| u8_received_cmd == 0x21							// or DeviceName()
+			|| u8_received_cmd == 0x22 )						// or DeviceChemistry() ?
 		{
 			// Check valid data
 			if( st_smb_frame.p8_data != (U8*)NULL )
@@ -295,10 +295,10 @@ U8 __SMB_ReceiveCommand(void)
 	} else {									// Command is out of table
 		st_smb_frame.u8_status = SMBUS_ERR;					// Receive mode: SMBus error
 
-		if( u8_reseived_cmd >= CMD_FWINFO_START		// Command of F/W information ?
-			&& u8_reseived_cmd <= CMD_FWINFO_END )
+		if( u8_received_cmd >= CMD_FWINFO_START		// Command of F/W information ?
+			&& u8_received_cmd <= CMD_FWINFO_END )
 		{
-			st_smb_frame = st_smb_fwinfo_table[u8_reseived_cmd - 0xF0];
+			st_smb_frame = st_smb_fwinfo_table[u8_received_cmd - 0xF0];
 		}
 
 		// TODO: Add some operation for command of out of table if necessary.
@@ -321,7 +321,7 @@ U8 __SMB_ReceiveCommand(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void __SMB_SetReadData(void)
+* Declaration		: void SMB_SetReadData(void)
 *-------------------------------------------------------------------
 * Function			: Set read data to SMBus buffer.
 *-------------------------------------------------------------------
@@ -329,7 +329,7 @@ U8 __SMB_ReceiveCommand(void)
 *-------------------------------------------------------------------
 * Return			: None
 *-------------------------------------------------------------------
-* Input				: u8_reseived_cmd	: Received command
+* Input				: u8_received_cmd	: Received command
 * Output			: au8_smb_buff	: SMBus buffer
 *-------------------------------------------------------------------
 * Used function 	: 
@@ -340,12 +340,12 @@ U8 __SMB_ReceiveCommand(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void __SMB_SetReadData(void)
+void SMB_SetReadData(void)
 {
 	_SBYTE	al1;
 
 	// Set read data
-	switch( u8_reseived_cmd )							// Command is ...
+	switch( u8_received_cmd )							// Command is ...
 	{
 		// TODO: Add some command own setting if necessary.
 		
@@ -400,7 +400,7 @@ void __SMB_SetReadData(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void __SMB_StoreReceiveData(void)
+* Declaration		: void SMB_StoreReceiveData(void)
 *-------------------------------------------------------------------
 * Function			: Store received data.
 *					: And it may have some additional operation.
@@ -409,7 +409,7 @@ void __SMB_SetReadData(void)
 *-------------------------------------------------------------------
 * Return			: None
 *-------------------------------------------------------------------
-* Input				: u8_reseived_cmd	: Received command
+* Input				: u8_received_cmd	: Received command
 *					: au8_smb_buff	: SMBus buffer
 *					: ssmb_info	: SMBus communication information
 * Output			: RAM data specified by ssmb_info
@@ -423,11 +423,11 @@ void __SMB_SetReadData(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void __SMB_StoreReceiveData(void)
+void SMB_StoreReceiveData(void)
 {
 	_SBYTE	al1;
 
-	switch( u8_reseived_cmd )							// Command is ...
+	switch( u8_received_cmd )							// Command is ...
 	{		
 		// - Extra function -
 		case 0x40:								// 0x40: ExtraFunction()
@@ -509,7 +509,7 @@ void __SMB_StoreReceiveData(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void __custom_StopCondition(void)
+* Declaration		: void SMB_custom_StopCondition(void)
 *-------------------------------------------------------------------
 * Function			: Custom function when receiving Stop condition.
 *-------------------------------------------------------------------
@@ -529,7 +529,7 @@ void __SMB_StoreReceiveData(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void __custom_StopCondition(void)
+void SMB_custom_StopCondition(void)
 {
 }
 
@@ -539,7 +539,7 @@ void __custom_StopCondition(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void __custom_SlaveComm(void)
+* Declaration		: void SMB_custom_SlaveComm(void)
 *-------------------------------------------------------------------
 * Function			: Custom function when slave communication.
 *-------------------------------------------------------------------
@@ -559,7 +559,7 @@ void __custom_StopCondition(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void __custom_SlaveComm(void)
+void SMB_custom_SlaveComm(void)
 {
 }
 
@@ -569,7 +569,7 @@ void __custom_SlaveComm(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void __custom_SlaveAddress_receive(void)
+* Declaration		: void SMB_custom_SlaveAddress_receive(void)
 *-------------------------------------------------------------------
 * Function			: Custom function when receiving Slave address.
 *-------------------------------------------------------------------
@@ -589,7 +589,7 @@ void __custom_SlaveComm(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void __custom_SlaveAddress_receive(void)
+void SMB_custom_SlaveAddress_receive(void)
 {
 }
 
@@ -599,7 +599,7 @@ void __custom_SlaveAddress_receive(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void __custom_SCLSDA(void)
+* Declaration		: void SMB_custom_SCLSDA(void)
 *-------------------------------------------------------------------
 * Function			: Custom function when SCL/SDA interrupt.
 *-------------------------------------------------------------------
@@ -619,7 +619,7 @@ void __custom_SlaveAddress_receive(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void __custom_SCLSDA(void)
+void SMB_custom_SCLSDA(void)
 {
 }
 
@@ -629,7 +629,7 @@ void __custom_SCLSDA(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void __SMBus_master_check(void)
+* Declaration		: void SMB_master_check(void)
 *-------------------------------------------------------------------
 * Function			: Check SMBus master communication is necessary or not.
 *					: If necessary, master communication will be made.
@@ -651,12 +651,12 @@ void __custom_SCLSDA(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void __SMBus_master_check(void)
+void SMB_master_check(void)
 {
 	// TODO: Add function of checking SMBus master communication if necessary.
 	if(F_SMBMSTR == ON)												// SMBus master com. enabled ?
 		{
-			if( aons_cnt == 80 )									// 10sec passed from OnState ?
+			if( u8_smbus_on_cnt == 80 )									// 10sec passed from OnState ?
 			{
 				Master_Chk();										// SMBus master function
 			}

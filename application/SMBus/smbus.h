@@ -75,13 +75,13 @@ typedef union
 	U16	u16_data[17];
 } st_smbus_buff_t;
 
-GLOBAL st_smb_frame_t	st_smb_frame;
+GLOBAL st_smb_frame_t		st_smb_frame;
 
 GLOBAL st_smbus_buff_t		st_smbus_buff;				// SMBus buffer
 #define au8_smb_buff		st_smbus_buff.u8_data
 #define au16_smb_buff		st_smbus_buff.u16_data
 
-GLOBAL U8				u8_reseived_cmd;				// Receive command
+GLOBAL U8				u8_received_cmd;				// Receive command
 GLOBAL U8				u8_smb_num;					// SMBus communicated number
 
 GLOBAL U8				u8_pec;						// PEC
@@ -90,7 +90,7 @@ GLOBAL U8				u8_received_addr;				// Received Slave address
 GLOBAL U8				u8_smbus_m_timeout_cnt;		// Master timeout counter
 GLOBAL U8				u8_smbus_s_timeout_cnt;		// Slave timeout counter
 GLOBAL U8				u8_smbus_scl_timeout_cnt;		// SCL timeout counter
-GLOBAL U16				u8_smbus_no_timeout_cnt;		// No SMBus time counter
+GLOBAL U16				u16_smbus_no_timeout_cnt;		// No SMBus time counter
 GLOBAL U8				u8_smbus_scl_hold_cnt;			// SCL Low hold counter
 GLOBAL U8				u8_smbus_sda_hold_cnt;		// SDA Low hold counter
 GLOBAL U8				u8_smbus_off_cnt;					// Off state counter

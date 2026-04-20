@@ -175,3 +175,43 @@ void app_Sleep_Check(void)
 
 	}
 }
+void app_SMBus_Timer(void)
+{
+	static U16 u16_timer_125ms;
+
+	if(f_nosmb == OFF)
+	{
+		if( u16_timer_125ms >= 480 )				// Sleep time has passed ?
+		{
+			u16_timer_125ms = 0;						// Clear the counter
+			f_nosmb = ON;						// Set No communication flag
+			
+		} else {
+			u16_timer_125ms++;
+		}
+	}
+	u16_timer_125ms++;						// Increment the counter
+
+	if((st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA <= (S32)st_fixed_data.st_system_info.u16_sleep_current) &&
+		(st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA >= -(S32)st_fixed_data.st_system_info.u16_sleep_current) &&
+		(f_nosmb == ON) &&
+		(st_flexible_data_ram.st_status.u16_safety_bit != 0) &&
+		(st_flexible_data_ram.st_status.u16_permanent_bit != 0))
+	{
+		BMS_Mode_Set(E_BMS_MODE_SLEEP);
+
+	}
+		// - No SMBus communication time count -
+	if( f_nosmb == OFF )						// Not judged No SMBus time ?
+	{
+		if( u16_smbus_no_timeout_cnt >= st_fixed_data.st_system_info.u16_sleep_entry_time*8)				// Sleep time has passed ?
+		{
+			u16_smbus_no_timeout_cnt = 0;						// Clear the counter
+			f_nosmb = ON;						// Set No communication flag
+			
+		} else {
+			u16_smbus_no_timeout_cnt++;
+		}
+	}
+}
+

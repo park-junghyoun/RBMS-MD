@@ -48,8 +48,8 @@
 
 // - Interrupt routine definition -
 #include "define.h"								// union/define definition
-#pragma interrupt _int_SMBus(vect=INTIICA0)
-#pragma interrupt _int_SCLSDA(vect=INTP0)
+#pragma interrupt SMB_INT_SMBus(vect=INTIICA0)
+#pragma interrupt SMB_INT_SCLSDA(vect=INTP0)
 
 // - Include header file -
 #include "flashrom.h"							// FlashROM data definition
@@ -243,7 +243,7 @@ void SMBus_timeout(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void _int_SMBus(void)
+* Declaration		: void SMB_INT_SMBus(void)
 *-------------------------------------------------------------------
 * Function			: IIC interrupt function.
 *-------------------------------------------------------------------
@@ -262,7 +262,7 @@ void SMBus_timeout(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void _int_SMBus(void)
+void SMB_INT_SMBus(void)
 {
 	WUP0 = 0;								// Wakeup disable
 	NOP();									// wait 5clock
@@ -284,10 +284,10 @@ void _int_SMBus(void)
 				if( f_recv == ON )			// Data received ?
 				{
 											// Store received data
-					__SMB_StoreReceiveData();
+					SMB_StoreReceiveData();
 				}
 				e_smbus_err_code = ERR_OK;			// Error code = OK
-				__custom_StopCondition();	// Custom function when Stop cond.
+				SMB_custom_StopCondition();	// Custom function when Stop cond.
 			}
 
 			f_recv = OFF;					// Clear data received flag
@@ -307,7 +307,7 @@ void _int_SMBus(void)
 					TT0L.1 = 1;				// Stop timer TM01(1msec timer)
 				}
 				f_slvto_req = OFF;			// Clear slave timeout check req.
-				tnosmb_cnt = 0;				// Clear no comm time counter
+				u16_smbus_no_timeout_cnt = 0;				// Clear no comm time counter
 				f_nosmb = OFF;				// Clear no comm flag
 				f_sclto_req = OFF;			// Clear SCL timeout check req.
 				PIF0 = 0;					// Clear SCL/SDA interrupt request
@@ -335,10 +335,10 @@ void _int_SMBus(void)
 		{
 											// Operates current SMBus status
 			((void(*)(void))SMBusFunction_table[st_smb_frame.u8_status])();
-			tnosmb_cnt = 0;					// Clear no comm time counter
+			u16_smbus_no_timeout_cnt = 0;					// Clear no comm time counter
 			f_nosmb = OFF;					// Clear no comm flag
 			f_sclto_req = OFF;				// Clear SCL timeout check req.
-			__custom_SlaveComm();			// Custom function when Slave comm.
+			SMB_custom_SlaveComm();			// Custom function when Slave comm.
 			
 		} else {							// Master communication
 			u8_smbus_m_timeout_cnt = 0;					// Clear master timeout counter
@@ -379,8 +379,8 @@ void _int_SMBus(void)
 			}
 		}
 	}
-	aclklow_cnt = 0;						// Clear low hold counter
-	asdalow_cnt = 0;
+	u8_smbus_scl_hold_cnt = 0;						// Clear low hold counter
+	u8_smbus_sda_hold_cnt = 0;
 }
 
 /*""FUNC COMMENT""***************************************************
@@ -464,7 +464,7 @@ void SlaveAddress_check(void)
 		SPIE0 = ON;							// Enable stop condition interrupt
 		PMK0 = 1;							// Disable SCL/SDA interrupt
 		
-		__custom_SlaveAddress_receive();	// custom function when
+		SMB_custom_SlaveAddress_receive();	// custom function when
 											// Slave address receiving
 		if( TRC0 == 0 )						// R/W Bit is Write ?
 		{
@@ -519,13 +519,13 @@ void Command_check(void)
 {
 	if( EXC0 == OFF )						// Not extend code ?
 	{
-		arcv_cmd = IICA0;					// Set received data as command
-		CRC8_Calc(arcv_cmd);				// Calculate PEC
-		if( __SMB_ReceiveCommand() )		// Valid command ?
+		u8_received_cmd = IICA0;					// Set received data as command
+		CRC8_Calc(u8_received_cmd);				// Calculate PEC
+		if( SMB_ReceiveCommand() )		// Valid command ?
 		{
 			u8_smb_num = 0;					// Clear communicated number
 			Send_ACK();						// Send ACK
-			if( arcv_cmd != 0x16 )			// Command is not BatteryStatus() ?
+			if( u8_received_cmd != 0x16 )			// Command is not BatteryStatus() ?
 			{
 				e_smbus_err_code = ERR_OK;			// Error code: OK
 			}
@@ -576,7 +576,7 @@ void ReadWrite_check(void)
 		if( COI0 == ON						// Slave address match
 			&& EXC0 == OFF )				// & not extend code ?
 		{
-			__SMB_SetReadData();			// Set Read data to the buffer
+			SMB_SetReadData();			// Set Read data to the buffer
 			if( st_smb_frame.u8_len == 0 )				// ReadWord ?
 			{
 				st_smb_frame.u8_len = 2;				// Set Data size = 2
@@ -660,7 +660,7 @@ void ReStart_check(void)
 		&& EXC0 == OFF						// & not extend code
 		&& TRC0==1 )						// & Read ?
 	{
-		__SMB_SetReadData();				// Set Read data to the buffer
+		SMB_SetReadData();				// Set Read data to the buffer
 		if( st_smb_frame.u8_len == 0 )					// ReadWord ?
 		{
 			st_smb_frame.u8_len = 2;					// Set Data size = 2
@@ -970,7 +970,7 @@ void Send_ACK(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void _int_SCLSDA(void)
+* Declaration		: void SMB_INT_SCLSDA(void)
 *-------------------------------------------------------------------
 * Function			: SCL/SDA interrupt function.
 *-------------------------------------------------------------------
@@ -989,11 +989,11 @@ void Send_ACK(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void _int_SCLSDA(void)
+void SMB_INT_SCLSDA(void)
 {
-	aoffs_cnt = 0;								// Clear OffState counter
+	u8_smbus_off_cnt = 0;								// Clear OffState counter
 	f_nosmb = OFF;								// Clear no comm flag
-	tnosmb_cnt = 0;
+	u16_smbus_no_timeout_cnt = 0;
 	
 	TT0L.1 = 1;									// Stop TM01(1msec timer)
 	while( TE0L.1 == ON ) ;						// Wait for stop timer
@@ -1001,7 +1001,7 @@ void _int_SCLSDA(void)
 	u8_smbus_scl_timeout_cnt = 0;								// Clear SCL timeout counter
 	f_sclto_req = ON;							// Set SCL timeout check req.
 
-	__custom_SCLSDA();							// Custom function of SCL/SDA
+	SMB_custom_SCLSDA();							// Custom function of SCL/SDA
 												//  interrupt
 }
 
@@ -1042,13 +1042,13 @@ void SMBus_state_check(void)
 	if( CLD0 == LOW								// SCL = LOW
 		&& DAD0 == LOW )						// & SDA = LOW ?
 	{
-		if( aoffs_cnt < 20 )					// Not Off state yet ?
+		if( u8_smbus_off_cnt < 20 )					// Not Off state yet ?
 		{
-			aoffs_cnt++;						// Count Off state time
-			if( aoffs_cnt == 20 )				// Detect Off state ?
+			u8_smbus_off_cnt++;						// Count Off state time
+			if( u8_smbus_off_cnt == 20 )				// Detect Off state ?
 			{
 				SMBus_timeout();				// Reset SMBus
-				aons_cnt = 0;					// Clear On state counter
+				u8_smbus_on_cnt = 0;					// Clear On state counter
 				// Note: On state counter will be cleared when Off state.
 				//       The counter should not be cleared by detecting
 				//       SCL/SDA=LOW once. Because On state may have condition
@@ -1056,10 +1056,10 @@ void SMBus_state_check(void)
 			}
 		}
 	} else {									// SCL or SDA = HI
-		aoffs_cnt = 0;							// Clear Off state counter
-		if( aons_cnt < 80 )						// less than 10sec at OnState ?
+		u8_smbus_off_cnt = 0;							// Clear Off state counter
+		if( u8_smbus_on_cnt < 80 )						// less than 10sec at OnState ?
 		{
-			aons_cnt++;							// Count On state time
+			u8_smbus_on_cnt++;							// Count On state time
 		}
 	}
 
@@ -1067,30 +1067,30 @@ void SMBus_state_check(void)
 	if( CLD0 == LOW								// SCL = LOW
 		&& DAD0 == HI )							// & SDA = HI ?
 	{
-		aclklow_cnt++;							// Count SCL low hold counter
-		if( aclklow_cnt >= 20 )					// 2.5sec has passed ?
+		u8_smbus_scl_hold_cnt++;							// Count SCL low hold counter
+		if( u8_smbus_scl_hold_cnt >= 20 )					// 2.5sec has passed ?
 												// (125ms x 20)
 		{
-			aclklow_cnt = 0;					// Clear the counter
+			u8_smbus_scl_hold_cnt = 0;					// Clear the counter
 			SMBus_timeout();					// Reset SMBus
 		}
 	} else {									// Not SCL low hold
-		aclklow_cnt = 0;						// Clear the counter
+		u8_smbus_scl_hold_cnt = 0;						// Clear the counter
 	}
 
 	// - SDA low hold check -
 	if( CLD0 == HI								// SCL = HI
 		&& DAD0 == LOW )						// & SDA = LOW ?
 	{
-		asdalow_cnt++;							// Count SDA low hold counter
-		if( asdalow_cnt >= 20 )					// 2.5sec has passed ?
+		u8_smbus_sda_hold_cnt++;							// Count SDA low hold counter
+		if( u8_smbus_sda_hold_cnt >= 20 )					// 2.5sec has passed ?
 												// (125ms x 20)
 		{
-			asdalow_cnt = 0;					// Clear the counter
+			u8_smbus_sda_hold_cnt = 0;					// Clear the counter
 			SMBus_timeout();					// Reset SMBus
 		}
 	} else {									// Not SDA low hold
-		asdalow_cnt = 0;						// Clear the counter
+		u8_smbus_sda_hold_cnt = 0;						// Clear the counter
 	}
 }
 

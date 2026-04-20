@@ -77,10 +77,10 @@ U8 APP_ReportBMSCoreResult_Fixed(E_BMS_RESULT_ITEM e_ret)
 		switch(e_ret)
 		{
 			case E_BMS_ERR_HW:
-				f_init_hw_error = ON;
+				f_hw_error = ON;
 				break;
 			case E_BMS_ERR_INVALID_PARAM:
-				f_init_fixed_error = ON;
+				f_fixed_error = ON;
 				break;
 			case E_BMS_ERR_NOT_INIT:
 			case E_BMS_ERR_NOT_READY:
@@ -98,10 +98,10 @@ U8 APP_ReportBMSCoreResult_Calib(E_BMS_RESULT_ITEM e_ret)
 		switch(e_ret)
 		{
 			case E_BMS_ERR_HW:
-				f_init_hw_error = ON;
+				f_hw_error = ON;
 				break;
 			case E_BMS_ERR_INVALID_PARAM:
-				f_init_cal_error = ON;
+				f_cal_error = ON;
 				break;
 			case E_BMS_ERR_NOT_INIT:
 			case E_BMS_ERR_NOT_READY:

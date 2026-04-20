@@ -94,8 +94,7 @@ typedef struct
 {
 	U16 u16_safety_bit;
 	U16 u16_permanent_bit;
-	U16 u16_capacity_bit;
-	U16 u16_battery_status_bit;
+	U16 u16_gaging_bit;
 	U16 u16_oper_status_bit;
 	U16 u16_pack_status_bit;
 	U16 u16_balancing_bit;
@@ -118,45 +117,55 @@ typedef struct
 	st_status_bit_t		st_status;						// [20byte] status data
 	st_reason_t		st_reason;					// [2byte] reason data
 	st_runtime_t		st_runtime;					// [8byte] runtime data
+	U16 u16_bms_core_mode;						// [2byte] bms core mode
 	U16 u16_manufacture_date;						// [2byte] manufacture data
 } st_flexible_data_t;
 
-#define FLEX_SIZE	sizeof(st_flexible_data_t)			// Size of Flexible data (94byte)
+#define FLEX_SIZE	sizeof(st_flexible_data_t)			// Size of Flexible data (96byte)
 
 GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 
-#define f_dfet			DEFS_BIT0(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// DFET	1=ON, 0=OFF
-#define f_cfet			DEFS_BIT1(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// CFET	1=ON, 0=OFF
-#define f_pf			DEFS_BIT2(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// PF	1=PF, 0=Other
-#define f_ss			DEFS_BIT3(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// SS	1=unseal, 0=Seal
-#define f_calemp		DEFS_BIT4(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// Calib value empty
-#define f_fixedemp		DEFS_BIT5(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// fixed value empty
-#define f_pinst			DEFS_BIT6(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// pin status
-#define f_wdt			DEFS_BIT7(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// wdt status
+#define f_dfet			DEF16_BIT0(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// DFET	1=ON, 0=OFF
+#define f_cfet			DEF16_BIT1(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// CFET	1=ON, 0=OFF
+#define f_saf			DEF16_BIT3(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// SAF	1=safety, 0=Not safety
+#define f_pf			DEF16_BIT4(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// PF	1=PF, 0=Not PF
+#define f_pinst			DEF16_BIT5(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// pin status
 
-#define f_rl			DEFS_BIT0(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// RL	1=relearning, 0=no rel.
-#define f_cp_h		DEFS_BIT1(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// CPH	1=detect, 0=not detect
-#define f_cp_l			DEFS_BIT2(&st_flexible_data_ram.st_status.u16_pack_status_bit)		// CPL	1=detect, 0=not detect
+#define f_init			DEF16_BIT0(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// init complete
+#define f_ss			DEF16_BIT1(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// SS	1=unseal, 0=Seal
+#define f_calib			DEF16_BIT2(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// calibration mode
+#define f_cal_emp		DEF16_BIT3(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// calibration data none
+#define f_fixed_emp	DEF16_BIT4(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// fixed data none
+#define f_fixed_error	DEF16_BIT5(&st_flexible_data_ram.st_status.u16_oper_status_bit)
+#define f_cal_error		DEF16_BIT6(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// fixed data none	
+#define f_hw_error		DEF16_BIT7(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// Initialization hw error
+
+#define f_rl			DEF16_BIT0(&st_flexible_data_ram.st_status.u16_gaging_bit)			// RL	1=relearning, 0=no rel.
+#define f_cp_h		DEF16_BIT1(&st_flexible_data_ram.st_status.u16_gaging_bit)			// CPH	1=detect, 0=not detect
+#define f_cp_l			DEF16_BIT2(&st_flexible_data_ram.st_status.u16_gaging_bit)			// CPL	1=detect, 0=not detect
 
 #define s16_SMB08_temp		st_flexible_data_ram.st_measurement.ad.as16_cell_temperature_0p1dC[0]
 #define s32_SMB0A_curr		st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA
 #define u16_SMB0D_rsoc		st_flexible_data_ram.st_capacity.u16_rsoc
 #define u32_SMB0F_rc			st_flexible_data_ram.st_capacity.u32_rc
-#define u32_SBM10_fcc			st_flexible_data_ram.st_capacity.u32_fcc
+#define u32_SMB10_fcc			st_flexible_data_ram.st_capacity.u32_fcc
 #define s32_SMB14_chg_curr		st_flexible_data_ram.st_charger.s32_charging_current
 #define u16_SMB15_chg_volt		st_flexible_data_ram.st_charger.u16_charging_voltage
 #define u16_SMB16_batt_status	st_flexible_data_ram.st_status.u16_battery_status_bit
 #define u32_SMB17_cycle_cnt	st_flexible_data_ram.st_capacity.u32_cycle_count
 #define u16_SMB1B_mfg_date	st_flexible_data_ram.u16_manufacture_date
 #define u16_SMB38_safety_status	st_flexible_data_ram.st_status.u16_safety_bit
+#define u16_SMB39_pf_status	st_flexible_data_ram.st_status.u16_permanent_bit
 #define u16_SMB41_oper_status	st_flexible_data_ram.st_status.u16_oper_status_bit
-#define u16_SMB43_pack_status	st_flexible_data_ram.st_status.u16_pack_status_bit
+#define u16_SMB42_pack_status	st_flexible_data_ram.st_status.u16_pack_status_bit
 #define u16_SMB45_sd_status	st_flexible_data_ram.st_status.u16_slef_discharge_bit
 #define u16_SMB46_cb_status	st_flexible_data_ram.st_status.u16_balancing_bit
 #define u16_SMB47_pack_volt	st_flexible_data_ram.st_measurement.ad.u16_pack_voltage_mV
 #define u16_SMB48_soh			st_flexible_data_ram.st_capacity.u16_soh
 #define u16_SMB60_volt		st_flexible_data_ram.st_measurement.ad.au16_cell_voltage_mV
 #define u16_SMB6A_temp		st_flexible_data_ram.st_measurement.ad.as16_cell_temperature_0p1dC
+
+GLOBAL U16 u16_SMB09_total_v;
 
 #undef 		GLOBAL
 

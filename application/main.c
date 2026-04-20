@@ -58,9 +58,7 @@ void main(void)
 {
 	U8 u8_ret;
 	MCU_Init();
-	APP_Check_FlashData();
-
-	u8_ret = APP_BMS_Core_Init() 
+	u8_ret = APP_BMS_Core_Init();
 	if(u8_ret == FALSE)
 	{
 		while (1)
@@ -68,6 +66,7 @@ void main(void)
 			SMBus_timeout_check();							// SMBus timeout check
 		}
 	}
+	APP_Check_FlashData();
 	(void)APP_Callbacks_Register();
 	
 	if(f_init_fixed_none != TRUE)

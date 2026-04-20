@@ -57,14 +57,14 @@
 
 
 // - Function declaration -
-U8 __SMB_ReceiveCommand(void);						// Receive command
-void __SMB_SetReadData(void);							// Set Read data to the buffer
-void __SMB_StoreReceiveData(void);						// Store received data
-void __custom_StopCondition(void);						// Function of Stop condition
-void __custom_SlaveComm(void);							// Function of Slave comm.
-void __custom_SlaveAddress_receive(void);				// Function of receive SAdr.
-void __custom_SCLSDA(void);								// Function of SCL/SDA int.
-void __SMBus_master_check(void);						// SMBus master communication
+U8 SMB_ReceiveCommand(void);						// Receive command
+void SMB_SetReadData(void);							// Set Read data to the buffer
+void SMB_StoreReceiveData(void);						// Store received data
+void SMB_custom_StopCondition(void);						// Function of Stop condition
+void SMB_custom_SlaveComm(void);							// Function of Slave comm.
+void SMB_custom_SlaveAddress_receive(void);				// Function of receive SAdr.
+void SMB_custom_SCLSDA(void);								// Function of SCL/SDA int.
+void SMB_master_check(void);						// SMBus master communication
 
 void ExtraFunction(void);								// ExtraFunction()
 void Seal_Proc(void);									// Seal/Unseal()
@@ -74,7 +74,7 @@ void Seal_Proc(void);									// Seal/Unseal()
 GLOBAL U16					tfwsum;						// SUM of Firmware
 GLOBAL U16					tfixsum;					// SUM of Fixed data
 
-GLOBAL u16_byte_t	u16_extra_func;					// 0x40:ExtraFunction()
+GLOBAL u16_byte_t		u16_extra_func;					// 0x40:ExtraFunction()
 #define u16_extfunc		u16_extra_func.u16_data
 #define au8_extfunc		u16_extra_func.u8_data
 
@@ -87,6 +87,10 @@ GLOBAL U16					u16_extra_func_flag;				// Flags for ExtraFunction()
 #define f_force_fetoff_ent		DEF16_BIT5(&u16_extra_func_flag)	// Force fet OFF Entery
 #define f_force_fetoff_ext		DEF16_BIT6(&u16_extra_func_flag)	// Force fet OFF Exit
 #define f_compf1				DEF16_BIT7(&u16_extra_func_flag)	// Force PF flag
+
+GLOBAL U16						u16_seal;								// Seal status
+#define STS_SEAL					0x0000							// Status of Seal
+#define STS_UNSEAL				0x0001							// Status of Unseal
 
 // - Define definition -
 #define DATA_EXTFUNC_DIS			0x0000					// ExtraFunction disable data
