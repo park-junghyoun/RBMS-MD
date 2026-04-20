@@ -52,7 +52,7 @@
 /***********************************************************************
 	define
 ***********************************************************************/
-
+#include "device_types.h" 
 /*==============================================================================================*/
 /* unsigned type definitions                                                                    */
 /*==============================================================================================*/
@@ -105,12 +105,19 @@ typedef struct {                                                /* -------------
                   pfdl_u08      wide_voltage_mode_u08;          /* 1, programming voltage mode ( full/wide )      */
                 } pfdl_descriptor_t;                            /*------------------------------------------------*/
                                                                 /* 2 bytes in total                               */
-
-#define		PFDL_Open						((pfdl_status_t (*)(__near pfdl_descriptor_t* descriptor_pstr))((0xFB50)))	// 1
-#define		PFDL_Close						((void  (*)(void))((0xFB60)))													// 2
-#define		PFDL_Execute					((pfdl_status_t (*)(__near pfdl_request_t* request_pstr))((0xFB68)))			// 3
+#ifdef _AFE_TYP_100_90_H
+#define		PFDL_Open					((pfdl_status_t (*)(__near pfdl_descriptor_t* descriptor_pstr))((0x1FB88)))		// 1
+#define		PFDL_Close					((void  (*)(void))((0x1FBA0)))											// 2
+#define		PFDL_Execute					((pfdl_status_t (*)(__near pfdl_request_t* request_pstr))((0x1FBA8)))			// 3
+#define		PFDL_Handler					((pfdl_status_t  (*)(void))((0x1FBC0)))										// 4
+#define		PFDL_GetVersionString			((__far pfdl_u08*  (*)(void))((0x1FBC8)))									// 5
+#endif
+#ifdef _AFE_TYP_95_94_H
+#define		PFDL_Open					((pfdl_status_t (*)(__near pfdl_descriptor_t* descriptor_pstr))((0xFB50)))			// 1
+#define		PFDL_Close					((void  (*)(void))((0xFB60)))												// 2
+#define		PFDL_Execute					((pfdl_status_t (*)(__near pfdl_request_t* request_pstr))((0xFB68)))				// 3
 #define		PFDL_Handler					((pfdl_status_t  (*)(void))((0xFB78)))										// 4	
-#define		PFDL_GetVersionString			((__far pfdl_u08*  (*)(void))((0xFB80)))										// 5
-
+#define		PFDL_GetVersionString			((__far pfdl_u08*  (*)(void))((0xFB80)))									// 5
+#endif
 #endif
 

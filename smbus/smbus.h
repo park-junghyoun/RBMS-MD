@@ -127,15 +127,15 @@ typedef enum{
 
 GLOBAL E_SMBUS_ERR_ITEM e_smbus_err_code;
 // - enum definition -
-enum{ 											/*  - SMBus status - */
-	SADR_CHK,									/*  Slave address check */
-	CMD_CHK,									/*  Command check */
-	RW_CHK,										/*  Read/Write check */
-	RS_SADR_CHK,								/*  ReStart Slave address check */
-	READ_SEND,									/*  Read data send */
-	WRITE_RCV,									/*  Write data receive */
-	BW_SIZE_CHK,								/*  BlockWrite size check */
-	SMBUS_ERR									/*  SMBus error */
+typedef enum{ 									/*  - SMBus status - */
+	E_SMBUS_ST_SADR_CHK,						/*  Slave address check */
+	E_SMBUS_ST_CMD_CHK,						/*  Command check */
+	E_SMBUS_ST_RW_CHK,							/*  Read/Write check */
+	E_SMBUS_ST_RS_SADR_CHK,					/*  ReStart Slave address check */
+	E_SMBUS_ST_READ_SEND,						/*  Read data send */
+	E_SMBUS_ST_WR_RCV,							/*  Write data receive */
+	E_SMBUS_ST_BW_SIZE_CHK,					/*  BlockWrite size check */
+	E_SMBUS_ST_ERR								/*  SMBus error */
 }E_SMBUS_STATUS_ITEM;
 
 #undef		GLOBAL

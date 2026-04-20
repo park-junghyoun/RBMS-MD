@@ -35,7 +35,7 @@
 #endif	// _DATAFLASH_FLEXIBLE
 
 #include "r_bms_api.h"
-#include "r_bms_limit.h"
+#include "r_bms_api_limits.h"
 #include "define.h"
 
 // - Function declaration -

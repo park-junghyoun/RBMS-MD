@@ -42,6 +42,7 @@
 #include "flashrom_fixed.h"
 #include "smbus.h"
 #include "r_bms_ram.h"
+#include "inline_asm.h"
 
 
 U8 APP_BMS_Core_Init(void)
@@ -126,7 +127,7 @@ U8 APP_ReportBMSCoreResult_Calib(E_BMS_RESULT_ITEM e_ret)
 *******************************************************************************/
 void APP_Get_AD_measurement_snapshot(void)
 {
-	if(BMS_Measure_GetAdSnapshot(&st_ad_snapshot) != E_BMS_OK)
+	if(BMS_Measure_GetAdSnapshot(&st_flexible_data_ram.st_measurement.ad) != E_BMS_OK)
 	{
 		return;
 	}

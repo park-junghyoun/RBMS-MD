@@ -1,5 +1,5 @@
 /******************************************************************************
-* DISCLAIMER                                                                    
+* DISCLAIMER                                                                    *
 * This software is supplied by Renesas Electronics Corp. and is only 
 * intended for use with Renesas products. No other uses are authorized.
 *
@@ -25,33 +25,46 @@
 * http://www.renesas.com/disclaimer
 ******************************************************************************/
 
-#ifndef _DATAFLASH_CALIBRATION_H
-#define _DATAFLASH_CALIBRATION_H
+/*""FILE COMMENT""*******************************************************
+* System Name	: RAJ240xxx Smart Battery Standard firmware
+* File Name		: inline_asm.h
+* Version		: 0.01
+* Contents		: Inline assembler header file
+* Customer		: Renesas Electronics Corp.
+* Model			: RAJ240xxx Standard firmware
+* Order			: 
+* CPU			: RAJ240xxx
+* Compiler		: CC-RL (V1.08.00)
+* OS			: None
+* Programmer	: Ryoji Kato
+* Note			: 
+************************************************************************
+* Copyright,2020 (2018-2020) RENESAS ELECTRONICS CORPORATION,
+*                            All right reserved.
+************************************************************************
+* History		: 2020.12.16 Ver 0.01
+* 				: Replace overall
+*				: 
+*""FILE COMMENT END""*****************************************************/
+#ifndef _INLINE_ASM_H
+#define _INLINE_ASM_H
 
-#ifdef	_DATAFLASH_CALIBRATION
-#define		GLOBAL
-#else	// _DATAFLASH_CALIBRATION
-#define		GLOBAL	extern
-#endif	// _DATAFLASH_CALIBRATION
+#pragma inline_asm ASM_JUMP_BOOT
+#pragma inline_asm ASM_SW_RESET
 
-#include "r_bms_api.h"
-#include "r_bms_api_limits.h"
-#include "define.h"
-
-// - Own data -
-typedef struct
+static void ASM_JUMP_BOOT(void)
 {
-	st_bms_cal_voltage_coeff_t	ast_coeff_cell[R_BMS_USER_API_CELL_COUNT];	// [20byte] Low voltage side of V
-	st_bms_cal_pack_coeff_t	st_coeff_pack;
-	st_bms_cal_current_coeff_t	st_coeff_curr;
-} st_cal_data_t;
+#ifdef (_AFE_TYP_95_94_H)|| (_AFE_TYP_95_94_H)
+	BR !!0x00DC80
+#endif
+#ifdef (_AFE_TYP_100_90_H)
+	BR !!0x01CC08
+#endif
+}
 
-#pragma address st_cal_data_dataflash = 0x0F1800
-GLOBAL st_cal_data_t	st_cal_data_dataflash;
+static void ASM_SW_RESET(void)
+{
+	.DB2 0x0FFFF
+}
+#endif	// _INLINE_ASM_H
 
-st_cal_data_t CalbirationData_Read(void);						// Read own data
-U8 FLASH_Check_CalibrationData(void);						// Check calibration data empty(0xFF)
-
-#undef 		GLOBAL
-
-#endif	// _DATAFLASH_CALIBRATION_H

@@ -202,7 +202,7 @@ void app_SMBus_Timer(void)
 		// - No SMBus communication time count -
 	if( f_nosmb == OFF )						// Not judged No SMBus time ?
 	{
-		if( u16_smbus_no_timeout_cnt >= st_fixed_data.st_system_info.u16_sleep_entry_time*8)				// Sleep time has passed ?
+		if( u16_smbus_no_timeout_cnt >= (U16)st_fixed_data.st_system_info.u8_sleep_entry_time*8)				// Sleep time has passed ?
 		{
 			u16_smbus_no_timeout_cnt = 0;						// Clear the counter
 			f_nosmb = ON;						// Set No communication flag

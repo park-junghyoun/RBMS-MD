@@ -56,7 +56,7 @@
 #endif	// _FLASHROM
 
 #include "r_bms_api.h"
-#include "r_bms_limit.h"
+#include "r_bms_api_limits.h"
 #include "define.h"
 
 // - Function declaration -
@@ -107,7 +107,7 @@ typedef struct
 	U8 DUMMY8			:1;			// bit	9 : Resreved
 
 	U8 DUMMY13		:1;			// bit 13 : Reserved
-	U8 f_pinshutdown	:1;			// bit 14 : PIN Shutdown Enable
+	U8 DUMMY12	:1;			// bit 14 : PIN Shutdown Enable
 									// 		(On: enable , Off: disable)
 	U8 f_forcepd		:1;			// bit 15 : Force PD Enable
 									// 		(On: enable , Off: disable)
@@ -275,7 +275,7 @@ typedef struct
 	st_bms_core_init_t st_bms_init_config;
 	st_bms_core_mode_t st_bms_normal_config;
 	st_bms_core_mode_t st_bms_sleep_config;
-	st_bms_core_mode_t st_bms_sleep2_congfig;
+	st_bms_core_mode_t st_bms_sleep2_config;
 	st_bms_core_mode_t st_bms_ship_config;
 	st_afe_hw1_config_t st_hw1_config;
 	st_afe_hw2_config_t st_hw2_config;

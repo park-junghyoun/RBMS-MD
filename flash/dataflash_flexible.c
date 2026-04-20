@@ -48,6 +48,7 @@
 #include "define.h"
 #include "dataflash_flexible.h"
 #include "dataflash.h"
+#include "uif_pfdl.h"
 #include <string.h>
 
 /*""FUNC COMMENT""***************************************************

@@ -69,13 +69,13 @@ void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx);		// Search write i
 
 // - Grobal variable (internal use only) -
 GLOBAL U8			u8_df_flg;				// Flags for DataFlash
-#define f_df0_erase_req		DEF_BIT0(&u8_df_flg)	// Block0 erase request
-#define f_df1_erase_req		DEF_BIT1(&u8_df_flg)	// Block1 erase request
-#define f_df2_erase_req		DEF_BIT2(&u8_df_flg)	// Block2 erase request
-#define f_df3_erase_req		DEF_BIT3(&u8_df_flg)	// Block3 erase request
-#define f_flex_stop			DEF_BIT4(&u8_df_flg)	// Stop Flexible data update
-#define f_flex_update_req	DEF_BIT5(&u8_df_flg)	// Flexible data update request
-#define f_dfe				DEF_BIT6(&u8_df_flg)	// DataFlash erasing flag
+#define f_df0_erase_req		DEF8_BIT0(&u8_df_flg)	// Block0 erase request
+#define f_df1_erase_req		DEF8_BIT1(&u8_df_flg)	// Block1 erase request
+#define f_df2_erase_req		DEF8_BIT2(&u8_df_flg)	// Block2 erase request
+#define f_df3_erase_req		DEF8_BIT3(&u8_df_flg)	// Block3 erase request
+#define f_flex_stop			DEF8_BIT4(&u8_df_flg)	// Stop Flexible data update
+#define f_flex_update_req	DEF8_BIT5(&u8_df_flg)	// Flexible data update request
+#define f_dfe				DEF8_BIT6(&u8_df_flg)	// DataFlash erasing flag
 
 
 // - Define definition (internal use only) -
