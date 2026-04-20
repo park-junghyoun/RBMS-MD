@@ -38,6 +38,10 @@
 #include "mcu.h"
 #include "smbus.h"
 #include "r_bms_api.h"
+#include "r_bms_app.h"
+#include "r_bms_event.h"
+#include "r_bms_config.h"
+#include "r_bms_ram.h"
 /*
  * Example application integrating the BMS library on target hardware.
  *

@@ -38,6 +38,10 @@
 #define _APP
 #include "r_bms_app.h"
 #include "dataflash_calibration.h"
+#include "dataflash_flexible.h"
+#include "flashrom_fixed.h"
+#include "smbus.h"
+#include "r_bms_ram.h"
 
 
 U8 APP_BMS_Core_Init(void)

@@ -47,6 +47,7 @@
 #ifndef _MCU_H
 #define _MCU_H
 
+#include "iodefine.h"
 
 #define LED7			P0.0				//LED 1 Pin
 #define LED6			P0.1				//LED 1 Pin
@@ -68,10 +69,13 @@
 #define TMR_CKm3_8Bit		0xC800				//    : Select CKm3, 8Bit
 #define TMR_CKm3_16Bit		0xC000				//    : Select CKm3,16Bit
 #define IT_START			0x8000				// ITMC: Start counting
-#define IT_STOP				0x7FFF				// ITMC: Stop counting
+#define IT_STOP			0x7FFF				// ITMC: Stop counting
 #define OSMC_LOCO			0x10				// OSMC: Low-speed OCO
 
+void MCU_Init(void);
+void mcu_LED_Init(void);
+void mcu_TM01_1ms_Init(void);
+void MCU_INT_TM01_SMBus1ms(void);
+void Stop_Mode(void);
+
 #endif	// _MCU_H
-
-
-
