@@ -85,7 +85,7 @@ void main(void)
 		 * Application processing is intentionally driven from app_on_alarm()
 		 * so periodic work stays aligned with the BMS alarm scheduler.
 		 */
-		SMBus_Master_Function();
+		SMBus_timeout_check();							// SMBus timeout check
 		Stop_Mode();
 	}
 }
