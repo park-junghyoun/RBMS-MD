@@ -27,7 +27,7 @@
 
 /*""FILE COMMENT""*******************************************************
 * System Name	: RAJ240xxx RBMS Core for renesas
-* File Name		: r_bms_callbacks.h
+* File Name		: r_bms_callbacks_types.h
 * Contents		: Callback Module
 * Compiler		: CC-RL
 * Note			:

@@ -28,7 +28,7 @@
 
 /*""FILE COMMENT""*******************************************************
 * System Name	: RAJ240xxx RBMS Core for renesas
-* File Name		: r_bms_calibration.h
+* File Name		: r_bms_calibration_types.h
 * Contents		: Public Calibration Types Module
 * Compiler		: CC-RL
 * Note			:

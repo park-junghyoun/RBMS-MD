@@ -37,8 +37,8 @@
 *""FILE COMMENT END""*****************************************************/
 #pragma once
 
-#include "afe_config.h"
-#include "afe_types.h"
+#include "r_afe_config_types.h"
+#include "r_afe_types.h"
 #include "r_bms_types.h"
 #include "r_bms_calibration_types.h"
 #include "r_bms_protection_types.h"
@@ -76,6 +76,7 @@ E_BMS_RESULT_ITEM BMS_Config_GetHw1(st_afe_hw1_config_t *pst_config);
 E_BMS_RESULT_ITEM BMS_Config_SetHw2(st_afe_hw2_config_t st_config);
 E_BMS_RESULT_ITEM BMS_Config_GetHw2(st_afe_hw2_config_t *pst_config);
 E_BMS_RESULT_ITEM BMS_Config_SetAfeTimerB(U8 u8_enable);
+E_BMS_RESULT_ITEM BMS_Config_SetWDT(U8 u8_enable);
 
 E_BMS_RESULT_ITEM BMS_Balancing_SetBalConfig(const st_bal_config_t* pst_config);
 E_BMS_RESULT_ITEM BMS_Balancing_GetBalConfig(st_bal_config_t* pst_config);

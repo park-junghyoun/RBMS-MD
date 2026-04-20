@@ -27,7 +27,7 @@
 
 /*""FILE COMMENT""*******************************************************
 * System Name	: RAJ240xxx RBMS Core for renesas
-* File Name		: r_bms_config.c
+* File Name		: r_bms_config_types.c
 * Contents		: Config Module
 * Compiler		: CC-RL
 * Note			:
@@ -45,7 +45,7 @@
  * the application after startup.
  */
 
-#include "afe_types.h"
+#include "r_afe_types.h"
 #include "r_bms_types.h"
 #include "r_bms_protection_types.h"
 /* -------- System config -------- */
@@ -113,7 +113,24 @@ typedef struct {
 	U16 u16_set_time_125ms;			/* [125 ms tick] Qualification time before CTOV latches */
 } st_prot_voltage_latched_t;
 
-typedef struct { 
+typedef struct {
+	/*
+	 * Grouped protection configuration
+	 * --------------------------------
+	 * The flat field list was hard for users to initialize correctly.
+	 * This grouped form keeps the public config manageable:
+	 *   - temperature auto-clear + latched
+	 *   - voltage auto-clear + latched
+	 *   - current windows
+	 *   - diagnostic settings (runtime latch behavior is defined by
+	 *     active/latched protection enums and their contiguous bit domains)
+	 *
+	 * Initialization flow:
+	 *   1) BMS_Core_Initialize copies an internal ROM default profile into runtime config.
+	 *   2) The application may later read/modify/replace this runtime copy through
+	 *      BMS_Protection_GetConfig() / BMS_Protection_SetConfig().
+	 */
+
 	struct {
 		st_prot_temp_window_t  st_window;	/* Auto-clear temperature settings (CUT/DUT/COT/DOT) */
 		st_prot_temp_latched_t st_latched;	/* Latched temperature settings (CTOT) */
@@ -145,9 +162,15 @@ typedef struct {
 
 typedef struct {
 	/* Fixed scheduler base is 125ms */
-	U8 u8_base_fet_policy_bitmask;	/* Default FET state policy (bit index: E_FET_*), can be overridden by protection */ 
+	U8 u8_base_fet_policy_bitmask;	/* Default FET state policy (bit index: E_FET_*), can be overridden by protection */
+
+	/* Measurement cadence controls */
 	U8 u8_ad_period_125ms_n;	/* AD cadence: 125 ms x n (0 disables AD) */
-	U8 u8_cc_period_250ms_n;	/* CC cadence: 250 ms x n (0 disables CC) */ 
-	U8 u8_wakeup_policy_bitmask;	/* Wakeup source enable bitmask (bit index: E_WAKEUP_*) */ 
+	U8 u8_cc_period_250ms_n;	/* CC cadence: 250 ms x n (0 disables CC) */
+	
+	/* wakeup / external pin control (bit index: E_WAKEUP_*) */
+	U8 u8_wakeup_policy_bitmask;	/* Wakeup source enable bitmask (bit index: E_WAKEUP_*) */
+
+	/* mode-specific protection/FET policy */
 	st_protection_policy_t st_prot_policy;	/* Protection response policy for this operating mode */
 } st_operating_profile_t;

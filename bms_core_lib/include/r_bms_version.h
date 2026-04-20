@@ -27,7 +27,8 @@
 
 #pragma once
 
-#include "afe_types.h"
+#include "define.h"
+#include "r_afe_types.h"
 
 /* User-visible version file. Users should reference this version definition. */
 #define BMS_CORE_DRIVER_VERSION	(0x0100u)	/* Public BMS core driver version constant */

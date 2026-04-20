@@ -38,7 +38,8 @@
 *""FILE COMMENT END""*****************************************************/
 #pragma once
 
-#include "afe_types.h"
+#include "define.h"
+#include "r_afe_types.h"
 #include "r_bms_measurement_types.h"
 #include "r_bms_api_limits.h"
 #include "r_bms_version.h"
@@ -104,7 +105,7 @@ typedef enum {
 	E_FET_COUNT				/* Number of FET policy bits */
 } E_BMS_FET_ITEM;
 
-/* NOTE: E_BMS_FET_ITEM remains public because mode profile config (r_bms_config.h) uses E_FET_COUNT. */
+/* NOTE: E_BMS_FET_ITEM remains public because mode profile config (r_bms_config_types.h) uses E_FET_COUNT. */
 #define U8_FET_BIT_ALLOFF	((U8)0u)								/* FET policy: all FET bits OFF */
 #define U8_FET_BIT_CHG		((U8)(1u << (U8)E_FET_CHG))			/* FET policy bit for CHG FET */
 #define U8_FET_BIT_DSG		((U8)(1u << (U8)E_FET_DSG))			/* FET policy bit for DSG FET */
