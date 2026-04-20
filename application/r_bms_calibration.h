@@ -45,7 +45,10 @@
 #endif	// _CALI
 
 #include "r_bms_api.h"
+#include "define.h"
 
+GLOBAL U16 u16_calib_ref;
+GLOBAL U16 u16_calib_cmd;
 #undef		GLOBAL
 
 #endif	// _CALI_H

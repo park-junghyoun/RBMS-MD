@@ -52,14 +52,9 @@
 #pragma interrupt SMB_INT_SCLSDA(vect=INTP0)
 
 // - Include header file -
-#include "flashrom.h"							// FlashROM data definition
-#include "dataflash_custom.h"
-#include "ram.h"
+#include "flashrom_fixed.h"							// FlashROM data definition
 #include "smbus.h"
 #include "smbus_custom.h"
-#include "mode.h"
-#include "afe.h"
-#include "uif.h"
 
 
 

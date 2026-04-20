@@ -52,6 +52,7 @@
 #include "define.h"								// Common definition
 #include "uif_pfdl.h"
 #include "dataflash.h"
+#include "r_bms_api.h"
 
 // - Define definition -
 #define PFDL_FREQUENCY			8				// PFDL CPU frequency (8MHz)
@@ -332,10 +333,10 @@ void Search_FlexibleData_read(U16 *p16_tblock, U8 *p8_aidx)
 
 	// Seach Flexible data index
 												// Seach Block0
-	for( s8_aidx0 = FLEX_AREA_NUM - 1, p8_apdata =(U8*)U16_BLOCK_0;
+	for( s8_aidx0 = U8_FLEX_AREA_NUM - 1, p8_apdata =(U8*)U16_BLOCK_0;
 		 s8_aidx0>=0 && p8_apdata[s8_aidx0]!= U8_FLEX_INDEX_WOK; s8_aidx0-- );
 												// Seach Block1
-	for( s8_aidx1 = FLEX_AREA_NUM - 1, p8_apdata =(U8*)U16_BLOCK_1;
+	for( s8_aidx1 = U8_FLEX_AREA_NUM - 1, p8_apdata =(U8*)U16_BLOCK_1;
 		 s8_aidx1>=0 && p8_apdata[s8_aidx1]!= U8_FLEX_INDEX_WOK; s8_aidx1-- );
 		 
 	if( s8_aidx0 < 0 )								// Block0 is empty ?
@@ -399,10 +400,10 @@ void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx)
 
 	// Seach Flexible data index
 	for( u8_aidx0 = 0, p8_apdata=(U8*)U16_BLOCK_0;		// Seach Block0
-		 u8_aidx0 < FLEX_AREA_NUM && p8_apdata[u8_aidx0]!= U8_FLEX_INDEX_EMPTY; u8_aidx0++ );
+		 u8_aidx0 < U8_FLEX_AREA_NUM && p8_apdata[u8_aidx0]!= U8_FLEX_INDEX_EMPTY; u8_aidx0++ );
 		 
 	for( u8_aidx1 = 0, p8_apdata = (U8*)U16_BLOCK_1;		// Seach Block1
-		 u8_aidx1 < FLEX_AREA_NUM && p8_apdata[u8_aidx1]!= U8_FLEX_INDEX_EMPTY; u8_aidx1++ );
+		 u8_aidx1 < U8_FLEX_AREA_NUM && p8_apdata[u8_aidx1]!= U8_FLEX_INDEX_EMPTY; u8_aidx1++ );
 		 
 	if( u8_aidx0 == 0 )							// Block0 is empty ?
 	{
@@ -411,7 +412,7 @@ void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx)
 			*p16_tblock = U16_BLOCK_0;					// Use Block0
 			*p8_aidx = 0;
 		} else {								// Block1 is not empty
-			if( u8_aidx1 == FLEX_AREA_NUM )		// Block1 is full ?
+			if( u8_aidx1 == U8_FLEX_AREA_NUM )		// Block1 is full ?
 			{
 				*p16_tblock = U16_BLOCK_0;				// Use Block0
 				*p8_aidx = 0;
@@ -423,7 +424,7 @@ void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx)
 	} else {									// Block0 is not empty
 		if( u8_aidx1 == 0 )						// Block1 is empty ?
 		{
-			if( u8_aidx0 == FLEX_AREA_NUM )		// Block 0 is full ?
+			if( u8_aidx0 == U8_FLEX_AREA_NUM )		// Block 0 is full ?
 			{
 				*p16_tblock = U16_BLOCK_1;				// Use Block1
 				*p8_aidx = 0;
@@ -436,7 +437,7 @@ void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx)
 			{
 				*p16_tblock = U16_BLOCK_0;				// Use Block0
 				*p8_aidx = u8_aidx0;
-				if( u8_aidx0 >= (FLEX_AREA_NUM - 3)) // Block0 is last 3 area ?
+				if( u8_aidx0 >= (U8_FLEX_AREA_NUM - 3)) // Block0 is last 3 area ?
 				{
 					if( f_pf == OFF )			// Not PF ?
 					{
@@ -448,7 +449,7 @@ void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx)
 				}
 			} else {							// Block0 is same or bigger
 				*p16_tblock = U16_BLOCK_1;				// Use Block1
-				if( u8_aidx1 == FLEX_AREA_NUM )	// Block1 is full ?
+				if( u8_aidx1 == U8_FLEX_AREA_NUM )	// Block1 is full ?
 				{								// (Both blocks are full)
 					if( f_pf == OFF )			// Not PF ?
 					{
@@ -460,7 +461,7 @@ void Search_FlexibleData_write(U16 *p16_tblock, U8 *p8_aidx)
 				} else {						// Block1 is not full
 					*p8_aidx = u8_aidx1;				// Set index
 												// Block1 is last 3 area ?
-					if( u8_aidx1 >= (FLEX_AREA_NUM - 3) )
+					if( u8_aidx1 >= (U8_FLEX_AREA_NUM - 3) )
 					{
 						if( f_pf == OFF )		// Not PF ?
 						{

@@ -55,6 +55,7 @@
 #define		GLOBAL	extern
 #endif	// _SMBUS_CUSTOM
 
+#include "define.h"
 
 // - Function declaration -
 U8 SMB_ReceiveCommand(void);						// Receive command

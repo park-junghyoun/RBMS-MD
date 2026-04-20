@@ -50,21 +50,12 @@
 
 // - Include header file -
 #include "define.h"								
-#include "flashrom.h"							
-#include "dataflash_custom.h"
-#include "ram.h"
+#include "flashrom_fixed.h"
+#include "dataflash_calibration.h"
+#include "dataflash_flexible.h"
 #include "smbus.h"
 #include "smbus_custom.h"
-#include "init_calib.h"
 #include "renesas.h"
-#include "main_custom.h"
-#include "mode.h"
-#include "capacity.h"
-#include "afe.h"
-#include "charge.h"
-#include "mcu_custom.h"
-#include "safety_custom.h"
-#include "inline_asm.h"
 
 // - Firmware version -
 #define MODEL_CODE	0x0000
@@ -174,8 +165,8 @@ const __near st_smb_frame_t st_smb_command_table[] =		// SMBus command info. tab
 	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 54 Reserved
 	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 55 Reserved
 	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 56 Reserved
-	,{ RW_CHK		, 0	, (U8*)&tcalib_ref }				// 57 InitialCalibrationRef.()
-	,{ RW_CHK		, 0	, (U8*)&tcalib_cmd }			// 58 InitialCalibration()
+	,{ RW_CHK		, 0	, (U8*)&u16_calib_ref }			// 57 InitialCalibrationRef.()
+	,{ RW_CHK		, 0	, (U8*)&u16_calib_cmd }		// 58 InitialCalibration()
 	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 59 Reserved
 	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 5A Reserved
 	,{ SMBUS_ERR	, 0	, (U8*)NULL }					// 5B Reserved

@@ -53,7 +53,7 @@
 #define		GLOBAL	extern
 #endif	// _SMBUS
 
-
+#include "define.h"
 
 // - Function declaration -
 void SMBus_initialize(void);						// SMBus initializing

@@ -43,23 +43,23 @@ void DataFlash_update_check(void);							// DataFlash updating
 void FlexibleData_Read(void);								// Read Flexible data
 U8 Write_FlexibleData(void);									// Write Flexible data
 U8 FlexibleData_Write(void);									// Legacy alias
-void Request_FlexibleData_update(void);							// Request Flexible data update
+void Request_FlexibleData_update(void);						// Request Flexible data update
 
 
 // - Define definition -
 // Flexible data configuration
-#define FLEX_INDEX_SIZE		0x10					// Size of Flexible data index
-#define FLEX_AREA_NUM		7						// Number of Flexible data area
-#define FLEX_AREA_SIZE		0x90					// Size of a Flexible data area
+#define U8_FLEX_INDEX_SIZE		0x10						// Size of Flexible data index
+#define U8_FLEX_AREA_NUM			0x07						// Number of Flexible data area
+#define U8_FLEX_AREA_SIZE			0x90						// Size of a Flexible data area
 
 // Reason of Flexible data update
 enum {
-	FLEXUP_DUMMY,									// Dummy
-	FLEXUP_MODE,									// By mode changing
-	FLEXUP_RC,										// By RSOC
-	FLEXUP_FLASH,									// By Flash update
-	FLEXUP_SMB,										// By SMBus command
-	FLEXUP_WDT,										// By AFE WDT
+	FLEXUP_DUMMY,										// Dummy
+	FLEXUP_MODE,										// By mode changing
+	FLEXUP_RC,											// By RSOC
+	FLEXUP_FLASH,										// By Flash update
+	FLEXUP_SMB,											// By SMBus command
+	FLEXUP_WDT,											// By AFE WDT
 };
 
 typedef struct

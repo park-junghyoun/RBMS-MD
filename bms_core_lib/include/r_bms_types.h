@@ -40,10 +40,10 @@
 
 #include "define.h"
 #include "afe_types.h"
-#include "r_bms_measurement.h"
+#include "r_bms_measurement_types.h"
 #include "r_bms_api_limits.h"
 #include "r_bms_version.h"
-#include "r_bms_protection.h"
+#include "r_bms_protection_types.h"
 
 /*
  * Public BMS enums and data transfer types.

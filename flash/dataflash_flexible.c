@@ -130,7 +130,7 @@ void FlexibleData_Read(void)
 	{
 												// Copy from DataFlash to RAM
 		memcpy(	(char*)&st_flexible_data_ram,
-				(char*)(u16_tblock + FLEX_INDEX_SIZE +((U16)u8_index*FLEX_AREA_SIZE)),
+				(char*)(u16_tblock + U8_FLEX_INDEX_SIZE +((U16)u8_index*U8_FLEX_AREA_SIZE)),
 				FLEX_SIZE);
 	} else {									// No valid data
 		memset((char*)&st_flexible_data_ram, 0, FLEX_SIZE);	// Set default data
@@ -160,7 +160,7 @@ U8 Write_FlexibleData(void)
 	
 	Search_FlexibleData_write(&u16_tblock, &u8_flex_index);	// Search Flexible data
 	
-	if( f_flex_stop == ON && u8_flex_index > (FLEX_AREA_NUM - 3))// Stop Flex.data update ?
+	if( f_flex_stop == ON && u8_flex_index > (U8_FLEX_AREA_NUM - 3))// Stop Flex.data update ?
 	{
 		if( u8_dfl_en == 0 )						// DFLEN is set by this ?
 		{
@@ -173,8 +173,8 @@ U8 Write_FlexibleData(void)
 	// Note: It sets DFLEN again because Search function may have erase
 	//       operation.
 												// Make write address
-	p8_data = (U8*)(u16_tblock + FLEX_INDEX_SIZE + ((U16)u8_flex_index * FLEX_AREA_SIZE));
-	for( u8_index=0; u8_index<FLEX_AREA_SIZE; u8_index++ )		// Empty check loop
+	p8_data = (U8*)(u16_tblock + U8_FLEX_INDEX_SIZE + ((U16)u8_flex_index * U8_FLEX_AREA_SIZE));
+	for( u8_index=0; u8_index<U8_FLEX_AREA_SIZE; u8_index++ )		// Empty check loop
 	{
 		if( *(p8_data+u8_index) != 0xFF )				// Not empty ?
 		{
