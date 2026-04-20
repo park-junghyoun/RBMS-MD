@@ -151,7 +151,7 @@ typedef struct
 	U8		au8_serial_number[32];			// [32byte] 0x1C:serial number
 	U8		au8_dev_name[32];			// [32byte] 0x21:DeviceName
 	U8		au8_dev_chem[4];				// [4byte] 0x22:DeviceChemistry
-	U8		au8_seal_pawd[4];				// [4byte] Unseal Password
+	U16		au16_seal_pawd[2];			// [4byte] Unseal Password
 	U8		au8_reserved[20];				// [20byte] Reserved
 }st_device_info_t;
 
@@ -317,7 +317,7 @@ GLOBAL st_fixed_data_t	st_fixed_data;
 #define au8_SMB22_serial_num	st_fixed_data.st_device_info.au8_serial_number
 #define au8_SMB23_dev_name	st_fixed_data.st_device_info.au8_dev_name
 #define au8_SMB24_dev_chem	st_fixed_data.st_device_info.au8_dev_chem
-
+#define au16_seal_password		st_fixed_data.st_device_info.au16_seal_pawd;
 
 U8 InitFixed_Chk(void);	
 U8 FLASH_Check_FixedData(void);

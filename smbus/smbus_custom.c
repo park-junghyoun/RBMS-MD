@@ -333,7 +333,7 @@ U8 SMB_ReceiveCommand(void)
 *""FUNC COMMENT END""**********************************************/
 void SMB_SetReadData(void)
 {
-	_SBYTE	al1;
+	U8	u8_index;
 
 	// Set read data
 	switch( u8_received_cmd )							// Command is ...
@@ -342,16 +342,16 @@ void SMB_SetReadData(void)
 		
 		case 0xF0:								// 0xF0: RSB_TOOL2 information
 			au8_smb_buff[0] = st_smb_frame.u8_len;				// Set data length to buffer
-			for( al1=1; al1<=st_smb_frame.u8_len; al1++ )
+			for( u8_index=1; u8_index<=st_smb_frame.u8_len; u8_index++ )
 			{
 				// Note: s_tool_info[] is far data.
 				//       Then it can't be set by near pointer.
-				au8_smb_buff[al1] = s_tool_info[al1-1];
+				au8_smb_buff[u8_index] = s_tool_info[u8_index-1];
 			}
 			break;
 			
 		case 0x57:								// 0x57: InitCalibRef.
-			CalibRef_read_request();			// CalibRef. read request
+			//CalibRef_read_request();			// CalibRef. read request
 			break;
 		
 		default:								// Others
@@ -370,9 +370,9 @@ void SMB_SetReadData(void)
 			
 				au8_smb_buff[0] = st_smb_frame.u8_len;			// Set data length to buffer
 												// Set data to buffer
-				for( al1=1; al1<=st_smb_frame.u8_len; al1++ )
+				for( u8_index=1; u8_index<=st_smb_frame.u8_len; u8_index++ )
 				{
-					au8_smb_buff[al1] = *st_smb_frame.p8_data;
+					au8_smb_buff[u8_index] = *st_smb_frame.p8_data;
 					st_smb_frame.p8_data++;
 				}
 
@@ -416,7 +416,7 @@ void SMB_SetReadData(void)
 *""FUNC COMMENT END""**********************************************/
 void SMB_StoreReceiveData(void)
 {
-	_SBYTE	al1;
+	U8	u8_index;
 
 	switch( u8_received_cmd )							// Command is ...
 	{		
@@ -431,10 +431,11 @@ void SMB_StoreReceiveData(void)
 			break;
 
 		case 0x52:								// 0x52: Escape from PF
-			if( f_unseal == ON )				// Only works when unseal
+			if( u16_SMB50_seal == STS_UNSEAL )				// Only works when unseal
 			{
 				if( au8_smb_buff[0] == 0xFF && au8_smb_buff[1] == 0xFF )
 				{
+					/*
 					if( amode == M_PF )			// PF ?
 					{
 						amode = M_RELAX;		// Change to RELAX Mode
@@ -445,6 +446,7 @@ void SMB_StoreReceiveData(void)
 					PFStatus = 0;					// PF Status Clear
 					FuseBlow_control(HV_LOW);		// Set fuseout pin LOW
 					aflex_reason = FLEXUP_SMB;		// Set Reason of Flex update
+					*/
 					Write_FlexibleData();			// Update Flexible data
 				}
 			}
@@ -452,41 +454,30 @@ void SMB_StoreReceiveData(void)
 		
 		// - Initial calibration -
 		case 0x57:								// 0x57: InitialCalibrationRef.
-			tcalib_ref = au16_smb_buff[0];			// Set received data
-			CalibRef_write_request();			// Ref.value writing request
+			//tcalib_ref = au16_smb_buff[0];			// Set received data
+			//CalibRef_write_request();			// Ref.value writing request
 			break;
 
 		case 0x58:								// 0x58: InitialCalibration
-			tcalib_cmd = au16_smb_buff[0];			// Set received data
-			Calibration_request();				// Calibration request
+			//tcalib_cmd = au16_smb_buff[0];			// Set received data
+			//Calibration_request();				// Calibration request
 			break;
 			
 		case 0x1B:								// ManufatureDate Write
-			if( f_unseal == ON )				// Only works when unseal
+			if( u16_SMB50_seal == STS_UNSEAL )				// Only works when unseal
 			{
-				a_com1b[0] = au8_smb_buff[0];
-				a_com1b[1] = au8_smb_buff[1];
+				u16_SMB1B_mfg_date = au16_smb_buff[0];
 				Request_FlexibleData_update();
-				aflex_reason = FLEXUP_SMB;		// Set Reason of Flex update
-			}
-			break;
-			
-		case 0x1C:								// SerialNumber Write
-			if( f_unseal == ON )				// Only works when unseal
-			{
-				a_com1c[0] = au8_smb_buff[0];
-				a_com1c[1] = au8_smb_buff[1];				
-				Request_FlexibleData_update();
-				aflex_reason = FLEXUP_SMB;		// Set Reason of Flex update
+				//aflex_reason = FLEXUP_SMB;		// Set Reason of Flex update
 			}
 			break;
 			
 		// TODO: Add some command own setting if necessary.
 
 		default:								// Others
-			for( al1=0; al1<st_smb_frame.u8_len; al1++ )	// Set data to buffer
+			for( u8_index=0; u8_index<st_smb_frame.u8_len; u8_index++ )	// Set data to buffer
 			{
-				*st_smb_frame.p8_data = au8_smb_buff[al1];
+				*st_smb_frame.p8_data = au8_smb_buff[u8_index];
 				st_smb_frame.p8_data++;
 			}
 			// TODO: Add some operation if necessary.
@@ -679,7 +670,7 @@ void ExtraFunction(void)
 		{
 			if( u16_extfunc == 0x0908 )			// Data is correct ?
 			{
-				__PowerDown(CAUSE_COM,FLEXUP_SMB);	// PowerDown function
+				//__PowerDown(CAUSE_COM,FLEXUP_SMB);	// PowerDown function
 				
 			} else {							// Data is wrong
 				f_comjib = OFF;					// Clear the flag
@@ -695,8 +686,8 @@ void ExtraFunction(void)
 		{
 			if( u16_extfunc == 0x0706 )										// Data is correct ?
 			{
-				f_fpf = ON;
-				Set_PF(CAUSE_PF_COM,FLEXUP_SMB);						// PermanentFailure function
+				//f_fpf = ON;
+				//Set_PF(CAUSE_PF_COM,FLEXUP_SMB);						// PermanentFailure function
 			} 
 			else 
 			{															// Data is wrong
@@ -716,10 +707,10 @@ void ExtraFunction(void)
 			switch( u16_extra_func.u8_data[0] )				// ** is ...
 			{
 				case 0x11:						// Flash update mode request
-					if( f_unseal == ON )		// Only works when unseal
+					if( u16_SMB50_seal == STS_UNSEAL )		// Only works when unseal
 					{
-						f_flashup = ON;			// Set Flash update mode req.
-						aflex_reason = FLEXUP_FLASH;// Set Reason of Flex update
+						//f_flashup = ON;			// Set Flash update mode req.
+						//aflex_reason = FLEXUP_FLASH;// Set Reason of Flex update
 					}
 					break;
 					
@@ -778,44 +769,43 @@ void ExtraFunction(void)
 *""FUNC COMMENT END""**********************************************/
 void Seal_Proc(void)
 {
-	if (D_PASS[0] == 0xFFFF && D_PASS[1]== 0xFFFF)
+	static U8 f_unseal_1st;
+	
+	if (au16_seal_password[0] == 0xFF && au16_seal_password[1]== 0xFF)
 	{
 		return;
 	}
 	
-	if( f_unseal == ON )						// Unseal now ?
+	if( u16_SMB50_seal == STS_UNSEAL )						// Unseal now ?
 	{
 		if( au16_smb_buff[0] == DATA_SEAL )			// Seal command ?
 		{
-			f_unseal = OFF;						// Clear unseal
-			f_unseal_1st = OFF;					// Clear unseal 1st command
-			tseal = STS_SEAL;					// Set Seal status
+			u16_SMB50_seal = STS_SEAL;						// Clear unseal
 			f_ss = ON;							// Set PackStatus[SS]
 			Request_FlexibleData_update();
-			aflex_reason = FLEXUP_SMB;			// Set Reason of Flex update
+			//aflex_reason = FLEXUP_SMB;			// Set Reason of Flex update
 		}
 		
 	} else {									// Seal now
 		if( f_unseal_1st == OFF )				// 1st data check ?
 		{
-			if( D_PASS[1] != 0xFFFF )			// No specified password ?
+			if( au16_seal_password[1] != 0xFFFF )			// No specified password ?
 			{					
-				if( au16_smb_buff[0] == D_PASS[1] )	// Correct data ?
+				if( au16_smb_buff[0] == au16_seal_password[1] )	// Correct data ?
 				{
 					f_unseal_1st = ON;			// Set 1st command received
 				}
 			}
 			
 		} else {								// 2nd data check
-			if( D_PASS[0] != 0xFFFF )			// No specified password ?
+			if( au16_seal_password[0] != 0xFFFF )			// No specified password ?
 			{					
-				if( au16_smb_buff[0] == D_PASS[0] )	// Correct data ?
+				if( au16_smb_buff[0] == au16_seal_password[0] )	// Correct data ?
 				{
-					f_unseal = ON;				// Set Unseal
-					tseal = STS_UNSEAL;			// Set Unseal status
+					u16_SMB50_seal = STS_UNSEAL;				// Set Unseal
 					f_ss = OFF;					// Set PackStatus[SS]
 					Request_FlexibleData_update();
-					aflex_reason = FLEXUP_SMB;	// Set Reason of Flex update
+					//aflex_reason = FLEXUP_SMB;	// Set Reason of Flex update
 
 				} else {						// Incorrect
 					f_unseal_1st = OFF;			// Clear 1st command received

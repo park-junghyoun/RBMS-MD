@@ -88,7 +88,6 @@ GLOBAL U16					u16_extra_func_flag;				// Flags for ExtraFunction()
 #define f_force_fetoff_ext		DEF16_BIT6(&u16_extra_func_flag)	// Force fet OFF Exit
 #define f_compf1				DEF16_BIT7(&u16_extra_func_flag)	// Force PF flag
 
-GLOBAL U16						u16_seal;								// Seal status
 #define STS_SEAL					0x0000							// Status of Seal
 #define STS_UNSEAL				0x0001							// Status of Unseal
 

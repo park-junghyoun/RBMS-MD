@@ -13,9 +13,9 @@
       </Category>
       <Category Name="AFE_driver">
         <Category Name="include">
-          <Path>afe_lib\include\afe_api.h</Path>
-          <Path>afe_lib\include\afe_config.h</Path>
-          <Path>afe_lib\include\afe_types.h</Path>
+          <Path>afe_lib\include\r_afe_api.h</Path>
+          <Path>afe_lib\include\r_afe_config_types.h</Path>
+          <Path>afe_lib\include\r_afe_types.h</Path>
         </Category>
       </Category>
       <Category Name="BMS_Core">
@@ -55,6 +55,10 @@
       <Category Name="Renesas">
         <Path>renesas\renesas.c</Path>
       </Category>
+      <Category Name="SMBus">
+        <Path>smbus\smbus.c</Path>
+        <Path>smbus\smbus_custom.c</Path>
+      </Category>
     </Files>
     <DebugOptions>
       <ConnectSettings>
@@ -79,6 +83,8 @@
           <Path>DefaultBuild\flashrom_fixed.obj</Path>
           <Path>DefaultBuild\mcu.obj</Path>
           <Path>DefaultBuild\renesas.obj</Path>
+          <Path>DefaultBuild\smbus.obj</Path>
+          <Path>DefaultBuild\smbus_custom.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>flash\flash_lib\include</IncludePathForC>
@@ -182,6 +188,8 @@
           <Path>95_Debug\flashrom_fixed.obj</Path>
           <Path>95_Debug\mcu.obj</Path>
           <Path>95_Debug\renesas.obj</Path>
+          <Path>95_Debug\smbus.obj</Path>
+          <Path>95_Debug\smbus_custom.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>flash\flash_lib\include</IncludePathForC>
@@ -289,8 +297,11 @@
           <Path>100_Release\flashrom_fixed.obj</Path>
           <Path>100_Release\mcu.obj</Path>
           <Path>100_Release\renesas.obj</Path>
+          <Path>100_Release\smbus.obj</Path>
+          <Path>100_Release\smbus_custom.obj</Path>
         </LinkOrder>
         <CommonOptions>
+          <IncludePathForC>afe_lib\include</IncludePathForC>
           <IncludePathForC>%ProjectDir%\application</IncludePathForC>
           <IncludePathForC>%ProjectDir%\flash</IncludePathForC>
           <IncludePathForC>%ProjectDir%\flash\flash_lib\include</IncludePathForC>
@@ -311,6 +322,7 @@
           <Option>-g</Option>
           <Option>-g_line</Option>
           <Option>-Onothing</Option>
+          <Option>-I afe_lib\include</Option>
           <Option>-I %ProjectDir%\application</Option>
           <Option>-I %ProjectDir%\flash</Option>
           <Option>-I %ProjectDir%\flash\flash_lib\include</Option>
@@ -345,7 +357,7 @@
           <Option>-OUtput=%BuildModeName%\%ProjectName%.abs</Option>
           <Option>-LIBrary=afe_lib\lib\RAJ240100_90\r_afe_driver.lib</Option>
           <Option>-LIBrary=bms_core_lib\lib\r_bms_core_driver.lib</Option>
-          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4s.lib</Option>
+          <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4s99.lib</Option>
           <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\malloc_n.lib</Option>
           <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4r.lib</Option>
           <Option>-OCDBG=85</Option>
@@ -395,6 +407,8 @@
           <Path>94_Debug\flashrom_fixed.obj</Path>
           <Path>94_Debug\mcu.obj</Path>
           <Path>94_Debug\renesas.obj</Path>
+          <Path>94_Debug\smbus.obj</Path>
+          <Path>94_Debug\smbus_custom.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>flash\flash_lib\include</IncludePathForC>
@@ -503,6 +517,8 @@
           <Path>94_Release\flashrom_fixed.obj</Path>
           <Path>94_Release\mcu.obj</Path>
           <Path>94_Release\renesas.obj</Path>
+          <Path>94_Release\smbus.obj</Path>
+          <Path>94_Release\smbus_custom.obj</Path>
         </LinkOrder>
         <CommonOptions>
           <IncludePathForC>flash\flash_lib\include</IncludePathForC>

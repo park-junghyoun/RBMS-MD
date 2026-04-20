@@ -71,16 +71,16 @@ void smb_bus_error_nak(void);						// SMBus error with NAK
 void smb_send_ack(void);							// Send ACK
 
 // - Internal variable -
-static const __near DWORD SMBusFunction_table[] = {
+static const __near U32 SMBusFunction_table[] = {
 												// SMBus function table
-	(DWORD)smb_SlaveAddr_chk,					// Slave address check
-	(DWORD)smb_cmd_chk,						// Command check
-	(DWORD)smb_RW_chk,						// Read/Write check
-	(DWORD)smb_ReStart_chk,						// Restart condition check
-	(DWORD)smb_ReadData_send,						// Read data sending
-	(DWORD)smb_WriteData_receive,					// Write data receiving
-	(DWORD)smb_BlockWrite_size_chk,				// BlockWrite data size check
-	(DWORD)smb_bus_error							// SMBus error function
+	(U32)smb_SlaveAddr_chk,					// Slave address check
+	(U32)smb_cmd_chk,						// Command check
+	(U32)smb_RW_chk,						// Read/Write check
+	(U32)smb_ReStart_chk,						// Restart condition check
+	(U32)smb_ReadData_send,						// Read data sending
+	(U32)smb_WriteData_receive,					// Write data receiving
+	(U32)smb_BlockWrite_size_chk,				// BlockWrite data size check
+	(U32)smb_bus_error							// SMBus error function
 };
 
 const unsigned char CRC8TBL[] = {

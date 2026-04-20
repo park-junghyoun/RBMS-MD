@@ -101,6 +101,7 @@ typedef struct
 	U16 u16_pack_status_bit;
 	U16 u16_balancing_bit;
 	U16 u16_slef_discharge_bit;
+	U16 u16_unseal_bit;
 	U32 u32_internal_bit;
 } st_status_bit_t;
 
@@ -164,6 +165,7 @@ GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 #define u16_SMB46_cb_status	st_flexible_data_ram.st_status.u16_balancing_bit
 #define u16_SMB47_pack_volt	st_flexible_data_ram.st_measurement.ad.u16_pack_voltage_mV
 #define u16_SMB48_soh			st_flexible_data_ram.st_capacity.u16_soh
+#define u16_SMB50_seal		st_flexible_data_ram.st_status.u16_unseal_bit
 #define u16_SMB60_volt		st_flexible_data_ram.st_measurement.ad.au16_cell_voltage_mV
 #define u16_SMB6A_temp		st_flexible_data_ram.st_measurement.ad.as16_cell_temperature_0p1dC
 
