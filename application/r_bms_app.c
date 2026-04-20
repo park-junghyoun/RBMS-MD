@@ -248,9 +248,9 @@ void APP_MoveToBoot(void)
 {
 
 	st_flexible_data_ram.st_reason.u8_update_reason = FLEXUP_FLASH;			// Set Reason of Flex update
-	Write_FlexibleData();					// Update Flexible data
+	Write_FlexibleData();							// Update Flexible data
 
 	DI();										// Disable interrupt
-	Stop_AFEWDT();								// Stop AFE WDT
-	ASM_JUMP_BOOT_64();							// To Flash update mode
+	BMS_Config_SetWDT(OFF);						// Stop AFE WDT
+	ASM_JUMP_BOOT();							// To Flash update mode
 }

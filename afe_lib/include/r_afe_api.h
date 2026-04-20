@@ -37,8 +37,9 @@
 *""FILE COMMENT END""*****************************************************/
 #pragma once
 // - Include header file -------------------------------------------------------
-#include "afe_types.h"
-#include "afe_config.h"
+#include "define.h"
+#include "r_afe_types.h"
+#include "r_afe_config_types.h"
 // - Global function -----------------------------------------------------------
 /***********************************************************************
 AFE  PROFILE (Public API Profile)
@@ -70,6 +71,7 @@ ABN DEVICE PROFILE (Public API Profile)
 ***********************************************************************/
 E_AFE_RESULT AFE_ABN_OC_Set_Setting(st_afe_hw1_config_t st_config);
 E_AFE_RESULT AFE_ABN_OC_Get_Setting(st_afe_hw1_config_t* pst_config);
+E_AFE_RESULT AFE_ABN_WDT_Setting(E_AFE_WDT_SETTING_ITEM e_wdt_config);
 E_AFE_RESULT AFE_ABN_WDT_Clear( void );
 /***********************************************************************
 PWR DEVICE PROFILE (Public API Profile)

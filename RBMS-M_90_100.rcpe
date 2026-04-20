@@ -11,27 +11,50 @@
         <Path>application\cstart.asm</Path>
         <Path>application\stkinit.asm</Path>
       </Category>
-      <Path>afe_lib\lib\RAJ240100_90\iodefine.h</Path>
       <Category Name="AFE_driver">
-        <Path>afe_lib\include\afe_api.h</Path>
-        <Path>afe_lib\include\afe_config.h</Path>
-        <Path>afe_lib\include\afe_types.h</Path>
+        <Category Name="include">
+          <Path>afe_lib\include\afe_api.h</Path>
+          <Path>afe_lib\include\afe_config.h</Path>
+          <Path>afe_lib\include\afe_types.h</Path>
+        </Category>
       </Category>
       <Category Name="BMS_Core">
-        <Path>bms_core_lib\include\r_bms_api.h</Path>
-        <Path>bms_core_lib\include\r_bms_api_limits.h</Path>
-        <Path>bms_core_lib\include\r_bms_calibration.h</Path>
-        <Path>bms_core_lib\include\r_bms_callbacks.h</Path>
-        <Path>bms_core_lib\include\r_bms_config.h</Path>
-        <Path>bms_core_lib\include\r_bms_measurement.h</Path>
-        <Path>bms_core_lib\include\r_bms_protection.h</Path>
-        <Path>bms_core_lib\include\r_bms_types.h</Path>
-        <Path>bms_core_lib\include\r_bms_version.h</Path>
+        <Category Name="include">
+          <Path>bms_core_lib\include\r_bms_api.h</Path>
+          <Path>bms_core_lib\include\r_bms_api_limits.h</Path>
+          <Path>bms_core_lib\include\r_bms_types.h</Path>
+          <Path>bms_core_lib\include\r_bms_version.h</Path>
+          <Path>bms_core_lib\include\r_bms_calibration_types.h</Path>
+          <Path>bms_core_lib\include\r_bms_callbacks_types.h</Path>
+          <Path>bms_core_lib\include\r_bms_config_types.h</Path>
+          <Path>bms_core_lib\include\r_bms_measurement_types.h</Path>
+          <Path>bms_core_lib\include\r_bms_protection_types.h</Path>
+        </Category>
       </Category>
-      <Path>application\bms_user_firmware_example.c</Path>
-      <Path>application\bms_user_firmware_example_config.c</Path>
-      <Path>application\bms_user_firmware_example_measurement.c</Path>
-      <Path>application\bms_user_firmware_example_platform.c</Path>
+      <Category Name="application">
+        <Path>application\main.c</Path>
+        <Path>application\r_bms_app.c</Path>
+        <Path>application\r_bms_calibration.c</Path>
+        <Path>application\r_bms_config.c</Path>
+        <Path>application\r_bms_event.c</Path>
+      </Category>
+      <Category Name="Flash">
+        <Path>flash\dataflash.c</Path>
+        <Path>flash\dataflash_calibration.c</Path>
+        <Path>flash\dataflash_flexible.c</Path>
+        <Path>flash\flashrom_fixed.c</Path>
+        <Category Name="include">
+          <Path>flash\flash_lib\include\uif_fsl.h</Path>
+          <Path>flash\flash_lib\include\uif_pfdl.h</Path>
+        </Category>
+      </Category>
+      <Category Name="MCU">
+        <Path>mcu\mcu.c</Path>
+        <Path>afe_lib\lib\RAJ240100_90\iodefine.h</Path>
+      </Category>
+      <Category Name="Renesas">
+        <Path>renesas\renesas.c</Path>
+      </Category>
     </Files>
     <DebugOptions>
       <ConnectSettings>
@@ -45,12 +68,20 @@
         <LinkOrder>
           <Path>DefaultBuild\cstart.obj</Path>
           <Path>DefaultBuild\stkinit.obj</Path>
-          <Path>DefaultBuild\bms_user_firmware_example.obj</Path>
-          <Path>DefaultBuild\bms_user_firmware_example_config.obj</Path>
-          <Path>DefaultBuild\bms_user_firmware_example_measurement.obj</Path>
-          <Path>DefaultBuild\bms_user_firmware_example_platform.obj</Path>
+          <Path>DefaultBuild\main.obj</Path>
+          <Path>DefaultBuild\r_bms_app.obj</Path>
+          <Path>DefaultBuild\r_bms_calibration.obj</Path>
+          <Path>DefaultBuild\r_bms_config.obj</Path>
+          <Path>DefaultBuild\r_bms_event.obj</Path>
+          <Path>DefaultBuild\dataflash.obj</Path>
+          <Path>DefaultBuild\dataflash_calibration.obj</Path>
+          <Path>DefaultBuild\dataflash_flexible.obj</Path>
+          <Path>DefaultBuild\flashrom_fixed.obj</Path>
+          <Path>DefaultBuild\mcu.obj</Path>
+          <Path>DefaultBuild\renesas.obj</Path>
         </LinkOrder>
         <CommonOptions>
+          <IncludePathForC>flash\flash_lib\include</IncludePathForC>
           <IncludePathForC>bms_core_lib\include</IncludePathForC>
           <IncludePathForC>afe_lib\include</IncludePathForC>
           <IncludePathForC>afe_lib\lib\RAJ240100_90</IncludePathForC>
@@ -70,6 +101,7 @@
           <Option>-g</Option>
           <Option>-g_line</Option>
           <Option>-Osize</Option>
+          <Option>-I flash\flash_lib\include</Option>
           <Option>-I bms_core_lib\include</Option>
           <Option>-I afe_lib\include</Option>
           <Option>-I afe_lib\lib\RAJ240100_90</Option>
@@ -139,12 +171,20 @@
         <LinkOrder>
           <Path>95_Debug\cstart.obj</Path>
           <Path>95_Debug\stkinit.obj</Path>
-          <Path>95_Debug\bms_user_firmware_example.obj</Path>
-          <Path>95_Debug\bms_user_firmware_example_config.obj</Path>
-          <Path>95_Debug\bms_user_firmware_example_measurement.obj</Path>
-          <Path>95_Debug\bms_user_firmware_example_platform.obj</Path>
+          <Path>95_Debug\main.obj</Path>
+          <Path>95_Debug\r_bms_app.obj</Path>
+          <Path>95_Debug\r_bms_calibration.obj</Path>
+          <Path>95_Debug\r_bms_config.obj</Path>
+          <Path>95_Debug\r_bms_event.obj</Path>
+          <Path>95_Debug\dataflash.obj</Path>
+          <Path>95_Debug\dataflash_calibration.obj</Path>
+          <Path>95_Debug\dataflash_flexible.obj</Path>
+          <Path>95_Debug\flashrom_fixed.obj</Path>
+          <Path>95_Debug\mcu.obj</Path>
+          <Path>95_Debug\renesas.obj</Path>
         </LinkOrder>
         <CommonOptions>
+          <IncludePathForC>flash\flash_lib\include</IncludePathForC>
           <IncludePathForC>bms_core_lib\include</IncludePathForC>
           <IncludePathForC>afe_lib\include</IncludePathForC>
           <IncludePathForC>afe_lib\lib\RAJ240100_90</IncludePathForC>
@@ -166,6 +206,7 @@
           <Option>-g</Option>
           <Option>-g_line</Option>
           <Option>-Onothing</Option>
+          <Option>-I flash\flash_lib\include</Option>
           <Option>-I bms_core_lib\include</Option>
           <Option>-I afe_lib\include</Option>
           <Option>-I afe_lib\lib\RAJ240100_90</Option>
@@ -237,14 +278,25 @@
         <LinkOrder>
           <Path>100_Release\cstart.obj</Path>
           <Path>100_Release\stkinit.obj</Path>
-          <Path>100_Release\bms_user_firmware_example.obj</Path>
-          <Path>100_Release\bms_user_firmware_example_config.obj</Path>
-          <Path>100_Release\bms_user_firmware_example_measurement.obj</Path>
-          <Path>100_Release\bms_user_firmware_example_platform.obj</Path>
+          <Path>100_Release\main.obj</Path>
+          <Path>100_Release\r_bms_app.obj</Path>
+          <Path>100_Release\r_bms_calibration.obj</Path>
+          <Path>100_Release\r_bms_config.obj</Path>
+          <Path>100_Release\r_bms_event.obj</Path>
+          <Path>100_Release\dataflash.obj</Path>
+          <Path>100_Release\dataflash_calibration.obj</Path>
+          <Path>100_Release\dataflash_flexible.obj</Path>
+          <Path>100_Release\flashrom_fixed.obj</Path>
+          <Path>100_Release\mcu.obj</Path>
+          <Path>100_Release\renesas.obj</Path>
         </LinkOrder>
         <CommonOptions>
-          <IncludePathForC>%ProjectDir%</IncludePathForC>
           <IncludePathForC>%ProjectDir%\application</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\flash</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\flash\flash_lib\include</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\mcu</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\smbus</IncludePathForC>
+          <IncludePathForC>%ProjectDir%\renesas</IncludePathForC>
           <IncludePathForC>%ProjectDir%\bms_core_lib\include</IncludePathForC>
           <IncludePathForC>%ProjectDir%\afe_lib\include</IncludePathForC>
           <IncludePathForC>%ProjectDir%\afe_lib\lib\RAJ240100_90</IncludePathForC>
@@ -259,8 +311,12 @@
           <Option>-g</Option>
           <Option>-g_line</Option>
           <Option>-Onothing</Option>
-          <Option>-I %ProjectDir%</Option>
           <Option>-I %ProjectDir%\application</Option>
+          <Option>-I %ProjectDir%\flash</Option>
+          <Option>-I %ProjectDir%\flash\flash_lib\include</Option>
+          <Option>-I %ProjectDir%\mcu</Option>
+          <Option>-I %ProjectDir%\smbus</Option>
+          <Option>-I %ProjectDir%\renesas</Option>
           <Option>-I %ProjectDir%\bms_core_lib\include</Option>
           <Option>-I %ProjectDir%\afe_lib\include</Option>
           <Option>-I %ProjectDir%\afe_lib\lib\RAJ240100_90</Option>
@@ -287,8 +343,8 @@
           <Option>-NOCOmpress</Option>
           <Option>-NOOPtimize</Option>
           <Option>-OUtput=%BuildModeName%\%ProjectName%.abs</Option>
-          <Option>-LIBrary=afe_lib\lib\RAJ240100_90\r_bms_driver.lib</Option>
-          <Option>-LIBrary=bms_core_lib\lib\r_bms_bms_core.lib</Option>
+          <Option>-LIBrary=afe_lib\lib\RAJ240100_90\r_afe_driver.lib</Option>
+          <Option>-LIBrary=bms_core_lib\lib\r_bms_core_driver.lib</Option>
           <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4s.lib</Option>
           <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\malloc_n.lib</Option>
           <Option>-LIBrary=%MicomToolPath%\CC-RL\V1.12.01\lib\rl78em4r.lib</Option>
@@ -310,7 +366,7 @@
           <Option>-END</Option>
           <Option>-Input=%BuildModeName%\%ProjectName%.abs</Option>
           <Option>-DEVICE=%MicomToolPath%\Device\RL78\Devicefile\DR7F240130.DVF</Option>
-          <Option>-OUtput=%BuildModeName%\RBMSM_FW_S_RAJ240100.mot</Option>
+          <Option>-OUtput=%BuildModeName%\RBMSM_RAJ240100.mot</Option>
           <Option>-FOrm=Stype</Option>
           <Option>-REcord=S2</Option>
           <Option>-END_RECORD=S8</Option>
@@ -328,12 +384,20 @@
         <LinkOrder>
           <Path>94_Debug\cstart.obj</Path>
           <Path>94_Debug\stkinit.obj</Path>
-          <Path>94_Debug\bms_user_firmware_example.obj</Path>
-          <Path>94_Debug\bms_user_firmware_example_config.obj</Path>
-          <Path>94_Debug\bms_user_firmware_example_measurement.obj</Path>
-          <Path>94_Debug\bms_user_firmware_example_platform.obj</Path>
+          <Path>94_Debug\main.obj</Path>
+          <Path>94_Debug\r_bms_app.obj</Path>
+          <Path>94_Debug\r_bms_calibration.obj</Path>
+          <Path>94_Debug\r_bms_config.obj</Path>
+          <Path>94_Debug\r_bms_event.obj</Path>
+          <Path>94_Debug\dataflash.obj</Path>
+          <Path>94_Debug\dataflash_calibration.obj</Path>
+          <Path>94_Debug\dataflash_flexible.obj</Path>
+          <Path>94_Debug\flashrom_fixed.obj</Path>
+          <Path>94_Debug\mcu.obj</Path>
+          <Path>94_Debug\renesas.obj</Path>
         </LinkOrder>
         <CommonOptions>
+          <IncludePathForC>flash\flash_lib\include</IncludePathForC>
           <IncludePathForC>bms_core_lib\include</IncludePathForC>
           <IncludePathForC>afe_lib\include</IncludePathForC>
           <IncludePathForC>afe_lib\lib\RAJ240100_90</IncludePathForC>
@@ -356,6 +420,7 @@
           <Option>-g</Option>
           <Option>-g_line</Option>
           <Option>-Onothing</Option>
+          <Option>-I flash\flash_lib\include</Option>
           <Option>-I bms_core_lib\include</Option>
           <Option>-I afe_lib\include</Option>
           <Option>-I afe_lib\lib\RAJ240100_90</Option>
@@ -427,12 +492,20 @@
         <LinkOrder>
           <Path>94_Release\cstart.obj</Path>
           <Path>94_Release\stkinit.obj</Path>
-          <Path>94_Release\bms_user_firmware_example.obj</Path>
-          <Path>94_Release\bms_user_firmware_example_config.obj</Path>
-          <Path>94_Release\bms_user_firmware_example_measurement.obj</Path>
-          <Path>94_Release\bms_user_firmware_example_platform.obj</Path>
+          <Path>94_Release\main.obj</Path>
+          <Path>94_Release\r_bms_app.obj</Path>
+          <Path>94_Release\r_bms_calibration.obj</Path>
+          <Path>94_Release\r_bms_config.obj</Path>
+          <Path>94_Release\r_bms_event.obj</Path>
+          <Path>94_Release\dataflash.obj</Path>
+          <Path>94_Release\dataflash_calibration.obj</Path>
+          <Path>94_Release\dataflash_flexible.obj</Path>
+          <Path>94_Release\flashrom_fixed.obj</Path>
+          <Path>94_Release\mcu.obj</Path>
+          <Path>94_Release\renesas.obj</Path>
         </LinkOrder>
         <CommonOptions>
+          <IncludePathForC>flash\flash_lib\include</IncludePathForC>
           <IncludePathForC>bms_core_lib\include</IncludePathForC>
           <IncludePathForC>afe_lib\include</IncludePathForC>
           <IncludePathForC>afe_lib\lib\RAJ240100_90</IncludePathForC>
@@ -453,6 +526,7 @@
           <Option>-g</Option>
           <Option>-g_line</Option>
           <Option>-Osize</Option>
+          <Option>-I flash\flash_lib\include</Option>
           <Option>-I bms_core_lib\include</Option>
           <Option>-I afe_lib\include</Option>
           <Option>-I afe_lib\lib\RAJ240100_90</Option>

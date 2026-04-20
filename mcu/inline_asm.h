@@ -54,10 +54,10 @@
 
 static void ASM_JUMP_BOOT(void)
 {
-#ifdef (_AFE_TYP_95_94_H)|| (_AFE_TYP_95_94_H)
+#if defined(_AFE_TYP_95_94_H) || defined(_AFE_TYP_55_57_H)
 	BR !!0x00DC80
 #endif
-#ifdef (_AFE_TYP_100_90_H)
+#if defined(_AFE_TYP_100_90_H)
 	BR !!0x01CC08
 #endif
 }
