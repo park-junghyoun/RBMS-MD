@@ -111,22 +111,12 @@ GLOBAL U16				u16_tsmbus_flg;				// Flags for SMBus
 #define f_mtr15			DEF16_BIT11(&u16_tsmbus_flg)	// ChargingVoltage send flag
 
 // - IIC Register setting -
-#define IICWL0_400KHz			0x0A					// IICWL0 setting for 400KHz
-#define IICWH0_400KHz		0x07						// IICWH0 setting for 400KHz
-#define IICCTL01_400KHz		0x0C					// IICCTL01 setting for 400KHz
-#define IICWL0_100KHz			0x26						// IICWL0 setting for 100KHz
-#define IICWH0_100KHz		0x28						// IICWH0 setting for 100KHz
-#define IICCTL01_100KHz		0x00						// IICCTL01 setting for 100KHz
-
-// - BatteryStatus() Error Code -
-#define ERR_OK			0						// OK
-#define ERR_BUSY			1						// Busy
-#define ERR_RESV			2						// Reserved Command
-#define ERR_UNSPT		3						// Unsupported Command
-#define ERR_ACSSD		4						// Access Denied
-#define ERR_OVFLW		5						// Overflow/Underflow
-#define ERR_BADSIZE		6						// Bad Size
-#define ERR_UNKNOW		7						// Unknoun Error
+#define U8_IICWL0_400KHz			0x0A					// IICWL0 setting for 400KHz
+#define U8_IICWH0_400KHz			0x07						// IICWH0 setting for 400KHz
+#define U8_IICCTL01_400KHz		0x0C					// IICCTL01 setting for 400KHz
+#define U8_IICWL0_100KHz			0x26						// IICWL0 setting for 100KHz
+#define U8_IICWH0_100KHz			0x28						// IICWH0 setting for 100KHz
+#define U8_IICCTL01_100KHz		0x00						// IICCTL01 setting for 100KHz
 
 typedef enum{
 	E_SMBUS_ERR_OK = 0,							/* OK */

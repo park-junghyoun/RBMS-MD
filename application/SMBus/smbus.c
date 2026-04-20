@@ -64,30 +64,30 @@
 
 
 // - Internal function declaration -
-void SlaveAddress_check(void);					// Slave address check
-void Command_check(void);						// Command check
-void ReadWrite_check(void);						// Read/Write check
-void ReStart_check(void);						// ReStart condition check
-void BlockWrite_size_check(void);				// BlockWrite data size check
-void Read_data_send(void);						// Read data sending
-void Write_data_receive(void);					// Write data receiving
-void SMBus_error(void);							// SMBus error
-void SMBus_error_nak(void);						// SMBus error with NAK
-void Send_ACK(void);							// Send ACK
+void smb_SlaveAddr_chk(void);					// Slave address check
+void smb_cmd_chk(void);						// Command check
+void smb_RW_chk(void);						// Read/Write check
+void smb_ReStart_chk(void);						// ReStart condition check
+void smb_BlockWrite_size_chk(void);				// BlockWrite data size check
+void smb_ReadData_send(void);						// Read data sending
+void smb_WriteData_receive(void);					// Write data receiving
+void smb_bus_error(void);							// SMBus error
+void smb_bus_error_nak(void);						// SMBus error with NAK
+void smb_send_ack(void);							// Send ACK
 
 U8	au8_m_smbus_buff[5];								// Master send buffer
 
 // - Internal variable -
 static const __near DWORD SMBusFunction_table[] = {
 												// SMBus function table
-	(DWORD)SlaveAddress_check,					// Slave address check
-	(DWORD)Command_check,						// Command check
-	(DWORD)ReadWrite_check,						// Read/Write check
-	(DWORD)ReStart_check,						// Restart condition check
-	(DWORD)Read_data_send,						// Read data sending
-	(DWORD)Write_data_receive,					// Write data receiving
-	(DWORD)BlockWrite_size_check,				// BlockWrite data size check
-	(DWORD)SMBus_error							// SMBus error function
+	(DWORD)smb_SlaveAddr_chk,					// Slave address check
+	(DWORD)smb_cmd_chk,						// Command check
+	(DWORD)smb_RW_chk,						// Read/Write check
+	(DWORD)smb_ReStart_chk,						// Restart condition check
+	(DWORD)smb_ReadData_send,						// Read data sending
+	(DWORD)smb_WriteData_receive,					// Write data receiving
+	(DWORD)smb_BlockWrite_size_chk,				// BlockWrite data size check
+	(DWORD)smb_bus_error							// SMBus error function
 };
 
 #define		CRC8TBL				((U8 (*)(U8))(0x0FBA0))
@@ -164,9 +164,9 @@ void SMBus_initialize(void)
 	IICAPR00 = 1;							// IICA0 interrupt priority
 	IICAPR10 = 0;							//   Level 1
 
-	IICWL0 = IICWL0_100KHz;					// IICA Low Level width setting
-	IICWH0 = IICWH0_100KHz;					// IICA High Level width setting
-	IICCTL01 = IICCTL01_100KHz;				// IICA control register 01
+	IICWL0 = U8_IICWL0_100KHz;					// IICA Low Level width setting
+	IICWH0 = U8_IICWH0_100KHz;					// IICA High Level width setting
+	IICCTL01 = U8_IICCTL01_100KHz;				// IICA control register 01
 	
 
 	if( st_fixed_data.st_smbus.u8_slave_addr!= 0xFF					// the value is not 0xFF/0x00 ?
@@ -286,7 +286,7 @@ void SMB_INT_SMBus(void)
 											// Store received data
 					SMB_StoreReceiveData();
 				}
-				e_smbus_err_code = ERR_OK;			// Error code = OK
+				e_smbus_err_code = E_SMBUS_ERR_OK;			// Error code = OK
 				SMB_custom_StopCondition();	// Custom function when Stop cond.
 			}
 
@@ -299,7 +299,7 @@ void SMB_INT_SMBus(void)
 				&& CLD0 == LOW )			// & CLK = LOW ?
 			{								// (next communication received)
 				IICAIF0 = 0;				// Clear IIC interrupt request
-				SlaveAddress_check();		// Slave address check
+				smb_SlaveAddr_chk();		// Slave address check
 			} else {						// No next communication
 				// Note: f_tm01_using should be set if other function use TM01.
 				if( f_tm01_using == OFF )	// Not using TM01 ?
@@ -321,7 +321,7 @@ void SMB_INT_SMBus(void)
 				&& CLD0 == LOW )			// & CLK = LOW ?
 			{								// (next communication received)
 				IICAIF0 = 0;				// Clear IIC interrupt request
-				SlaveAddress_check();		// Slave address check
+				smb_SlaveAddr_chk();		// Slave address check
 			} else {
 				PIF0 = 0;					// Clear SCL/SDA interrupt request
 				PMK0 = 0;					// SCL/SDA interrupt enable
@@ -371,7 +371,7 @@ void SMB_INT_SMBus(void)
 				{
 					if( COI0  == ON )		// Slave address match ?
 					{	
-						SlaveAddress_check();// Slave address check
+						smb_SlaveAddr_chk();// Slave address check
 					} else {				// Slave address mismatch
 						LREL0 = 1;			// Exit from communication
 					}
@@ -435,7 +435,7 @@ void SMBus_timeout_check(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void SlaveAddress_check(void)
+* Declaration		: void smb_SlaveAddr_chk(void)
 *-------------------------------------------------------------------
 * Function			: Function when receiving slave address after start
 *					:  condition.
@@ -455,7 +455,7 @@ void SMBus_timeout_check(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void SlaveAddress_check(void)
+void smb_SlaveAddr_chk(void)
 {
 	u8_received_addr = IICA0;						// Get received data as SlaveAdr.
 	if( COI0 == ON							// Slave address match
@@ -474,11 +474,11 @@ void SlaveAddress_check(void)
 			WTIM0 = 0;						// Set IIC interrupt by 8 clock
 			WREL0 = 1;						// Wait release
 		} else {							// R/W Bit is Read
-			e_smbus_err_code = ERR_UNSPT;			// Error code: Unsupported
-			SMBus_error_nak();				// Error with Nak
+			e_smbus_err_code = E_SMBUS_ERR_UNSPT;			// Error code: Unsupported
+			smb_bus_error_nak();				// Error with Nak
 		}
 	} else {								// Slave address mismatch
-		e_smbus_err_code = ERR_UNKNOW;				// Error code: Unknown error
+		e_smbus_err_code = E_SMBUS_ERR_UNKNOW;				// Error code: Unknown error
 		LREL0 = 1;							// Exit from communication
 	}
 
@@ -496,7 +496,7 @@ void SlaveAddress_check(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void Command_check(void)
+* Declaration		: void smb_cmd_chk(void)
 *-------------------------------------------------------------------
 * Function			: Function when receiving command.
 *-------------------------------------------------------------------
@@ -515,7 +515,7 @@ void SlaveAddress_check(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void Command_check(void)
+void smb_cmd_chk(void)
 {
 	if( EXC0 == OFF )						// Not extend code ?
 	{
@@ -524,18 +524,18 @@ void Command_check(void)
 		if( SMB_ReceiveCommand() )		// Valid command ?
 		{
 			u8_smb_num = 0;					// Clear communicated number
-			Send_ACK();						// Send ACK
+			smb_send_ack();						// Send ACK
 			if( u8_received_cmd != 0x16 )			// Command is not BatteryStatus() ?
 			{
-				e_smbus_err_code = ERR_OK;			// Error code: OK
+				e_smbus_err_code = E_SMBUS_ERR_OK;			// Error code: OK
 			}
 		} else {							// Undefine command
-			e_smbus_err_code = ERR_UNSPT;			// Error code: Unsupported
-			SMBus_error_nak();				// Error with Nak
+			e_smbus_err_code = E_SMBUS_ERR_UNSPT;			// Error code: Unsupported
+			smb_bus_error_nak();				// Error with Nak
 		}
 	} else {								// Extend code
-		e_smbus_err_code = ERR_UNKNOW;				// Error code: Unknown error
-		SMBus_error_nak();					// Error with Nak
+		e_smbus_err_code = E_SMBUS_ERR_UNKNOW;				// Error code: Unknown error
+		smb_bus_error_nak();					// Error with Nak
 	}
 }
 
@@ -545,7 +545,7 @@ void Command_check(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void ReadWrite_check(void)
+* Declaration		: void smb_RW_chk(void)
 *-------------------------------------------------------------------
 * Function			: Check the communication is Read or Write when
 *					: receiving command supporting both Read and Write.
@@ -565,7 +565,7 @@ void Command_check(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void ReadWrite_check(void)
+void smb_RW_chk(void)
 {
 	U8	aiic_dat;						// Receive data
 
@@ -589,8 +589,8 @@ void ReadWrite_check(void)
 			IICA0 = au8_smb_buff[u8_smb_num];		// Send data
 			st_smb_frame.u8_status = READ_SEND;			// Receive mode: Send Read data
 		} else {
-			e_smbus_err_code = ERR_UNKNOW;			// Error code: Unknown error
-			SMBus_error_nak();				// Error with Nak
+			e_smbus_err_code = E_SMBUS_ERR_UNKNOW;			// Error code: Unknown error
+			smb_bus_error_nak();				// Error with Nak
 		}
 	} else {								// Write
 		if( STD0 == OFF )					// No start condition ?
@@ -603,22 +603,22 @@ void ReadWrite_check(void)
 				au8_smb_buff[u8_smb_num] = aiic_dat;
 				u8_smb_num++;					// Count communicated number
 				st_smb_frame.u8_status = WRITE_RCV;		// Receive mode: Receive write data
-				Send_ACK();					// Send ACK
+				smb_send_ack();					// Send ACK
 			} else {						// BlockWrite
 				if( st_smb_frame.u8_len >= aiic_dat )	// Received length is in the range?
 				{
 					st_smb_frame.u8_len = aiic_dat;	// Set data size
 					st_smb_frame.u8_status = WRITE_RCV;	// Receive mode: Receive write data
-					Send_ACK();				// Send ACK
+					smb_send_ack();				// Send ACK
 				} else {					// Over the length
 											// Error code: Bad size
-					e_smbus_err_code = ERR_BADSIZE;
-					SMBus_error_nak();		// Error with Nak
+					e_smbus_err_code = E_SMBUS_ERR_BADSIZE;
+					smb_bus_error_nak();		// Error with Nak
 				}
 			}
 		} else {							// Detect start condition
-			e_smbus_err_code = ERR_UNKNOW;			// Error code: Unknown error
-			SMBus_error_nak();				// Error with Nak
+			e_smbus_err_code = E_SMBUS_ERR_UNKNOW;			// Error code: Unknown error
+			smb_bus_error_nak();				// Error with Nak
 		}
 	}
 }
@@ -629,7 +629,7 @@ void ReadWrite_check(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void ReStart_check(void)
+* Declaration		: void smb_ReStart_chk(void)
 *-------------------------------------------------------------------
 * Function			: Function when receiving slave address after
 *					:  Re-start condition.
@@ -649,7 +649,7 @@ void ReadWrite_check(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void ReStart_check(void)
+void smb_ReStart_chk(void)
 {
 	U8	aiic_dat;						// Receive data
 
@@ -673,8 +673,8 @@ void ReStart_check(void)
 		IICA0 = au8_smb_buff[u8_smb_num];			// Send data
 		st_smb_frame.u8_status = READ_SEND;				// Receive mode: Send read data
 	} else {
-		e_smbus_err_code = ERR_ACSSD;				// Error code: Access Denied
-		SMBus_error_nak();					// Error with Nak
+		e_smbus_err_code = E_SMBUS_ERR_ACSSD;				// Error code: Access Denied
+		smb_bus_error_nak();					// Error with Nak
 	}
 }
 
@@ -684,7 +684,7 @@ void ReStart_check(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void BlockWrite_size_check(void)
+* Declaration		: void smb_BlockWrite_size_chk(void)
 *-------------------------------------------------------------------
 * Function			: Function when receiving data size of BlockWrite.
 *					: 
@@ -705,7 +705,7 @@ void ReStart_check(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void BlockWrite_size_check(void)
+void smb_BlockWrite_size_chk(void)
 {
 	U8	aiic_dat;						// Receive data
 
@@ -718,14 +718,14 @@ void BlockWrite_size_check(void)
 			CRC8_Calc(aiic_dat);			// Calculate PEC
 			st_smb_frame.u8_len = aiic_dat;			// Set data size
 			st_smb_frame.u8_status = WRITE_RCV;			// Receive mode: Receive write data
-			Send_ACK();						// Send ACK
+			smb_send_ack();						// Send ACK
 		} else {							// data length mismatch
-			e_smbus_err_code = ERR_BADSIZE;			// Error code: Bad Size
-			SMBus_error_nak();				// Error with Nak
+			e_smbus_err_code = E_SMBUS_ERR_BADSIZE;			// Error code: Bad Size
+			smb_bus_error_nak();				// Error with Nak
 		}
 	} else {
-		e_smbus_err_code = ERR_UNSPT;				// Error code: Unsupported
-		SMBus_error_nak();					// Error with Nak
+		e_smbus_err_code = E_SMBUS_ERR_UNSPT;				// Error code: Unsupported
+		smb_bus_error_nak();					// Error with Nak
 	}
 }
 
@@ -735,7 +735,7 @@ void BlockWrite_size_check(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void Read_data_send(void)
+* Declaration		: void smb_ReadData_send(void)
 *-------------------------------------------------------------------
 * Function			: Send ReadWord and BlockRead data.
 *					: 
@@ -755,7 +755,7 @@ void BlockWrite_size_check(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void Read_data_send(void)
+void smb_ReadData_send(void)
 {
 	if( EXC0 == OFF )						// Not extend code ?
 	{
@@ -780,8 +780,8 @@ void Read_data_send(void)
 											// Output data
 					IICA0 = au8_smb_buff[u8_smb_num];
 				} else {					// NAK
-					e_smbus_err_code = ERR_UNKNOW;	// Error code: Unknown error
-					SMBus_error();			// SMBus error
+					e_smbus_err_code = E_SMBUS_ERR_UNKNOW;	// Error code: Unknown error
+					smb_bus_error();			// SMBus error
 				}
 			}
 		} else {							// Already completed to send
@@ -791,13 +791,13 @@ void Read_data_send(void)
 				ACKE0 = 0;					// ACK disable
 				WREL0 = 1;					// Wait release
 			} else {
-				e_smbus_err_code = ERR_UNKNOW;		// Error code: Unknown error
-				SMBus_error();				// SMBus error
+				e_smbus_err_code = E_SMBUS_ERR_UNKNOW;		// Error code: Unknown error
+				smb_bus_error();				// SMBus error
 			}
 		}
 	} else {
-		e_smbus_err_code = ERR_UNKNOW;				// Error code: Unknown error
-		SMBus_error();						// SMBus error
+		e_smbus_err_code = E_SMBUS_ERR_UNKNOW;				// Error code: Unknown error
+		smb_bus_error();						// SMBus error
 	}
 }
 
@@ -807,7 +807,7 @@ void Read_data_send(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void Write_data_receive(void)
+* Declaration		: void smb_WriteData_receive(void)
 *-------------------------------------------------------------------
 * Function			: Receive WriteWord and BlockWrite data.
 *					: 
@@ -827,7 +827,7 @@ void Read_data_send(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void Write_data_receive(void)
+void smb_WriteData_receive(void)
 {
 	if( EXC0 == OFF )						// Not extend code ?
 	{
@@ -840,7 +840,7 @@ void Write_data_receive(void)
 			{
 				f_recv = ON;				// Set received flag
 			}
-			Send_ACK();						// Send ACK
+			smb_send_ack();						// Send ACK
 		} else {							// Already completed to receive
 			if( f_wwpec == OFF )			// PEC is not send yet ?
 			{
@@ -855,13 +855,13 @@ void Write_data_receive(void)
 				}
 				f_wwpec = ON;				// Set PEC send flag
 			} else {						// Already PEC is sent
-				SMBus_error_nak();			// Error with Nak
+				smb_bus_error_nak();			// Error with Nak
 			}
 		}
 	} else {
 		f_recv = OFF;						// Clear received flag
-		e_smbus_err_code = ERR_UNKNOW;				// Error code: Unknown error
-		SMBus_error();						// SMBus error
+		e_smbus_err_code = E_SMBUS_ERR_UNKNOW;				// Error code: Unknown error
+		smb_bus_error();						// SMBus error
 	}
 }
 
@@ -871,7 +871,7 @@ void Write_data_receive(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void SMBus_error(void)
+* Declaration		: void smb_bus_error(void)
 *-------------------------------------------------------------------
 * Function			: Function when SMBus error is occured.
 *					: 
@@ -891,7 +891,7 @@ void Write_data_receive(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void SMBus_error(void)
+void smb_bus_error(void)
 {
 	st_smb_frame.u8_status = SMBUS_ERR;					// Receive mode: SMBus error
 	f_comerr = ON;							// Set communication error flag
@@ -904,7 +904,7 @@ void SMBus_error(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void SMBus_error_nak(void)
+* Declaration		: void smb_bus_error_nak(void)
 *-------------------------------------------------------------------
 * Function			: Function when SMBus error is occured.
 *					: And it sends NAK.
@@ -924,7 +924,7 @@ void SMBus_error(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void SMBus_error_nak(void)
+void smb_bus_error_nak(void)
 {
 	ACKE0 = 0;								// ACK disable
 	WREL0 = 1;								// Wait release
@@ -938,7 +938,7 @@ void SMBus_error_nak(void)
 *-------------------------------------------------------------------
 * Include			: 
 *-------------------------------------------------------------------
-* Declaration		: void Send_ACK(void)
+* Declaration		: void smb_send_ack(void)
 *-------------------------------------------------------------------
 * Function			: Send ACK.
 *					: 
@@ -958,7 +958,7 @@ void SMBus_error_nak(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void Send_ACK(void)
+void smb_send_ack(void)
 {
 	ACKE0 = 1;								// ACK enable
 	WREL0 = 1;								// Wait release
