@@ -55,6 +55,10 @@
 #include "r_bms_api.h"
 #include "dataflash_flexible.h"
 
+/* External AFE helper prototypes (implemented in AFE driver library) */
+extern void MCU_PSW_PUSH(void);
+extern void MCU_PSW_POP(void);
+
 // - Define definition -
 #define PFDL_FREQUENCY			8				// PFDL CPU frequency (8MHz)
 #define PFDL_FLASH_VOLTAGE		1				// PFDL voltage mode setting

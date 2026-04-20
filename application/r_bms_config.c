@@ -24,22 +24,22 @@ U8 app_CFG_Set_Mode_profile(void)
 {
 	E_BMS_RESULT_ITEM e_ret;
 	
-	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_NORMAL, &st_fixed_data.st_bms_normal_config);
+	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_NORMAL, (const st_operating_profile_t *)&st_fixed_data.st_bms_normal_config);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SLEEP, &st_fixed_data.st_bms_sleep_config);
+	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SLEEP, (const st_operating_profile_t *)&st_fixed_data.st_bms_sleep_config);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SLEEP2, &st_fixed_data.st_bms_sleep2_config);
+	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SLEEP2, (const st_operating_profile_t *)&st_fixed_data.st_bms_sleep2_config);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SHIP, &st_fixed_data.st_bms_ship_config);
+	e_ret = BMS_Mode_SetProfile(E_BMS_MODE_SHIP, (const st_operating_profile_t *)&st_fixed_data.st_bms_ship_config);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
@@ -107,31 +107,31 @@ U8 app_CFG_Set_Thermistor_tables(void)
 {
 	E_BMS_RESULT_ITEM e_ret;
 	
-	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN0, &st_fixed_data.st_thermister1_table);
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN0, st_fixed_data.st_thermister1_table.au32_ther_table);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	
-	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN1, &st_fixed_data.st_thermister2_table);
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN1, st_fixed_data.st_thermister2_table.au32_ther_table);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	
-	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN2, &st_fixed_data.st_thermister3_table);
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN2, st_fixed_data.st_thermister3_table.au32_ther_table);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	
-	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN3, &st_fixed_data.st_thermister4_table);
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN3, st_fixed_data.st_thermister4_table.au32_ther_table);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
 	
-	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN4, &st_fixed_data.st_thermister5_table);
+	e_ret = BMS_Calib_SetThermistorTable(E_BMS_THERMISTOR_AN4, st_fixed_data.st_thermister5_table.au32_ther_table);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
