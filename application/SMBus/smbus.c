@@ -333,8 +333,8 @@ void SMB_INT_SMBus(void)
 *""FUNC COMMENT END""**********************************************/
 void SMBus_timeout_check(void)
 {
-	if( u8_smbus_s_timeout_cnt < 25					// No Slave timeout(25ms)
-		&& u8_smbus_scl_timeout_cnt < 25 )			// & No SCL timeout(25ms) detect ?
+	if( u8_smbus_s_timeout_cnt < U8_SMBUS_TIMEOUT					// No Slave timeout(25ms)
+		&& u8_smbus_scl_timeout_cnt < U8_SMBUS_TIMEOUT )			// & No SCL timeout(25ms) detect ?
 	{
 		return;
 	}

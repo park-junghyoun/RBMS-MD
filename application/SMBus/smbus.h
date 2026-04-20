@@ -111,6 +111,8 @@ GLOBAL U16				u16_tsmbus_flg;				// Flags for SMBus
 #define U8_IICWH0_100KHz			0x28						// IICWH0 setting for 100KHz
 #define U8_IICCTL01_100KHz		0x00						// IICCTL01 setting for 100KHz
 
+#define U8_SMBUS_TIMEOUT			25
+
 typedef enum{
 	E_SMBUS_ERR_OK = 0,							/* OK */
 	E_SMBUS_ERR_BUSY,							/* Busy */

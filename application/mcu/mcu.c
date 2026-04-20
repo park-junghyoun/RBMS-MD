@@ -49,7 +49,7 @@
 
 // - Include header file -
 #include "define.h"									// Common definition
-#pragma interrupt _int_TM01_SMBus1ms(vect=INTTM01)	// Timer for SMBus
+#pragma interrupt MCU_INT_TM01_SMBus1ms(vect=INTTM01)	// Timer for SMBus
 
 #include "iodefine.h"
 #include "mcu.h"
@@ -135,15 +135,21 @@ void mcu_TM01_1ms_Init(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void _int_TM01_SMBus1ms(void)
+void MCU_INT_TM01_SMBus1ms(void)
 {
 	if( f_slvto_req == ON )						// Checking Slave timeout ?
 	{
-		u8_smbus_s_timeout_cnt++;							// Count the time
+		if(u8_smbus_s_timeout_cnt < U8_SMBUS_TIMEOUT)
+		{
+			u8_smbus_s_timeout_cnt++;							// Count the time
+		}
 	}
 	if( f_sclto_req == ON )						// Checking SCL timeout ?
 	{
-		u8_smbus_scl_timeout_cnt++;							// Count the time
+		if(u8_smbus_scl_timeout_cnt < U8_SMBUS_TIMEOUT)
+		{
+			u8_smbus_scl_timeout_cnt++;							// Count the time
+		}
 	}
 }
 /*******************************************************************************
