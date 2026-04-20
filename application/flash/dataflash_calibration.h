@@ -34,6 +34,8 @@
 #define		GLOBAL	extern
 #endif	// _DATAFLASH_CALIBRATION
 
+#include "r_bms_api.h"
+#include "r_bms_limit.h"
 #include "define.h"
 
 // - Own data -

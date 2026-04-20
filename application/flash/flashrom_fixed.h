@@ -55,6 +55,9 @@
 #define		GLOBAL	extern
 #endif	// _FLASHROM
 
+#include "r_bms_api.h"
+#include "r_bms_limit.h"
+#include "define.h"
 
 // - Function declaration -
 void MoveToFlashUpdate(void);		// Move to Flash update mode

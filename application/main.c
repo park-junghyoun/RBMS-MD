@@ -37,7 +37,7 @@
 *""FILE COMMENT END""*****************************************************/
 #include "mcu.h"
 #include "smbus.h"
-
+#include "r_bms_api.h"
 /*
  * Example application integrating the BMS library on target hardware.
  *

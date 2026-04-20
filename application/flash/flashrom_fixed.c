@@ -50,12 +50,8 @@
 // - Include header file -
 #include <stddef.h>
 #include "define.h"								// Common definition
-#include "flashrom.h"
-#include "ram.h"
-#include "dataflash_custom.h"
-#include "afe.h"
+#include "flashrom_fixed.h"
 #include "uif_fsl.h"
-#include "inline_asm.h"
 
 typedef struct
 {

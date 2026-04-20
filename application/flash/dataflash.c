@@ -52,8 +52,6 @@
 #include "define.h"								// Common definition
 #include "uif_pfdl.h"
 #include "dataflash.h"
-#include "dataflash_custom.h"
-
 
 // - Define definition -
 #define PFDL_FREQUENCY			8				// PFDL CPU frequency (8MHz)
