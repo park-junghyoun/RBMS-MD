@@ -40,10 +40,10 @@
 #include "afe_config.h"
 #include "afe_types.h"
 #include "r_bms_types.h"
-#include "r_bms_calibration.h"
-#include "r_bms_protection.h"
-#include "r_bms_config.h"
-#include "r_bms_callbacks.h"
+#include "r_bms_calibration_types.h"
+#include "r_bms_protection_types.h"
+#include "r_bms_config_types.h"
+#include "r_bms_callbacks_types.h"
 #include "r_bms_version.h"
 
 /*

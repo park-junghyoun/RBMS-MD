@@ -47,7 +47,7 @@
 
 #include "afe_types.h"
 #include "r_bms_types.h"
-#include "r_bms_protection.h"
+#include "r_bms_protection_types.h"
 /* -------- System config -------- */
 typedef struct {
 	U8  u8_cell_series_count;	/* Number of series cells used by measurement/diagnostics (<= MAX_CELLS) */

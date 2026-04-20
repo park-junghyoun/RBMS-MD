@@ -44,7 +44,7 @@
  * without introducing a reverse dependency from the core into board-specific code.
  */
 #include "define.h"
-#include "r_bms_protection.h"
+#include "r_bms_protection_types.h"
 
 /* Alarm events delivered through BMS_OnAlarmEvent callback. */
 typedef enum {
