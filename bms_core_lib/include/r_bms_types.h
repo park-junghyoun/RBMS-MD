@@ -38,7 +38,6 @@
 *""FILE COMMENT END""*****************************************************/
 #pragma once
 
-#include "define.h"
 #include "afe_types.h"
 #include "r_bms_measurement.h"
 #include "r_bms_api_limits.h"

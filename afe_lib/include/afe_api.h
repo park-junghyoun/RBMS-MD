@@ -37,7 +37,6 @@
 *""FILE COMMENT END""*****************************************************/
 #pragma once
 // - Include header file -------------------------------------------------------
-#include "define.h"
 #include "afe_types.h"
 #include "afe_config.h"
 // - Global function -----------------------------------------------------------

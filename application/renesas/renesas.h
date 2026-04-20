@@ -33,7 +33,6 @@
 #ifndef	_RENESAS_H_
 #define	_RENESAS_H_
 
-#include "version.h"
 #include "renesas_def.h"
 
 

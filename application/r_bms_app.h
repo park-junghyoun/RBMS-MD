@@ -44,7 +44,6 @@
 #define		GLOBAL	extern
 #endif	// _APP
 
-#include "r_bms_api.h"
 #include "iodefine.h"
 
 #define LED7			P0.0				//LED 1 Pin
