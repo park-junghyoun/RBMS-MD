@@ -53,6 +53,7 @@
 #include "uif_pfdl.h"
 #include "dataflash.h"
 #include "r_bms_api.h"
+#include "dataflash_flexible.h"
 
 // - Define definition -
 #define PFDL_FREQUENCY			8				// PFDL CPU frequency (8MHz)

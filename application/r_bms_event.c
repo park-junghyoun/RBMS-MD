@@ -1,6 +1,10 @@
-#define _CONFIG
-#include "r_bms_api.h"
+#include "r_bms_event.h"
+#include "r_bms_app.h"
 #include "r_bms_config.h"
+#include "smbus.h"
+#include "smbus_custom.h"
+#include "flashrom_fixed.h"
+#include "dataflash_flexible.h"
 
 /*******************************************************************************
 * Function Name: app_configure_callbacks
@@ -13,7 +17,6 @@
 *******************************************************************************/
 U8 APP_Callbacks_Register(void)
 {
-	E_BMS_RESULT_ITEM e_ret = E_BMS_OK;
 	BmsCoreCallbacks st_callbacks = {0};
 	
 	st_callbacks.on_alarm = APP_Alarm_Event;
@@ -73,6 +76,7 @@ void APP_Alarm_Event(E_BMS_ALARM_ITEM e_alarm)
 *******************************************************************************/
 void APP_Protection_Active_Event(E_BMS_ACTIVE_PROTECTION_ITEM e_prot, U8 u8_entered)
 {
+	(void)u8_entered;
 	BMS_Protection_GetActiveMask(&st_flexible_data_ram.st_status.u16_safety_bit);
 	
 	switch(e_prot)
@@ -107,12 +111,13 @@ void APP_Protection_Active_Event(E_BMS_ACTIVE_PROTECTION_ITEM e_prot, U8 u8_ente
 *******************************************************************************/
 void APP_Protection_Latched_Event(E_BMS_LATCHED_PROTECTION_ITEM e_prot, U8 u8_entered)
 {
+	(void)u8_entered;
 	BMS_Protection_GetLatchedMask(&st_flexible_data_ram.st_status.u16_permanent_bit);
 	
 	switch(e_prot)
 	{
 		case E_LPROT_IR:
-			BMS_InternalStatus_Get(st_flexible_data_ram.st_status.u32_internal_bit);
+			st_flexible_data_ram.st_status.u32_internal_bit = BMS_InternalStatus_Get();
 			break;
 		case E_LPROT_COW:
 		case E_LPROT_TOW:
@@ -137,7 +142,7 @@ void app_Charger_Timer(void)
 	{
 		//if ( (F_SMBMSTR == ON) && (f_alrm1st == ON))// Master comm enabled & ALARM state ?
 		//{
-			f_mster10 = ON;						// Set BatteryStatus send to charger request
+			/* Charger request flag is not used in this project configuration. */
 		//}
 	}
 
@@ -145,7 +150,7 @@ void app_Charger_Timer(void)
 	{
 		//if( F_SMBMSTR == ON )					// Master comm enabled ?
 		//{
-			f_mster30 = ON;						// Set CC/CV send to charger request
+			/* Charger request flag is not used in this project configuration. */
 		//}
 		u16_timer_125ms = 0;							// Clear the counter
 	}

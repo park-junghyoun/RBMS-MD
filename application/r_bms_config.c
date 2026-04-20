@@ -1,10 +1,10 @@
-#define _CONFIG
-#include "r_bms_api.h"
 #include "r_bms_config.h"
+#include "r_bms_app.h"
+#include "flashrom_fixed.h"
+#include "dataflash_calibration.h"
 
 void APP_CFG_Set_Fixed_Profile(void)
 {
-	U8 u8_ret = FALSE;
 	if(app_CFG_Set_Mode_profile() == FALSE) return;
 	if(app_CFG_Set_Protection_profile() == FALSE) return;
 	if(app_CFG_Set_HW_profile() == FALSE) return;
@@ -81,12 +81,12 @@ U8 app_CFG_Set_HW_profile(void)
 {
 	E_BMS_RESULT_ITEM e_ret;
 
-	e_ret = BMS_Config_SetHw1(st_fixed_data.st_hw1_config)
+	e_ret = BMS_Config_SetHw1(st_fixed_data.st_hw1_config);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
 	}
-	e_ret = BMS_Config_SetHw2(st_fixed_data.st_hw2_config)
+	e_ret = BMS_Config_SetHw2(st_fixed_data.st_hw2_config);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Fixed(e_ret);
@@ -175,9 +175,6 @@ U8 app_CFG_Set_Bal_profile(void)
 U8 APP_CFG_Apply_Calibration_Profiles(void)
 {
 	E_BMS_RESULT_ITEM e_ret;
-	st_bms_cal_voltage_coeff_t st_cell_coeff = {0};
-	st_bms_cal_pack_coeff_t st_pack_coeff = {0};
-	st_bms_cal_current_coeff_t st_current_coeff = {0};
 	U8 u8_index = 0;
 	
 	for(u8_index = 0; u8_index<R_BMS_USER_API_CELL_COUNT; u8_index++)
