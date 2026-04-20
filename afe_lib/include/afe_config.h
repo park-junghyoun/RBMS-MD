@@ -38,7 +38,6 @@
 #pragma once
 
 // - Include header file -------------------------------------------------------
-#include "define.h"
 #include "afe_types.h"
 
 #define AFE_API_CELL_COUNT      (10u)

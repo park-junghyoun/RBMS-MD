@@ -27,7 +27,6 @@
 
 #pragma once
 
-#include "define.h"
 #include "afe_types.h"
 
 /* User-visible version file. Users should reference this version definition. */
