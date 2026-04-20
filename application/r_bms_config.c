@@ -189,14 +189,14 @@ U8 APP_CFG_Apply_Calibration_Profiles(void)
 		}
 	}
 
-	e_ret = BMS_Calib_ApplyPackCoeff(&st_cal_data_dataflash.st_coeff_pack);
+	e_ret = BMS_Calib_ApplyPackCoeff(st_cal_data_dataflash.st_coeff_pack);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Calib(e_ret);
 	}
 
 
-	e_ret = BMS_Calib_ApplyCurrentCoeff(&st_cal_data_dataflash.st_coeff_curr);
+	e_ret = BMS_Calib_ApplyCurrentCoeff(st_cal_data_dataflash.st_coeff_curr);
 	if(e_ret != E_BMS_OK)
 	{
 		return APP_ReportBMSCoreResult_Calib(e_ret);
