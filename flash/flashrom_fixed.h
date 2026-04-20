@@ -320,6 +320,7 @@ GLOBAL st_fixed_data_t	st_fixed_data;
 
 
 U8 InitFixed_Chk(void);	
+U8 FLASH_Check_FixedData(void);
 
 #undef		GLOBAL
 

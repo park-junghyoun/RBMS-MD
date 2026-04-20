@@ -266,6 +266,27 @@
       <TreeImageGuid>941832c1-fc3b-4e1b-94e8-01ea17128b42</TreeImageGuid>
       <ParentItem>22064a72-344d-4ca7-8876-2163e0b278ed</ParentItem>
     </Instance>
+    <Instance Guid="1f2f7dc1-b0f5-4b4d-9a98-6b7d9f1303a1">
+      <Name>smbus.c</Name>
+      <Type>File</Type>
+      <RelativePath>smbus\smbus.c</RelativePath>
+      <TreeImageGuid>941832c1-fc3b-4e1b-94e8-01ea17128b42</TreeImageGuid>
+      <ParentItem>22064a72-344d-4ca7-8876-2163e0b278ed</ParentItem>
+    </Instance>
+    <Instance Guid="6f0537cf-21c8-4a0a-95ce-0cc3e6e6d18c">
+      <Name>smbus_custom.c</Name>
+      <Type>File</Type>
+      <RelativePath>smbus\smbus_custom.c</RelativePath>
+      <TreeImageGuid>941832c1-fc3b-4e1b-94e8-01ea17128b42</TreeImageGuid>
+      <ParentItem>22064a72-344d-4ca7-8876-2163e0b278ed</ParentItem>
+    </Instance>
+    <Instance Guid="d1b97af6-39ef-47df-b8fe-e6be36f1f79d">
+      <Name>r_bms_ram.c</Name>
+      <Type>File</Type>
+      <RelativePath>application\r_bms_ram.c</RelativePath>
+      <TreeImageGuid>941832c1-fc3b-4e1b-94e8-01ea17128b42</TreeImageGuid>
+      <ParentItem>02a98128-933b-441b-b856-6f69e568038a</ParentItem>
+    </Instance>
   </Class>
   <Class Guid="fb98844b-2c27-4275-9804-f6e63e204da0">
     <Instance Guid="fb98844b-2c27-4275-9804-f6e63e204da0">
