@@ -51,7 +51,6 @@
 #include "define.h"									// Common definition
 #pragma interrupt MCU_INT_TM01_SMBus1ms(vect=INTTM01)	// Timer for SMBus
 
-#include "iodefine.h"
 #include "mcu.h"
 #include "smbus.h"
 #include "r_bms_api.h"
