@@ -119,7 +119,7 @@ const unsigned char CRC8TBL[] = {
 };
 
 // - Define definition -
-#define CRC8_Calc(a)	u8_pec = CRC8TBL(a^u8_pec)	// PEC calculation macro
+#define CRC8_Calc(a)	u8_pec = CRC8TBL[(a)^u8_pec]	// PEC calculation macro
 
 /*""FUNC COMMENT""***************************************************
 * ID : 1.0
@@ -1035,4 +1035,3 @@ void SMBus_state_check(void)
 		u8_smbus_sda_hold_cnt = 0;						// Clear the counter
 	}
 }
-

@@ -317,7 +317,7 @@ GLOBAL st_fixed_data_t	st_fixed_data;
 #define au8_SMB22_serial_num	st_fixed_data.st_device_info.au8_serial_number
 #define au8_SMB23_dev_name	st_fixed_data.st_device_info.au8_dev_name
 #define au8_SMB24_dev_chem	st_fixed_data.st_device_info.au8_dev_chem
-#define au16_seal_password		st_fixed_data.st_device_info.au16_seal_pawd;
+#define au16_seal_password		st_fixed_data.st_device_info.au16_seal_pawd
 
 U8 InitFixed_Chk(void);	
 U8 FLASH_Check_FixedData(void);
@@ -325,6 +325,5 @@ U8 FLASH_Check_FixedData(void);
 #undef		GLOBAL
 
 #endif	// _FLASHROM_H
-
 
 

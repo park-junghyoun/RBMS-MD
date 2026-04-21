@@ -56,6 +56,8 @@
 #include "smbus.h"
 #include "smbus_custom.h"
 #include "renesas.h"
+#include "version.h"
+#include "r_bms_calibration.h"
 
 // - Firmware version -
 #define MODEL_CODE	0x0000
@@ -147,7 +149,7 @@ const __near st_smb_frame_t st_smb_command_table[] =		// SMBus command info. tab
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB42_pack_status }	// 42 PackStatus()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 43 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 44 Reserved
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)u16_SMB45_sd_status }	// 45 Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB45_sd_status }	// 45 Reserved
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB46_cb_status }	// 46 CBStatus()
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB47_pack_volt }	// 47 PACKVoltage
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB48_soh}		// 48 StateOfHealth()
@@ -158,7 +160,7 @@ const __near st_smb_frame_t st_smb_command_table[] =		// SMBus command info. tab
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4D Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4E Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4F Reserved
-	,{ E_SMBUS_ST_RW_CHK		, 0	, (U8*)&u16_seal }				// 50 Reserved
+	,{ E_SMBUS_ST_RW_CHK		, 0	, (U8*)&u16_SMB50_seal }		// 50 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 51 Reserved
 	,{ E_SMBUS_ST_RW_CHK		, 0	, (U8*)NULL }					// 52 Escape from PF
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 53 Reserved
@@ -771,7 +773,7 @@ void Seal_Proc(void)
 {
 	static U8 f_unseal_1st;
 	
-	if (au16_seal_password[0] == 0xFF && au16_seal_password[1]== 0xFF)
+	if( au16_seal_password[0] == 0xFFFF && au16_seal_password[1] == 0xFFFF )
 	{
 		return;
 	}
