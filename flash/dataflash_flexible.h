@@ -154,7 +154,7 @@ GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 #define u32_SMB10_fcc			st_flexible_data_ram.st_capacity.u32_fcc
 #define s32_SMB14_chg_curr		st_flexible_data_ram.st_charger.s32_charging_current
 #define u16_SMB15_chg_volt		st_flexible_data_ram.st_charger.u16_charging_voltage
-#define u16_SMB16_batt_status	st_flexible_data_ram.st_status.u16_battery_status_bit
+#define u16_SMB16_batt_status	st_flexible_data_ram.st_status.u16_pack_status_bit
 #define u32_SMB17_cycle_cnt	st_flexible_data_ram.st_capacity.u32_cycle_count
 #define u16_SMB1B_mfg_date	st_flexible_data_ram.u16_manufacture_date
 #define u16_SMB38_safety_status	st_flexible_data_ram.st_status.u16_safety_bit
