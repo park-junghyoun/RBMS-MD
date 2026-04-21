@@ -721,7 +721,7 @@ void ExtraFunction(void)
 					break;
 					
 				case 0x33:						// S/W reset
-					ASM_SW_RESET();				// Make reset
+					//ASM_SW_RESET();				// Make reset
 					break;
 				
 				case 0xC0:						// Fcc relearn cancel. unit

@@ -59,6 +59,14 @@ typedef enum {
 	E_BMS_ERR_NOT_READY			/* API/data path is not ready yet */
 } E_BMS_RESULT_ITEM;
 
+typedef enum {
+	E_BMS_PD_IDLE = 0,		/* No power-down sequence is active */
+	E_BMS_PD_IN_PROGRESS,		/* PowerDown sequence is running */
+	E_BMS_PD_DONE,			/* PowerDown entry sequence completed */
+	E_BMS_PD_TIMEOUT,		/* PowerDown check-ready polling exceeded try limit */
+	E_BMS_PD_FAULT			/* PowerDown sequence failed by driver/HW error */
+} E_BMS_PD_STATUS_ITEM;
+
 /* Internal-status bitmap (runtime diagnostics folded into U16_LPROT_IR_BIT). */
 typedef enum {
 	E_BMS_ISTAT_EVENT_COALESCED = 0,	/* Multiple internal events merged into one processing slot */

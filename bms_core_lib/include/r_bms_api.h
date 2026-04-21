@@ -64,7 +64,9 @@
 E_BMS_RESULT_ITEM BMS_Core_Initialize(const st_sys_config_t* pst_sys_config);
 E_BMS_RESULT_ITEM BMS_Core_RegisterCallbacks(const BmsCoreCallbacks* p_callbacks);
 E_BMS_RESULT_ITEM BMS_Core_GetDriverInfo(st_bms_driver_info_t* pst_info);
-E_BMS_RESULT_ITEM BMS_Core_PowerDown(void);
+E_BMS_RESULT_ITEM BMS_PowerDown_Req(void);
+E_BMS_PD_STATUS_ITEM BMS_PowerDown_GetStatus(void);
+E_BMS_RESULT_ITEM BMS_PowerDown_Cancel(void);
 
 E_BMS_RESULT_ITEM BMS_Mode_SetProfile(E_BMS_MODE_ITEM e_state, const st_operating_profile_t* pst_profile);
 E_BMS_RESULT_ITEM BMS_Mode_GetProfile(E_BMS_MODE_ITEM e_state, st_operating_profile_t* pst_profile);
