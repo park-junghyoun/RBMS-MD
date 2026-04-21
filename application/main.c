@@ -41,7 +41,7 @@
 #include "r_bms_app.h"
 #include "r_bms_event.h"
 #include "r_bms_config.h"
-#include "r_bms_ram.h"
+#include "dataflash_flexible.h"
 /*
  * Example application integrating the BMS library on target hardware.
  *
@@ -73,12 +73,12 @@ void main(void)
 	APP_Check_FlashData();
 	(void)APP_Callbacks_Register();
 	
-	if(f_init_fixed_none != TRUE)
+	if(f_fixed_emp != TRUE)
 	{
 		APP_CFG_Set_Fixed_Profile();
 	}
 	
-	if(f_init_cal_none != TRUE)
+	if(f_cal_emp != TRUE)
 	{
 		APP_CFG_Apply_Calibration_Profiles();
 	}

@@ -61,7 +61,7 @@ void APP_Check_FlashData(void)
 	u8_ret = FLASH_Check_FixedData();
 	if(u8_ret == FALSE)
 	{
-		f_init_fixed_none = TRUE;
+		f_fixed_emp = TRUE;
 		while(1)
 		{
 			SMBus_timeout_check();							// SMBus timeout check
@@ -70,7 +70,7 @@ void APP_Check_FlashData(void)
 	u8_ret = FLASH_Check_CalibrationData();
 	if(u8_ret == FALSE)
 	{
-		f_init_cal_none = TRUE;
+		f_cal_emp = TRUE;
 	}
 
 }

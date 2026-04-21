@@ -78,7 +78,6 @@ PWR DEVICE PROFILE (Public API Profile)
 ***********************************************************************/
 E_AFE_RESULT AFE_PWR_Control( E_AFE_MODE_ITEM e_pwr_con );
 E_AFE_MODE_ITEM AFE_PWR_Get_Mode(void);
-E_AFE_RESULT AFE_PWR_PowerDown( void );
 E_AFE_RESULT AFE_PWR_Reset(void);
 
 E_AFE_RESULT AFE_PowerDown_Prepare(void);
