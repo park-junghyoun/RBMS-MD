@@ -221,11 +221,11 @@ void APP_Get_FETstatus(void)
 }
 void APP_Sleep_Check(void)
 {
-	if((st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA <= (S32)st_fixed_data.st_system_info.u16_sleep_current) &&
-		(st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA >= -(S32)st_fixed_data.st_system_info.u16_sleep_current) &&
+	if((s32_SMB0B_orig_curr <= (S32)u16_sleep_current) &&
+		(s32_SMB0B_orig_curr >= -(S32)u16_sleep_current) &&
 		(f_nosmb == ON) &&
-		(st_flexible_data_ram.st_status.u16_safety_bit == 0) &&
-		(st_flexible_data_ram.st_status.u16_permanent_bit == 0))
+		(u16_SMB38_safety_status == 0) &&
+		(u16_SMB39_pf_status == 0))
 	{
 		BMS_Mode_Set(E_BMS_MODE_SLEEP);
 

@@ -112,6 +112,7 @@ typedef struct {
  * Pack current is published separately because it becomes valid on E_ALARM_CC_COMP.
  */
 typedef struct {
+	S32 s32_original_current_mA;
 	S32 s32_pack_current_mA;
 } st_bms_cc_snapshot_t;
 

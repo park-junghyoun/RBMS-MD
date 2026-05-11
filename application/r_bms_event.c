@@ -190,8 +190,8 @@ void app_SMBus_Timer(void)
 	}
 	u16_timer_125ms++;						// Increment the counter
 
-	if((st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA <= (S32)st_fixed_data.st_system_info.u16_sleep_current) &&
-		(st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA >= -(S32)st_fixed_data.st_system_info.u16_sleep_current) &&
+	if((st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA <= (S32)st_fixed_data.st_system_info.u16_sleep_current_mA) &&
+		(st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA >= -(S32)st_fixed_data.st_system_info.u16_sleep_current_mA) &&
 		(f_nosmb == ON) &&
 		(st_flexible_data_ram.st_status.u16_safety_bit != 0) &&
 		(st_flexible_data_ram.st_status.u16_permanent_bit != 0))

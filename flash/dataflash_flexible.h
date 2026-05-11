@@ -64,14 +64,14 @@ enum {
 
 typedef struct
 {
-	U16 u16_gaging_bit;
-	U32 u32_fcc;
-	U32 u32_rc;
-	U16 u16_rsoc;
-	U16 u16_soh;
-	U32 u32_cycle_count;
-	U32 u32_total_quse;
-	U32 u32_total_qchg;
+	U16 u16_gaging_bit;			// [2byte]
+	U32 u32_fcc;					// [4byte]
+	U32 u32_rc;					// [4byte]
+	U16 u16_rsoc;					// [2byte]
+	U16 u16_soh;					// [2byte]
+	U32 u32_cycle_count;			// [4byte]
+	U32 u32_total_quse;			// [4byte]
+	U32 u32_total_qchg;			// [4byte]
 } st_lut_data_t;
 
 typedef struct
@@ -82,7 +82,7 @@ typedef struct
 
 typedef struct {
 	st_bms_ad_snapshot_t ad;		// [32byte] ad data
-	st_bms_cc_snapshot_t cc;		// [4byte] cc data
+	st_bms_cc_snapshot_t cc;		// [8byte] cc data
 } st_measurement_t;
 typedef struct {
 	U16 u16_exp_min_cell_mV;
@@ -101,14 +101,14 @@ typedef struct
 
 typedef struct
 {
-	U16 u16_safety_bit;
-	U16 u16_permanent_bit;
-	U16 u16_oper_status_bit;
-	U16 u16_pack_status_bit;
-	U16 u16_balancing_bit;
-	U16 u16_slef_discharge_bit;
-	U16 u16_unseal_bit;
-	U32 u32_internal_bit;	
+	U16 u16_safety_bit;			// [2byte]
+	U16 u16_permanent_bit;		// [2byte]
+	U16 u16_oper_status_bit;		// [2byte]
+	U16 u16_pack_status_bit;		// [2byte]
+	U16 u16_balancing_bit;			// [2byte]
+	U16 u16_slef_discharge_bit;		// [2byte]
+	U16 u16_unseal_bit;			// [2byte]
+	U32 u32_internal_bit;			// [4byte]
 } st_status_bit_t;
 
 typedef struct
@@ -124,15 +124,15 @@ typedef struct
 	U16						u16_manufacture_date;			// [2byte] manufacture data
 	U16						u16_bms_core_mode;			// [2byte] bms core mode
 	st_charger_t				st_charger;					// [6byte] charger data
-	st_measurement_t			st_measurement;				// [36byte] measurement data
-	st_experience_minmax_t	u16_exp;						// [8byte] experience min max data
-	st_status_bit_t				st_status;						// [20byte] status data
+	st_measurement_t			st_measurement;				// [40byte] measurement data
+	st_experience_minmax_t	st_exp_minmax;				// [8byte] experience min max data
+	st_status_bit_t				st_status;						// [18byte] status data
 	st_reason_t				st_reason;					// [2byte] reason data
 	st_runtime_t				st_runtime;					// [8byte] runtime data
-	st_lut_data_t				st_lut_data;					// [20byte] capacity data
+	st_lut_data_t				st_lut_data;					// [26byte] capacity data
 } st_flexible_data_t;
 
-#define FLEX_SIZE	sizeof(st_flexible_data_t)			// Size of Flexible data (128byte)
+#define FLEX_SIZE	sizeof(st_flexible_data_t)			// Size of Flexible data (132byte)
 
 GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 
@@ -155,17 +155,18 @@ GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 #define f_cp_h		DEF16_BIT1(&st_flexible_data_ram.st_status.u16_gaging_bit)			// CPH	1=detect, 0=not detect
 #define f_cp_l			DEF16_BIT2(&st_flexible_data_ram.st_status.u16_gaging_bit)			// CPL	1=detect, 0=not detect
 
-#define au8_SMB24_serial_num	st_flexible_data_ram.au8_serial_number[0]
+#define au8_SMB25_serial_num	st_flexible_data_ram.au8_serial_number[0]
 #define s16_SMB08_temp		st_flexible_data_ram.st_measurement.ad.as16_cell_temperature_0p1dC[0]
+#define s32_SMB0B_orig_curr	st_flexible_data_ram.st_measurement.cc.s32_original_current_mA
 #define s32_SMB0A_curr		st_flexible_data_ram.st_measurement.cc.s32_pack_current_mA
-#define u16_SMB0D_rsoc		st_flexible_data_ram.st_capacity.u16_rsoc
-#define u32_SMB0F_rc			st_flexible_data_ram.st_capacity.u32_rc
-#define u32_SMB10_fcc			st_flexible_data_ram.st_capacity.u32_fcc
+#define u16_SMB0D_rsoc		st_flexible_data_ram.st_lut_data.u16_rsoc
+#define u32_SMB0F_rc			st_flexible_data_ram.st_lut_data.u32_rc
+#define u32_SMB10_fcc			st_flexible_data_ram.st_lut_data.u32_fcc
 #define s32_SMB14_chg_curr		st_flexible_data_ram.st_charger.s32_charging_current
 #define u16_SMB15_chg_volt		st_flexible_data_ram.st_charger.u16_charging_voltage
-#define u16_SMB16_batt_status	st_flexible_data_ram.st_status.u16_pack_status_bit
-#define u32_SMB17_cycle_cnt	st_flexible_data_ram.st_capacity.u32_cycle_count
-#define u16_SMB1B_mfg_date	st_flexible_data_ram.u16_manufacture_date
+#define u16_SMB16_pack_status	st_flexible_data_ram.st_status.u16_pack_status_bit
+#define u32_SMB17_cycle_cnt	st_flexible_data_ram.st_lut_data.u32_cycle_count
+#define u16_SMB24_mfg_date	st_flexible_data_ram.u16_manufacture_date
 #define u16_SMB38_safety_status	st_flexible_data_ram.st_status.u16_safety_bit
 #define u16_SMB39_pf_status	st_flexible_data_ram.st_status.u16_permanent_bit
 #define U16_SMB41_mode		st_flexible_data_ram.u16_bms_core_mode
@@ -175,7 +176,7 @@ GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 #define u16_SMB46_cb_status	st_flexible_data_ram.st_status.u16_balancing_bit
 #define u32_SMB48_internal_status	st_flexible_data_ram.st_status.u32_internal_bit
 #define u16_SMB49_pack_volt	st_flexible_data_ram.st_measurement.ad.u16_pack_voltage_mV
-#define u16_SMB4A_soh			st_flexible_data_ram.st_capacity.u16_soh
+#define u16_SMB4A_soh			st_flexible_data_ram.st_lut_data.u16_soh
 #define u16_SMB50_seal		st_flexible_data_ram.st_status.u16_unseal_bit
 #define u16_SMB60_volt		st_flexible_data_ram.st_measurement.ad.au16_cell_voltage_mV
 #define u16_SMB6A_temp		st_flexible_data_ram.st_measurement.ad.as16_cell_temperature_0p1dC

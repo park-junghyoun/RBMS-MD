@@ -91,19 +91,19 @@ const __near st_smb_frame_t st_smb_command_table[] =		// SMBus command info. tab
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&s16_SMB08_temp}		// 08 Temperature1
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB09_total_v }	// 09 Voltage()
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&s32_SMB0A_curr }		// 0A Current()
-	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 0B Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&s32_SMB0B_orig_curr }	// 0B  Original Current()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 0C Reserved
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB0D_rsoc }		// 0D RelativeStateOfCharge()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 0E Reserved
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u32_SMB0F_rc }		// 0F RemainingCapacity()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u32_SMB10_fcc }		// 10 FullChargeCapacity()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&u32_SMB0F_rc }		// 0F RemainingCapacity()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&u32_SMB10_fcc }		// 10 FullChargeCapacity()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 11 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 12 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 13 Reserved
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&s32_SMB14_chg_curr }	// 14 ChargingCurrent()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&s32_SMB14_chg_curr }	// 14 ChargingCurrent()
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB15_chg_volt }	// 15 ChargingVoltage()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB16_batt_status }	// 16 BatteryStatus()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u32_SMB17_cycle_cnt }	// 17 CycleCount()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB16_pack_status }// 16 PackStatus()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&u32_SMB17_cycle_cnt }	// 17 CycleCount()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 18 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 19 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 1A Reserved
@@ -115,9 +115,9 @@ const __near st_smb_frame_t st_smb_command_table[] =		// SMBus command info. tab
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB20_mfg_name }	// 20 ManufacturerName()
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB21_dev_name }	// 21 DeviceName()
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&au8_SMB22_dev_chem }	// 22 device Chemistry()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB23_mfg_data }	// 23 ManufactureDate()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB24_serial_num }	// 24 Serial Number()
-	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 25 Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB23_mfg_data }	// 23 ManufactureData()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB24_mfg_date }	// 24 ManufactureDate()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB25_serial_num }	// 25 Serial Number()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 26 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 27 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 28 Reserved
@@ -465,10 +465,10 @@ void SMB_StoreReceiveData(void)
 			//Calibration_request();				// Calibration request
 			break;
 			
-		case 0x1B:								// ManufatureDate Write
+		case 0x24:								// ManufatureDate Write
 			if( u16_SMB50_seal == STS_UNSEAL )				// Only works when unseal
 			{
-				u16_SMB1B_mfg_date = au16_smb_buff[0];
+				u16_SMB24_mfg_date = au16_smb_buff[0];
 				Request_FlexibleData_update();
 				//aflex_reason = FLEXUP_SMB;		// Set Reason of Flex update
 			}

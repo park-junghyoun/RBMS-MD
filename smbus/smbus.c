@@ -163,10 +163,10 @@ void SMBus_initialize(void)
 	IICCTL01 = U8_IICCTL01_100KHz;				// IICA control register 01
 	
 
-	if( st_fixed_data.st_smbus.u8_slave_addr!= 0xFF					// the value is not 0xFF/0x00 ?
-		&& st_fixed_data.st_smbus.u8_slave_addr != 0x00 )
+	if( u8_slave_addr != 0xFF					// the value is not 0xFF/0x00 ?
+		&& u8_slave_addr != 0x00 )
 	{
-		SVA0 = st_fixed_data.st_smbus.u8_slave_addr;					// SMBus Slave address = Specified
+		SVA0 = u8_slave_addr;					// SMBus Slave address = Specified
 	} else {								// Set default Slave address
 		SVA0 = 0x16;						// SMBus Slave address = 0x16
 	}
