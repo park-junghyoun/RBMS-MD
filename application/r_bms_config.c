@@ -187,27 +187,44 @@ U8 app_CFG_Set_Bal_profile(void)
 U8 APP_CFG_Apply_Calibration_Profiles(void)
 {
 	E_BMS_RESULT_ITEM e_ret;
+	st_bms_cal_voltage_coeff_t st_cell_coeff;
+	st_bms_cal_pack_coeff_t st_pack_coeff;
+	st_bms_cal_current_coeff_t st_curr_coeff;
 	U8 u8_index = 0;
 	
 	for(u8_index = 0; u8_index<R_BMS_USER_API_CELL_COUNT; u8_index++)
 	{
-		e_ret = BMS_Calib_ApplyCellCoeff((E_BMS_CELL_ITEM)u8_index, &st_cal_data_dataflash.ast_coeff_cell[u8_index]);
+		e_ret = BMS_Calib_ComputeCellCoeff((E_BMS_CELL_ITEM)u8_index,&st_cal_data_dataflash.ast_points_cell[u8_index],&st_cell_coeff);
 		if(APP_ReportBMSCoreResult_Calib(e_ret) == FALSE)
 		{
 			return FALSE;
 		}
 
+		e_ret = BMS_Calib_ApplyCellCoeff((E_BMS_CELL_ITEM)u8_index, &st_cell_coeff);
+		if(APP_ReportBMSCoreResult_Calib(e_ret) == FALSE)
+		{
+			return FALSE;
+		}
 	}
-
-	e_ret = BMS_Calib_ApplyPackCoeff(&st_cal_data_dataflash.st_coeff_pack);
+	e_ret = BMS_Calib_ComputePackCoeff(&st_cal_data_dataflash.st_points_pack,&st_pack_coeff);
 	if(APP_ReportBMSCoreResult_Calib(e_ret) == FALSE)
 	{
 		return FALSE;
 	}
 
+	e_ret = BMS_Calib_ApplyPackCoeff(&st_pack_coeff);
+	if(APP_ReportBMSCoreResult_Calib(e_ret) == FALSE)
+	{
+		return FALSE;
+	}
 
+	e_ret = BMS_Calib_ComputeCurrentCoeff(&st_cal_data_dataflash.st_points_curr, &st_curr_coeff);
+	if(APP_ReportBMSCoreResult_Calib(e_ret) == FALSE)
+	{
+		return FALSE;
+	}
 
-	e_ret = BMS_Calib_ApplyCurrentCoeff(&st_cal_data_dataflash.st_coeff_curr);
+	e_ret = BMS_Calib_ApplyCurrentCoeff(&st_curr_coeff);
 	if(APP_ReportBMSCoreResult_Calib(e_ret) == FALSE)
 	{
 		return FALSE;

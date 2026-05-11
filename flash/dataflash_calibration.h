@@ -41,9 +41,9 @@
 // - Own data -
 typedef struct
 {
-	st_bms_cal_voltage_coeff_t	ast_coeff_cell[R_BMS_USER_API_CELL_COUNT];			// [90byte]
-	st_bms_cal_pack_coeff_t	st_coeff_pack;										// [9byte]
-	st_bms_cal_current_coeff_t	st_coeff_curr;										// [9byte]
+	st_bms_cal_voltage_points_t	ast_points_cell[R_BMS_USER_API_CELL_COUNT];			// [90byte]
+	st_bms_cal_voltage_points_t	st_points_pack;										// [9byte]
+	st_bms_cal_current_points_t	st_points_curr;										// [9byte]
 } st_cal_data_t;
 
 #pragma address st_cal_data_dataflash = 0x0F1800
