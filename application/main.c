@@ -60,17 +60,10 @@
 *******************************************************************************/
 void main(void)
 {
-	U8 u8_ret;
 	MCU_Init();
-	u8_ret = APP_BMS_Core_Init();
-	if(u8_ret == FALSE)
-	{
-		while (1)
-		{
-			SMBus_timeout_check();							// SMBus timeout check
-		}
-	}
 	APP_Check_FlashData();
+	APP_BMS_Core_Init();
+
 	(void)APP_Callbacks_Register();
 	
 	if(f_fixed_emp != TRUE)
@@ -81,6 +74,11 @@ void main(void)
 	if(f_cal_emp != TRUE)
 	{
 		APP_CFG_Apply_Calibration_Profiles();
+	}
+
+	if((f_hw_error == ON) && (f_fixed_error == ON) && (f_cal_error == ON))
+	{
+		APP_RunFail_Handler();
 	}
 	while (1)
 	{

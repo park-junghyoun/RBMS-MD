@@ -112,11 +112,11 @@ const __near st_smb_frame_t st_smb_command_table[] =		// SMBus command info. tab
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 1D Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 1E Reserved
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)NULL }					// 1F Reserved
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB20_mfg_name }	// 1B ManufacturerName()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB21_mfg_data }	// 21 ManufactureDate()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB22_serial_num }	// 22 Serial Number()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB23_dev_name }	// 23 DeviceName()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&au8_SMB24_dev_chem }	// 24 Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB20_mfg_name }	// 20 ManufacturerName()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB21_dev_name }	// 21 DeviceName()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&au8_SMB22_dev_chem }	// 22 device Chemistry()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB23_mfg_data }	// 23 ManufactureDate()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 32	, (U8*)&au8_SMB24_serial_num }	// 24 Serial Number()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 25 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 26 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 27 Reserved
@@ -137,30 +137,30 @@ const __near st_smb_frame_t st_smb_command_table[] =		// SMBus command info. tab
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 36 Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 37 Reserved
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB38_safety_status }	// 38 SafetyStatus
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB39_pf_status }	// 3A PFStatus
-	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 39 Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB39_pf_status }	// 39 PFStatus
+	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 3A Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 3B Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 3C Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 3D Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 3E Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 3F Reserved
 	,{ E_SMBUS_ST_RW_CHK		, 0	, (U8*)&u16_extfunc }			// 40 ExtraFunction()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB41_oper_status }	// 41 OperationStatus()
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&U16_SMB41_mode }		// 41 OperationMode()
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB42_pack_status }	// 42 PackStatus()
-	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 43 Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB43_oper_status }	// 43 OperationStatus()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 44 Reserved
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB45_sd_status }	// 45 Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB45_sd_status }	// 45 SDStatus()
 	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB46_cb_status }	// 46 CBStatus()
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB47_pack_volt }	// 47 PACKVoltage
-	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB48_soh}		// 48 StateOfHealth()
-	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 49 Reserved
-	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4A Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 4	, (U8*)&u32_SMB48_internal_status }	// 47 Interrnal Status ()
+	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 48 Reserved
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB49_pack_volt }	// 49 PACKVoltage
+	,{ E_SMBUS_ST_RS_SADR_CHK	, 0	, (U8*)&u16_SMB4A_soh}		// 4A StateOfHealth()
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4B Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4C Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4D Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4E Reserved
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 4F Reserved
-	,{ E_SMBUS_ST_RW_CHK		, 0	, (U8*)&u16_SMB50_seal }		// 50 Reserved
+	,{ E_SMBUS_ST_RW_CHK		, 0	, (U8*)&u16_SMB50_seal }		// 50 Seal
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 51 Reserved
 	,{ E_SMBUS_ST_RW_CHK		, 0	, (U8*)NULL }					// 52 Escape from PF
 	,{ E_SMBUS_ST_ERR	, 0	, (U8*)NULL }					// 53 Reserved

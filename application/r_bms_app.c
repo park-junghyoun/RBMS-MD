@@ -45,15 +45,22 @@
 #include "inline_asm.h"
 
 
-U8 APP_BMS_Core_Init(void)
+void APP_BMS_Core_Init(void)
 {
 	E_BMS_RESULT_ITEM e_ret;
 
 	e_ret = BMS_Core_Initialize((const st_sys_config_t *)&st_fixed_data.st_bms_init_config);
-	return APP_ReportBMSCoreResult_Fixed(e_ret);
+	APP_ReportBMSCoreResult_Fixed(e_ret);
 
 }
-
+void APP_RunFail_Handler(void)
+{
+	while(1)
+	{
+		SMBus_timeout_check();							// SMBus timeout check
+	}
+}
+	
 void APP_Check_FlashData(void)
 {
 	U8 u8_ret;
@@ -62,10 +69,6 @@ void APP_Check_FlashData(void)
 	if(u8_ret == FALSE)
 	{
 		f_fixed_emp = TRUE;
-		while(1)
-		{
-			SMBus_timeout_check();							// SMBus timeout check
-		}
 	}
 	u8_ret = FLASH_Check_CalibrationData();
 	if(u8_ret == FALSE)
@@ -77,45 +80,55 @@ void APP_Check_FlashData(void)
 
 U8 APP_ReportBMSCoreResult_Fixed(E_BMS_RESULT_ITEM e_ret)
 {
-	if( e_ret != E_BMS_OK)
+	U8 u8_result = FALSE;
+	
+	switch(e_ret)
 	{
-		switch(e_ret)
-		{
-			case E_BMS_ERR_HW:
-				f_hw_error = ON;
-				break;
-			case E_BMS_ERR_INVALID_PARAM:
-				f_fixed_error = ON;
-				break;
-			case E_BMS_ERR_NOT_INIT:
-			case E_BMS_ERR_NOT_READY:
-			default:
-				break;
-		}
-		return FALSE;
+		case E_BMS_OK:
+			f_init = ON;
+			u8_result = TRUE;
+			break;
+		case E_BMS_ERR_HW:
+			f_hw_error = ON;
+			f_init = OFF;
+			break;
+		case E_BMS_ERR_INVALID_PARAM:
+			f_fixed_error = ON;
+			f_init = OFF;
+			break;
+		case E_BMS_ERR_NOT_INIT:
+		case E_BMS_ERR_NOT_READY:
+		default:
+			break;
 	}
-	return TRUE;
+	
+	return u8_result;
 }
 U8 APP_ReportBMSCoreResult_Calib(E_BMS_RESULT_ITEM e_ret)
 {
-	if( e_ret != E_BMS_OK)
+	U8 u8_result = FALSE;
+	
+	switch(e_ret)
 	{
-		switch(e_ret)
-		{
-			case E_BMS_ERR_HW:
-				f_hw_error = ON;
-				break;
-			case E_BMS_ERR_INVALID_PARAM:
-				f_cal_error = ON;
-				break;
-			case E_BMS_ERR_NOT_INIT:
-			case E_BMS_ERR_NOT_READY:
-			default:
-				break;
-		}
-		return FALSE;
+		case E_BMS_OK:
+			f_calib = ON;
+			u8_result = TRUE;
+			break;
+		case E_BMS_ERR_HW:
+			f_hw_error = ON;
+			f_calib = OFF;
+			break;
+		case E_BMS_ERR_INVALID_PARAM:
+			f_cal_error = ON;
+			f_calib = OFF;
+			break;
+		case E_BMS_ERR_NOT_INIT:
+		case E_BMS_ERR_NOT_READY:
+		default:
+			break;
 	}
-	return TRUE;
+	
+	return u8_result;
 }
 
 /*******************************************************************************

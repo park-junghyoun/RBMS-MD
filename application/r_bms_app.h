@@ -4,7 +4,8 @@
 #include "define.h"
 #include "r_bms_api.h"
 
-U8 APP_BMS_Core_Init(void);
+void APP_BMS_Core_Init(void);
+void APP_RunFail_Handler(void);
 void APP_Check_FlashData(void);
 U8 APP_ReportBMSCoreResult_Fixed(E_BMS_RESULT_ITEM e_ret);
 U8 APP_ReportBMSCoreResult_Calib(E_BMS_RESULT_ITEM e_ret);

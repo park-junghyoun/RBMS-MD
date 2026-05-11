@@ -46,20 +46,14 @@
  * This header isolates the calibration model interface from the broader public
  * type catalog so calibration-related APIs can include only what they need.
  */
+/* Calibration state only distinguishes default (not calibrated) versus calibrated. */
 typedef enum {
 	E_BMS_CAL_STATE_DEFAULT = 0,
-	E_BMS_CAL_STATE_OFFSET_ONLY,
-	E_BMS_CAL_STATE_GAIN_OFFSET,
+	E_BMS_CAL_STATE_CALIBRATED,
 	E_BMS_CAL_STATE_COUNT
 } E_BMS_CAL_STATE_ITEM;
 
-typedef enum {
-	E_BMS_CAL_POINT_SINGLE = 0u,
-	E_BMS_CAL_POINT_DUAL
-} E_BMS_CAL_POINT_ITEM;
-
 typedef struct {
-	E_BMS_CAL_POINT_ITEM e_point;
 	U16 u16_adc_low;
 	U16 u16_adc_high;
 	U16 u16_ref_low_mV;
@@ -69,17 +63,14 @@ typedef struct {
 typedef struct {
 	S32 u32_gain_q16;
 	S32 u32_offset_q16;
-	E_BMS_CAL_STATE_ITEM e_state;
 } st_bms_cal_voltage_coeff_t;
 
 typedef struct {
 	S32 u32_gain_q16;
 	S32 u32_offset_q16;
-	E_BMS_CAL_STATE_ITEM e_state;
 } st_bms_cal_pack_coeff_t;
 
 typedef struct {
-	E_BMS_CAL_POINT_ITEM e_point;
 	U32 u32_adc_zero;
 	U32 u32_adc_load;
 	S32 s32_ref_load_mA;
@@ -88,5 +79,4 @@ typedef struct {
 typedef struct {
 	U32 u32_offset_adc;
 	U32 u32_k_q20;
-	E_BMS_CAL_STATE_ITEM e_state;
 } st_bms_cal_current_coeff_t;

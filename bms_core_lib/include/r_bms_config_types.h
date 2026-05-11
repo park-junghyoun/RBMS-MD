@@ -163,14 +163,13 @@ typedef struct {
 typedef struct {
 	/* Fixed scheduler base is 125ms */
 	U8 u8_base_fet_policy_bitmask;	/* Default FET state policy (bit index: E_FET_*), can be overridden by protection */
+	/* wakeup / external pin control (bit index: E_WAKEUP_*) */
+	U8 u8_wakeup_policy_bitmask;	/* Wakeup source enable bitmask (bit index: E_WAKEUP_*) */
 
 	/* Measurement cadence controls */
 	U8 u8_ad_period_125ms_n;	/* AD cadence: 125 ms x n (0 disables AD) */
 	U8 u8_cc_period_250ms_n;	/* CC cadence: 250 ms x n (0 disables CC) */
 	
-	/* wakeup / external pin control (bit index: E_WAKEUP_*) */
-	U8 u8_wakeup_policy_bitmask;	/* Wakeup source enable bitmask (bit index: E_WAKEUP_*) */
-
 	/* mode-specific protection/FET policy */
 	st_protection_policy_t st_prot_policy;	/* Protection response policy for this operating mode */
 } st_operating_profile_t;
