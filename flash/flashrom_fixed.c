@@ -71,10 +71,10 @@ static U8 FLASH_IsReservedFixedDataIndex(U16 u16_index)
 	const st_fixed_reserved_range_t *pst_range;
 	static const st_fixed_reserved_range_t st_reserved_ranges[] =
 	{
-		// Add all au8_reserved fields in st_fixed_data here.
-		FLASH_SET_RESERVED_RANGE(st_gauging_info.au8_reserved),
-		FLASH_SET_RESERVED_RANGE(st_system_info.au8_reserved),
-		FLASH_SET_RESERVED_RANGE(st_operating_info.au8_reserved),
+		// Add all u8_reserved fields in st_fixed_data here.
+		FLASH_SET_RESERVED_RANGE(u8_reserved1),
+		FLASH_SET_RESERVED_RANGE(u8_reserved2),
+		FLASH_SET_RESERVED_RANGE(u8_reserved3),
 	};
 
 	for( u8_index = 0; u8_index < (sizeof(st_reserved_ranges) / sizeof(st_reserved_ranges[0])); u8_index++ )
