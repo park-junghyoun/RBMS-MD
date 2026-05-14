@@ -49,11 +49,13 @@
 
 // - Include header file -
 #include "define.h"									// Common definition
-#pragma interrupt MCU_INT_TM01_SMBus1ms(vect=INTTM01)	// Timer for SMBus
-
 #include "mcu.h"
 #include "smbus.h"
 #include "r_bms_api.h"
+
+#pragma interrupt MCU_INT_TM01_SMBus1ms(vect=INTTM01)	// Timer for SMBus
+
+
 
 void MCU_Init(void)
 {
@@ -171,10 +173,31 @@ void mcu_LED_Init(void)
 	LED6=1;
 	LED7=1;
 }
+void MCU_LED_Control(U8 u8_led_num, U8 u8_con)
+{
+	switch(u8_led_num)
+	{
+		case 1:
+			if(u8_con == ON) LED1 = 0;
+			else LED1 = 1;
+			break;
+		case 2:
+			if(u8_con == ON) LED2 = 0;
+			else LED2 = 1;
+			break;
+		case 3:
+			if(u8_con == ON) LED3 = 0;
+			else LED3 = 1;
+			break;
+		default:
+			break;
+	}
+}
 void Stop_Mode(void)
 {
 	DI();
-	if(BMS_Event_HasPending())
+	if((BMS_Event_HasPending() == ON)		//have an event left to process.
+		&& ((TE0L.1 == ON) || (IICS0 & 0b10110010) != 0x00 ))				//In SMBus communication
 	{
 		EI();
 		return;
@@ -191,5 +214,11 @@ void Stop_Mode(void)
 	NOP();
 	NOP();
 	WUP0 = 0;
+	if( TE0L.1 == OFF )					// Not during SMBus comm. ?
+	{
+		PIF0 = 0;						// Interrupt flag clear
+		PMK0 = 0;						// Interrupt enable(SCL/SDA)
+	}
+	EI();
 }
 

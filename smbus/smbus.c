@@ -47,14 +47,16 @@
 #define _SMBUS
 
 // - Interrupt routine definition -
+#include "uif_crc8.h"
 #include "define.h"								// union/define definition
-#pragma interrupt SMB_INT_SMBus(vect=INTIICA0)
-#pragma interrupt SMB_INT_SCLSDA(vect=INTP0)
 
 // - Include header file -
 #include "flashrom_fixed.h"							// FlashROM data definition
 #include "smbus.h"
 #include "smbus_custom.h"
+
+#pragma interrupt SMB_INT_SMBus(vect=INTIICA0)
+#pragma interrupt SMB_INT_SCLSDA(vect=INTP0)
 
 
 
@@ -82,8 +84,8 @@ static const __near U32 SMBusFunction_table[] = {
 	(U32)smb_BlockWrite_size_chk,				// BlockWrite data size check
 	(U32)smb_bus_error							// SMBus error function
 };
-
-const unsigned char CRC8TBL[] = {
+/*
+const U8 CRC8TBL[] = {
 	0x00,0x07,0x0E,0x09,0x1C,0x1B,0x12,0x15,
 	0x38,0x3F,0x36,0x31,0x24,0x23,0x2A,0x2D,
 	0x70,0x77,0x7E,0x79,0x6C,0x6B,0x62,0x65,
@@ -116,10 +118,13 @@ const unsigned char CRC8TBL[] = {
 	0x96,0x91,0x98,0x9F,0x8A,0x8D,0x84,0x83,
 	0xDE,0xD9,0xD0,0xD7,0xC2,0xC5,0xCC,0xCB,
 	0xE6,0xE1,0xE8,0xEF,0xFA,0xFD,0xF4,0xF3
-};
+};*/
 
 // - Define definition -
-#define CRC8_Calc(a)	u8_pec = CRC8TBL[(a)^u8_pec]	// PEC calculation macro
+#define CRC8_Calc(a)  (u8_pec = AU8_CRC8TBL[((U8)(a)) ^ u8_pec])
+
+
+
 
 /*""FUNC COMMENT""***************************************************
 * ID : 1.0

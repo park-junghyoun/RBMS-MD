@@ -101,7 +101,7 @@ typedef enum {
 #define U32_BMS_ISTAT_AD_START_WHILE_BUSY_BIT    (1UL << E_BMS_ISTAT_AD_START_WHILE_BUSY)	/* Bit mask for AD-start while busy */
 #define U32_BMS_ISTAT_CC_START_WHILE_BUSY_BIT    (1UL << E_BMS_ISTAT_CC_START_WHILE_BUSY)	/* Bit mask for CC-start while busy */
 #define U32_BMS_ISTAT_AFE_SYS_HW_OVERFLOW_BIT    (1UL << E_BMS_ISTAT_AFE_SYS_HW_OVERFLOW)	/* Bit mask for AFE HW-overflow diagnostic */
-#define U32_BMS_ISTAT_AFE_SYS_PSW_BIT            (1UL << E_BMS_ISTAT_AFE_SYS_PSW)		/* Bit mask for AFE PSW diagnostic */
+
 #define U32_BMS_ISTAT_AFE_ALREADY_DONE_BIT       (1UL << E_BMS_ISTAT_AFE_ALREADY_DONE)	/* Bit mask for AFE already-done diagnostic */
 #define U32_BMS_ISTAT_AFE_HW_FAIL_BIT            (1UL << E_BMS_ISTAT_AFE_HW_FAIL)		/* Bit mask for AFE hardware-failure diagnostic */
 #define U32_BMS_ISTAT_AFE_NOT_INIT_BIT           (1UL << E_BMS_ISTAT_AFE_NOT_INIT)		/* Bit mask for AFE not-initialized diagnostic */

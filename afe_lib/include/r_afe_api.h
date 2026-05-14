@@ -125,8 +125,9 @@ E_AFE_RESULT AFE_WKUP_PON_Control(U8 u8_con);
 MCU PROFILE (Public API Profile)
 ***********************************************************************/
 void MCU_100us_WaitTime(U8 u8_n00us_wait);
-void MCU_PSW_PUSH( void );
-void MCU_PSW_POP( void );
+U8 MCU_IRQ_Lock(void);
+void MCU_IRQ_Unlock(U8 psw_state);
+
 /***********************************************************************
 Callback PROFILE (Public API Profile)
 ***********************************************************************/

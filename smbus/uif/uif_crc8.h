@@ -24,46 +24,28 @@
 * conditions found by accessing the following link:
 * http://www.renesas.com/disclaimer
 ******************************************************************************/
-
 /*""FILE COMMENT""*******************************************************
-* System Name	: RAJ240xxx Smart Battery Standard firmware
-* File Name		: inline_asm.h
-* Version		: 0.01
-* Contents		: Inline assembler header file
-* Customer		: Renesas Electronics Corp.
-* Model			: RAJ240xxx Standard firmware
-* Order			: 
-* CPU			: RAJ240xxx
-* Compiler		: CC-RL (V1.08.00)
-* OS			: None
-* Programmer	: Ryoji Kato
-* Note			: 
+* System Name	: RAJ240XXX F/W user interface library
+* File Name		: uif_crc8.h
+* Version			: 1.00
+* Contents		: user interface function header file
 ************************************************************************
-* Copyright,2020 (2018-2020) RENESAS ELECTRONICS CORPORATION,
-*                            All right reserved.
+* Copyright(C) 2013 (2012-2013) RENESAS ELECTRONICS CORPORATION
+*                AND RENESAS SOLUTIONS CORPORATION
 ************************************************************************
-* History		: 2020.12.16 Ver 0.01
-* 				: Replace overall
-*				: 
-*""FILE COMMENT END""*****************************************************/
-#ifndef _INLINE_ASM_H
-#define _INLINE_ASM_H
+* History		: 2025.01.01
+*""FILE COMMENT END""**************************************************/
 
-#pragma inline_asm ASM_JUMP_BOOT
-#pragma inline_asm ASM_SW_RESET
+#ifndef _UIF_CRC8_H
+#define _UIF_CRC8_H
 
-static void ASM_JUMP_BOOT(void)
-{
-#if defined(_AFE_TYP_95_94_H) || defined(_AFE_TYP_55_57_H)
-	BR !!0x00DC80
-#elif defined(_AFE_TYP_100_90_H)
-	BR !!0x01CC08
+/***********************************************************************
+	define
+***********************************************************************/
+#if defined (_AFE_TYP_100_90_H)
+#define AU8_CRC8TBL ((volatile const __far U8 *)(0x1CD18uL))
+#elif defined(_AFE_TYP_95_94_H) || defined(_AFE_TYP_55_57_H)
+#pragma address au8_CRC8TBL = 0x1CDB0	// CRC Table
 #endif
-}
 
-static void ASM_SW_RESET(void)
-{
-	.DB2 0x0FFFF
-}
-#endif	// _INLINE_ASM_H
-
+#endif //_UIF_CRC8_H

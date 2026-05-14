@@ -2,6 +2,7 @@
 #include "r_bms_app.h"
 #include "r_bms_config.h"
 #include "smbus.h"
+#include "mcu.h"
 #include "smbus_custom.h"
 #include "flashrom_fixed.h"
 #include "dataflash_flexible.h"
@@ -39,6 +40,7 @@ U8 APP_Callbacks_Register(void)
 *******************************************************************************/
 void APP_Alarm_Event(E_BMS_ALARM_ITEM e_alarm)
 {
+	static U8 u8_led;
 	switch(e_alarm)
 	{
 		case E_ALARM_CC_COMP:
@@ -47,13 +49,18 @@ void APP_Alarm_Event(E_BMS_ALARM_ITEM e_alarm)
 			break;
 		case E_ALARM_AD_COMP:
 			APP_Get_AD_measurement_snapshot();
+			APP_Calc_TotalVolt();
 			//APP_Get_CC_RAW_measurement_snapshot();
 			break;
 		case E_ALARM_125MS:
-			APP_Get_FETstatus();
-			app_Charger_Timer();
-			app_Sleep_Timer();
-			APP_Sleep_Check();
+			APP_Get_FETStatus();
+			APP_Get_ModeStatus();
+			//app_Charger_Timer();
+			//app_Sleep_Timer();
+			//APP_Sleep_Check();
+			SMBus_state_check();
+			u8_led = !u8_led;
+			MCU_LED_Control(1,u8_led);
 			break;
 		case E_ALARM_5MS:
 			break;

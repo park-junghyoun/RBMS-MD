@@ -60,9 +60,11 @@
 *******************************************************************************/
 void main(void)
 {
+
 	MCU_Init();
 	APP_Check_FlashData();
 	APP_BMS_Core_Init();
+	EI();
 
 	(void)APP_Callbacks_Register();
 	
@@ -88,6 +90,23 @@ void main(void)
 		 * so periodic work stays aligned with the BMS alarm scheduler.
 		 */
 		SMBus_timeout_check();							// SMBus timeout check
-		Stop_Mode();
+
+		if(f_save_flexible == ON)
+		{
+			if(FlexibleData_Write() == TRUE)
+			{
+				f_save_flexible = OFF;
+			}
+		}
+		if(f_ety_boot == ON)
+		{
+			APP_EntryBoot();
+		}
+		if(f_ety_pd == ON)
+		{
+			APP_EntryPowerDown();
+		}
+
+		//Stop_Mode();
 	}
 }

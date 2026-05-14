@@ -109,7 +109,8 @@ typedef struct {
 
 /*
  * Host-facing CC-completion converted measurement snapshot.
- * Pack current is published separately because it becomes valid on E_ALARM_CC_COMP.
+ * Original current keeps the unmasked converted value. Pack current applies the configured
+ * current dead-band mask and matches the protection-facing current direction decision.
  */
 typedef struct {
 	S32 s32_original_current_mA;

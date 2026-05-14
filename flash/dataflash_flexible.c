@@ -228,5 +228,6 @@ U8 Write_FlexibleData(void)
 
 U8 FlexibleData_Write(void)
 {
+	st_flexible_data_ram.st_reason.u8_update_reason = e_flexble_up_reason;
 	return Write_FlexibleData();
 }

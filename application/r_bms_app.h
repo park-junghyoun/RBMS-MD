@@ -14,9 +14,14 @@ void APP_Get_AD_measurement_snapshot(void);
 void APP_Get_CC_measurement_snapshot(void);
 void APP_Get_CC_RAW_measurement_snapshot(void);
 void APP_Get_AD_RAW_measurement_snapshot(void);
-void APP_Get_FETstatus(void);
+void APP_Get_FETStatus(void);
+void APP_Get_ModeStatus(void);
+void APP_Calc_TotalVolt(void);
+
 void APP_Sleep_Check(void);
-void APP_MoveToBoot(void);
+void APP_EntryBoot(void);
+void APP_EntryPowerDown(void);
+void APP_Seq_PowerDown(void);
 
 void Stop_Mode(void);
 

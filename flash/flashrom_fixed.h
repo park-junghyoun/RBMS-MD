@@ -221,7 +221,7 @@ typedef struct
 
 typedef struct
 {
-	U32	au32_ther_table[21];				// [84byte] Thermistor characteristic table
+	U32	au32_ther_table[22];				// [84byte] Thermistor characteristic table
 }st_thermister_table_t;
 
 typedef struct
@@ -259,12 +259,12 @@ typedef struct
 	st_bal_self_dsg_config_t st_self_dsg_config;		// [8byte] self discharge
 	st_protection_config_t	st_bms_prot_config;	// [70byte] protection
 	st_system_t			st_system_info;		// [10byte] system
-	U16					u8_reserved2[4];		// [8byte] reserved
-	st_thermister_table_t	st_thermister1_table;	// [84byte] thermister 1 table
-	st_thermister_table_t	st_thermister2_table;	// [84byte] thermister 2 table
-	st_thermister_table_t	st_thermister3_table;	// [84byte] thermister 3 table
-	st_thermister_table_t	st_thermister4_table;	// [84byte] thermister 4 table
-	st_thermister_table_t	st_thermister5_table;	// [84byte] thermister 5 table
+	U16					u16_reserved2[4];		// [8byte] reserved
+	st_thermister_table_t	st_thermister1_table;	// [88byte] thermister 1 table
+	st_thermister_table_t	st_thermister2_table;	// [88byte] thermister 2 table
+	st_thermister_table_t	st_thermister3_table;	// [88byte] thermister 3 table
+	st_thermister_table_t	st_thermister4_table;	// [88byte] thermister 4 table
+	st_thermister_table_t	st_thermister5_table;	// [88byte] thermister 5 table
 	st_control_flag1_t		st_control_flag1;		// [2byte] Control flag 1
 	st_control_flag2_t		st_control_flag2;		// [2byte] Control flag 2
 	st_library_flag_t		st_library_flag;			// [2byte] library flag
@@ -273,7 +273,7 @@ typedef struct
 	st_lut_cp_table_t		st_lut_cp;			// [98byte] correction point
 	st_lut_cp_impedance_t	st_lut_cp_imp;			// [16byte] impedance table
 	st_lut_capacity_t		st_lut_init_cap;		// [18byte] init capacity table
-	U8					u8_reserved3[174];	// [174byte] reserved
+	U8					u8_reserved3[154];		// [154byte] reserved
 	U16					u16_fixed_chekcsum;	// [2bytes] Fixed Data Checksum
 
 }st_fixed_data_t;									// - FlashROM fixed data definition -

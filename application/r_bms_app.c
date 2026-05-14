@@ -41,6 +41,7 @@
 #include "dataflash_flexible.h"
 #include "flashrom_fixed.h"
 #include "smbus.h"
+#include "smbus_custom.h"
 #include "r_bms_ram.h"
 #include "inline_asm.h"
 
@@ -49,7 +50,7 @@ void APP_BMS_Core_Init(void)
 {
 	E_BMS_RESULT_ITEM e_ret;
 
-	e_ret = BMS_Core_Initialize((const st_sys_config_t *)&st_fixed_data.st_bms_init_config);
+	e_ret = BMS_Core_Initialize(&st_fixed_data.st_bms_init_config);
 	APP_ReportBMSCoreResult_Fixed(e_ret);
 
 }
@@ -202,7 +203,7 @@ void APP_Get_AD_RAW_measurement_snapshot(void)
 * Return Value : None
 * Notes        : Auto-generated API comment block for maintainability.
 *******************************************************************************/
-void APP_Get_FETstatus(void)
+void APP_Get_FETStatus(void)
 {
 	st_bms_fet_state_t st_policy_state;
 	st_bms_fet_state_t st_hw_state;
@@ -219,6 +220,32 @@ void APP_Get_FETstatus(void)
 	f_cfet = st_hw_state.u8_chg_fet_state;
 	f_dfet = st_hw_state.u8_dsg_fet_state;
 }
+void APP_Calc_TotalVolt(void)
+{
+	U16 u16_totalv= 0;
+	U8 u8_index = 0;
+
+	for(u8_index = 0; u8_index < st_fixed_data.st_bms_init_config.u8_cell_series_count; u8_index++)
+	{
+		u16_totalv += st_flexible_data_ram.st_measurement.ad.au16_cell_voltage_mV[u8_index];
+	}
+	u16_SMB09_total_v = u16_totalv;
+}
+/*******************************************************************************
+* Function Name: app_refresh_fet_status
+* Description  : Executes app_refresh_fet_status routine in the BMS module.
+* Arguments    : None
+* Return Value : None
+* Notes        : Auto-generated API comment block for maintainability.
+*******************************************************************************/
+void APP_Get_ModeStatus(void)
+{
+	E_BMS_MODE_ITEM e_bms_mode;
+	
+	BMS_Mode_Get(&e_bms_mode);
+	st_flexible_data_ram.u16_bms_core_mode = (U16)e_bms_mode;
+}
+
 void APP_Sleep_Check(void)
 {
 	if((s32_SMB0B_orig_curr <= (S32)u16_sleep_current) &&
@@ -257,13 +284,41 @@ void APP_Sleep_Check(void)
 * 					: Replace overall
 * 
 *""FUNC COMMENT END""**********************************************/
-void APP_MoveToBoot(void)
+void APP_EntryBoot(void)
 {
-
-	st_flexible_data_ram.st_reason.u8_update_reason = FLEXUP_FLASH;			// Set Reason of Flex update
-	Write_FlexibleData();							// Update Flexible data
-
-	DI();										// Disable interrupt
-	BMS_Config_SetWDT(OFF);						// Stop AFE WDT
-	ASM_JUMP_BOOT();							// To Flash update mode
+	if(f_save_flexible == FALSE)
+	{
+		DI();										// Disable interrupt
+		BMS_Config_SetWDT(OFF);						// Stop AFE WDT
+		ASM_JUMP_BOOT();							// To Flash update mode
+	}
+}
+void APP_EntryPowerDown(void)
+{
+	if(f_save_flexible == FALSE)
+	{
+		APP_Seq_PowerDown();
+	}
+}
+void APP_Seq_PowerDown(void)
+{
+	E_BMS_PD_STATUS_ITEM e_pd_status;
+	
+	e_pd_status = BMS_PowerDown_GetStatus();
+	
+	switch(e_pd_status)
+	{
+		case E_BMS_PD_IDLE:
+			BMS_PowerDown_Req();
+			break;
+		case E_BMS_PD_IN_PROGRESS:
+		case E_BMS_PD_DONE:
+			break;
+		case E_BMS_PD_FAULT:
+		case E_BMS_PD_TIMEOUT:
+			BMS_PowerDown_Cancel();
+			break;
+		default:
+			break;
+	}
 }

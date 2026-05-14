@@ -67,16 +67,18 @@ st_cal_data_t CalbirationData_Read(void)
 U8 FLASH_Check_CalibrationData(void)
 {
 	U16 u16_index;
-	U8 *pu8_cal_data;
-
-	pu8_cal_data = (U8 *)&st_cal_data_dataflash;
+	volatile U8 *pu8_cal_data;
+	
+	DataFlash_Enable();								// Enable DataFlash access
+	pu8_cal_data = (volatile U8 *)&st_cal_data_dataflash.ast_points_cell[0].u16_adc_low;
 	for(u16_index = 0; u16_index < sizeof(st_cal_data_t); u16_index++)
 	{
-		if(pu8_cal_data[u16_index] == 0xFF)
+		if(pu8_cal_data[u16_index] == 0xFFU)
 		{
+			DataFlash_Disable();								// Disable DataFlash access
 			return FALSE;
 		}
 	}
-
+	DataFlash_Disable();								// Disable DataFlash access
 	return TRUE;
 }

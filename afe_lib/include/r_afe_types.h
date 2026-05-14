@@ -77,7 +77,6 @@ typedef enum{
 
 typedef enum {
 	E_SYS_ERROR_HWOVERFLOW = 0,
-	E_SYS_RRROR_PSW_UNMACTH,
 	E_SYS_ERROR_NUM
 }E_AFE_SYS_ERROR_ITEM;
 
@@ -163,7 +162,6 @@ typedef struct{
 typedef void (*afe_callback_t)(st_afe_callback_args_t * p_args);
 
 #define U16_AFE_SYS_ER_HWOVF_BIT			((U16)1<<E_SYS_ERROR_HWOVERFLOW)
-#define U16_AFE_SYS_ER_PSW_BIT			((U16)1<<E_SYS_RRROR_PSW_UNMACTH)
 
 
 #define U16_AFE_INT_CC_BIT				((U16)1<<E_AFE_EVENT_CC)

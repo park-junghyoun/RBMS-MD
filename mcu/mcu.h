@@ -48,6 +48,7 @@
 #define _MCU_H
 
 #include "iodefine.h"
+#include "define.h"
 
 #define LED7			P0.0				//LED 1 Pin
 #define LED6			P0.1				//LED 1 Pin
@@ -76,6 +77,7 @@ void MCU_Init(void);
 void mcu_LED_Init(void);
 void mcu_TM01_1ms_Init(void);
 void MCU_INT_TM01_SMBus1ms(void);
+void MCU_LED_Control(U8 u8_led_num, U8 u8_con);
 void Stop_Mode(void);
 
 #endif	// _MCU_H

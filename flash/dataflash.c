@@ -56,8 +56,8 @@
 #include "dataflash_flexible.h"
 
 /* External AFE helper prototypes (implemented in AFE driver library) */
-extern void MCU_PSW_PUSH(void);
-extern void MCU_PSW_POP(void);
+extern U8 MCU_IRQ_Lock(void);
+extern void MCU_IRQ_Unlock(U8 psw_state);
 
 // - Define definition -
 #define PFDL_FREQUENCY			8				// PFDL CPU frequency (8MHz)
@@ -109,14 +109,15 @@ U8 DataFlash_Write(U8 *p8_addr, U8 *p8_data, U16 u16_size)
 	U8				*p8_write_data;
 	U16				u16_write_cnt;
 	pfdl_request_t		pfdl_req;
-	pfdl_status_t		pfdl_ret;					// Return code
+	pfdl_status_t		pfdl_ret;						// Return code
+	U8	u8_irq = 0U;
 
 	if( u8_fw_step != 0 )							// FlashWrite executing ?
 	{
-		return PFDL_BUSY;						// Abort
+		return PFDL_BUSY;							// Abort
 	}
 
-	MCU_PSW_PUSH();									// PSW -> STACK
+	u8_irq = MCU_IRQ_Lock();						// PSW -> STACK
 	u8_fw_step = 1;								// Set Flash Write step
 
 	PFDL_Open( (__near pfdl_descriptor_t*)&pfdl_descriptor_pstr );
@@ -179,9 +180,9 @@ U8 DataFlash_Write(U8 *p8_addr, U8 *p8_data, U16 u16_size)
 	}
 
 
-	PFDL_Close();								// Flash data library close
+	PFDL_Close();									// Flash data library close
 	u8_fw_step = 0;								// Clear Flash Write step
-	MCU_PSW_POP();							// STACK -> PSW
+	MCU_IRQ_Unlock(u8_irq);						// STACK -> PSW
 
 	return pfdl_ret;
 }
@@ -215,22 +216,24 @@ U8 DataFlash_Write(U8 *p8_addr, U8 *p8_data, U16 u16_size)
 U8 DataFlash_Erase(U8 u8_block)
 {
 	pfdl_request_t		pfdl_req;
-	pfdl_status_t		pfdl_ret;					// Return code
-
-	MCU_PSW_PUSH();									// PSW -> STACK
+	pfdl_status_t		pfdl_ret;						// Return code
+	U8	u8_irq = 0U;
+	
+	u8_irq = MCU_IRQ_Lock();						// PSW -> STACK
 												// Flash data library open
 	PFDL_Open( (__near pfdl_descriptor_t*)&pfdl_descriptor_pstr );
 
-	pfdl_req.index_u16 = (pfdl_u16)u8_block;		// Set block number of erase
+	pfdl_req.index_u16 = (pfdl_u16)u8_block;			// Set block number of erase
 	pfdl_req.command_enu = PFDL_CMD_ERASE_BLOCK;	// Set Erase command
 	pfdl_ret = PFDL_Execute( &pfdl_req );				// Erase
 	while( pfdl_ret == PFDL_BUSY )					// Wait for finish erasing
 	{
 		pfdl_ret = PFDL_Handler();					// Ststus check
 	}
-	MCU_PSW_POP();										// STACK -> PSW
-
-	PFDL_Close();								// Flash data library close
+	
+	PFDL_Close();									// Flash data library close
+	
+	MCU_IRQ_Unlock(u8_irq);						// STACK -> PSW
 
 	return pfdl_ret;
 }

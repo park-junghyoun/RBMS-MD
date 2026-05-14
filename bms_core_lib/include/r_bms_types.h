@@ -73,7 +73,7 @@ typedef enum {
 	E_BMS_ISTAT_AD_START_WHILE_BUSY,	/* AD conversion start requested while AD was busy */
 	E_BMS_ISTAT_CC_START_WHILE_BUSY,	/* Coulomb counter start requested while CC was busy */
 	E_BMS_ISTAT_AFE_SYS_HW_OVERFLOW,	/* AFE system status reported hardware overflow */
-	E_BMS_ISTAT_AFE_SYS_PSW,			/* AFE system status reported PSW event */
+	E_BMS_ISTAT_Reserved,					/* AFE system status reported PSW event */
 	E_BMS_ISTAT_AFE_ALREADY_DONE,		/* AFE operation request was already completed */
 	E_BMS_ISTAT_AFE_HW_FAIL,			/* AFE layer returned hardware failure */
 	E_BMS_ISTAT_AFE_NOT_INIT,			/* AFE layer not initialized */

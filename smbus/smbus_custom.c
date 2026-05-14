@@ -433,7 +433,7 @@ void SMB_StoreReceiveData(void)
 			break;
 
 		case 0x52:								// 0x52: Escape from PF
-			if( u16_SMB50_seal == STS_UNSEAL )				// Only works when unseal
+			if( f_ss == OFF )				// Only works when unseal
 			{
 				if( au8_smb_buff[0] == 0xFF && au8_smb_buff[1] == 0xFF )
 				{
@@ -466,7 +466,7 @@ void SMB_StoreReceiveData(void)
 			break;
 			
 		case 0x24:								// ManufatureDate Write
-			if( u16_SMB50_seal == STS_UNSEAL )				// Only works when unseal
+			if( f_ss == OFF )				// Only works when unseal
 			{
 				u16_SMB24_mfg_date = au16_smb_buff[0];
 				Request_FlexibleData_update();
@@ -672,6 +672,7 @@ void ExtraFunction(void)
 		{
 			if( u16_extfunc == 0x0908 )			// Data is correct ?
 			{
+				f_ety_pd = ON;
 				//__PowerDown(CAUSE_COM,FLEXUP_SMB);	// PowerDown function
 				
 			} else {							// Data is wrong
@@ -709,10 +710,10 @@ void ExtraFunction(void)
 			switch( u16_extra_func.u8_data[0] )				// ** is ...
 			{
 				case 0x11:						// Flash update mode request
-					if( u16_SMB50_seal == STS_UNSEAL )		// Only works when unseal
+					if( f_ss == OFF )		// Only works when unseal
 					{
-						//f_flashup = ON;			// Set Flash update mode req.
-						//aflex_reason = FLEXUP_FLASH;// Set Reason of Flex update
+						f_ety_boot = ON;
+						e_flexble_up_reason = FLEXUP_REASON_FLASH;// Set Reason of Flex update
 					}
 					break;
 					
@@ -778,11 +779,11 @@ void Seal_Proc(void)
 		return;
 	}
 	
-	if( u16_SMB50_seal == STS_UNSEAL )						// Unseal now ?
+	if( f_ss == OFF )						// Unseal now ?
 	{
 		if( au16_smb_buff[0] == DATA_SEAL )			// Seal command ?
 		{
-			u16_SMB50_seal = STS_SEAL;						// Clear unseal
+			u16_SMB50_seal = ON;						// Clear unseal
 			f_ss = ON;							// Set PackStatus[SS]
 			Request_FlexibleData_update();
 			//aflex_reason = FLEXUP_SMB;			// Set Reason of Flex update
@@ -804,7 +805,7 @@ void Seal_Proc(void)
 			{					
 				if( au16_smb_buff[0] == au16_seal_password[0] )	// Correct data ?
 				{
-					u16_SMB50_seal = STS_UNSEAL;				// Set Unseal
+					u16_SMB50_seal = OFF;				// Set Unseal
 					f_ss = OFF;					// Set PackStatus[SS]
 					Request_FlexibleData_update();
 					//aflex_reason = FLEXUP_SMB;	// Set Reason of Flex update

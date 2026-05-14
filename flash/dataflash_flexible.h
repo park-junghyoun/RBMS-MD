@@ -53,14 +53,20 @@ void Request_FlexibleData_update(void);						// Request Flexible data update
 #define U8_FLEX_AREA_SIZE			0x90						// Size of a Flexible data area
 
 // Reason of Flexible data update
-enum {
-	FLEXUP_DUMMY,										// Dummy
-	FLEXUP_MODE,										// By mode changing
-	FLEXUP_RC,											// By RSOC
-	FLEXUP_FLASH,										// By Flash update
-	FLEXUP_SMB,											// By SMBus command
-	FLEXUP_WDT,											// By AFE WDT
-};
+typedef enum {
+	FLEXUP_REASON_DUMMY =0,									// Dummy
+	FLEXUP_REASON_MODE,										// By mode changing
+	FLEXUP_REASON_RC,											// By RSOC
+	FLEXUP_REASON_FLASH,										// By Flash update
+	FLEXUP_REASON_SMB,											// By SMBus command
+	FLEXUP_REASON_WDT											// By AFE WDT
+} E_FLEXP_RESAON_ITEM;
+
+typedef enum {
+	PD_REASON_DUMMY = 0,
+	PD_REASON_COMMAND,
+	PD_REASON_VOLTAGE
+} E_PD_REASON_ITEM;
 
 typedef struct
 {
@@ -146,10 +152,14 @@ GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 #define f_ss			DEF16_BIT1(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// SS	1=unseal, 0=Seal
 #define f_calib			DEF16_BIT2(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// calibration mode
 #define f_cal_emp		DEF16_BIT3(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// calibration data none
-#define f_fixed_emp	DEF16_BIT4(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// fixed data none
-#define f_fixed_error	DEF16_BIT5(&st_flexible_data_ram.st_status.u16_oper_status_bit)
-#define f_cal_error		DEF16_BIT6(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// fixed data none	
+#define f_cal_error		DEF16_BIT4(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// calibration data error
+#define f_fixed_emp	DEF16_BIT5(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// fixed data none
+#define f_fixed_error	DEF16_BIT6(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// fixed data error
+
 #define f_hw_error		DEF16_BIT7(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// Initialization hw error
+#define f_save_flexible	DEF16_BIT8(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// save flexible data
+#define f_ety_boot		DEF16_BIT9(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// entry boot
+#define f_ety_pd		DEF16_BIT9(&st_flexible_data_ram.st_status.u16_oper_status_bit)		// entry pd
 
 #define f_rl			DEF16_BIT0(&st_flexible_data_ram.st_status.u16_gaging_bit)			// RL	1=relearning, 0=no rel.
 #define f_cp_h		DEF16_BIT1(&st_flexible_data_ram.st_status.u16_gaging_bit)			// CPH	1=detect, 0=not detect
@@ -181,7 +191,8 @@ GLOBAL st_flexible_data_t	st_flexible_data_ram;						// Flexible data
 #define u16_SMB60_volt		st_flexible_data_ram.st_measurement.ad.au16_cell_voltage_mV
 #define u16_SMB6A_temp		st_flexible_data_ram.st_measurement.ad.as16_cell_temperature_0p1dC
 
-GLOBAL U16 u16_SMB09_total_v;
+GLOBAL E_FLEXP_RESAON_ITEM e_flexble_up_reason;
+GLOBAL E_PD_REASON_ITEM e_powerdown_reason;
 
 #undef 		GLOBAL
 
